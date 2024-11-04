@@ -12,7 +12,7 @@
         private static void welcome9801() { }
         private static void welcome6087()
         {
-            Console.WriteLine("Enter your name: pnina");
+            Console.WriteLine("Enter your name: ");
             string name = Console.ReadLine();
             Console.WriteLine("{0} welcome to my first console application", name);
         }
