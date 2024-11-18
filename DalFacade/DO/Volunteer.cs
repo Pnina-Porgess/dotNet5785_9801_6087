@@ -32,4 +32,4 @@ public record Volunteer
     bool IsActive,
     double? MaximumDistance,
     Enum DistanceType
-)
+);
