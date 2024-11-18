@@ -9,6 +9,7 @@ public record Assignment
     int VolunteerId,
     DateTime EntryTime,
     DateTime? EndTime=null,
-    Enum? TypeOfTreatment
+    Enum? TypeOfTreatment=null,
+ 
 
 );
