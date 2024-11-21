@@ -8,7 +8,7 @@ public class VolunteerImplementation : IVolunteer
     public void Create(Volunteer item)
     {
         if(DataSource.Volunteers.Any(v=>v.Id == item.Id)) 
-         throw new NotImplementedException("An object of type Volunteer with such ID already exists.");
+         throw new NotImplementedException($"Volunteer with ID={item.Id} already exists");
         DataSource.Volunteers.Add(item);
     }
 
@@ -16,13 +16,12 @@ public class VolunteerImplementation : IVolunteer
     {
         int removeCount = DataSource.Volunteers.RemoveAll(c => c?.Id == id);
         if (removeCount == 0)
-            throw new NotImplementedException("Call not found");
+            throw new NotImplementedException($"Volunteer with ID={id} not exists");
     }
 
     public void DeleteAll()
     {
         DataSource.Volunteers.Clear();
-
     }
 
     public Volunteer? Read(int id)

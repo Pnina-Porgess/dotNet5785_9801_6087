@@ -7,18 +7,19 @@ using System.Collections.Generic;
 
 public class AssignmentImplementation : IAssignment
 {
-    public void Create(Assignment item)
+    public int Create(Assignment item)
     {
-        if(DataSource.Assignments.Any(a=>a?.Id == item.Id))
-            throw new NotImplementedException("Assignment with the same id already exists.");
-        DataSource.Assignments.Add(item);
+        int id = DataSource.Config.NextCallId;
+        Assignment copy = item with { Id = id };
+        DataSource.Assignments.Add(copy);
+        return copy.Id;
     }
 
     public void Delete(int id)
     {
         int removeCount=DataSource.Assignments.RemoveAll(a=>a?.Id==id);
         if (removeCount == 0)
-            throw new NotImplementedException("Assignment not found");
+            throw new NotImplementedException($"Assignments with ID={id} not exists");
     }
 
     public void DeleteAll()
