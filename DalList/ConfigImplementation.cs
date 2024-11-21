@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DalApi;
 
-namespace Dal
+namespace Dal;
+
+internal class ConfigImplementation : IConfig
 {
-    internal class ConfigImplementation
+    public DateTime Clock
     {
+        get => Config.Clock;
+        set => Config.Clock = value;
+    }
+    public TimeSpan RiskRange
+    {
+        get => Config.RiskRange;
+        set => Config.RiskRange = value;
+    }
+    public void Reset()
+    {
+        Config.Reset();
     }
 }
