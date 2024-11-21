@@ -5,20 +5,20 @@ using System.Collections.Generic;
 
 public class CallImplementation : ICall
 {
-    public int Create(Call item)
+    public void Create(Call item)
     {
         //for entities with auto id
-        int id = DataSource.Config.NextCallId;
+        int id = Config.NextCallId;
         Call copy = item with { Id = id };
         DataSource.Calls.Add(copy);
-        return copy.Id;
+        //return copy.Id;
     }
 
     public void Delete(int id)
     {
         int removeCount = DataSource.Calls.RemoveAll(c => c?.Id == id);
         if (removeCount == 0)
-            throw new NotImplementedException($"Volunteer with ID={id} not exists");
+            throw new Exception($"Call with ID={id} not exists");
     }
 
     public void DeleteAll()
@@ -39,9 +39,15 @@ public class CallImplementation : ICall
 
     public void Update(Call item)
     {
-        int index = DataSource.Calls.FindIndex(c => c?.Id == item.Id);
-        if (index < 0)
-            throw new NotImplementedException("Call not found");
-        DataSource.Calls[index] = item;
+        var call = Read(item.Id);
+        if (call == null)
+            throw new Exception($"Assignments with ID={item.Id} not exists");
+        DataSource.Calls.Remove(call);
+        DataSource.Calls.Add(call);
+    }
+
+    void ICall.Create(Call item)
+    {
+        throw new NotImplementedException();
     }
 }

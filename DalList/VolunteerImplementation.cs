@@ -36,9 +36,10 @@ public class VolunteerImplementation : IVolunteer
 
     public void Update(Volunteer item)
     {
-        int index = DataSource.Volunteers.FindIndex(v => v.Id == item.Id);
-        if(index==-1)
-           throw new NotImplementedException();
-        DataSource.Volunteers[index] = item;
+        var volunteer = Read(item.Id);
+        if (volunteer == null)
+            throw new Exception($"Volunteer with ID={item.Id} not exists");
+        DataSource.Volunteers.Remove(volunteer);
+        DataSource.Volunteers.Add(volunteer);
     }
 }

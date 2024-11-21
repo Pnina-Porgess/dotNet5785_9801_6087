@@ -7,19 +7,19 @@ using System.Collections.Generic;
 
 public class AssignmentImplementation : IAssignment
 {
-    public int Create(Assignment item)
+    public void Create(Assignment item)
     {
-        int id = DataSource.Config.NextCallId;
+        int id = Config.NextCallId;
         Assignment copy = item with { Id = id };
         DataSource.Assignments.Add(copy);
-        return copy.Id;
+       // return copy.Id;
     }
 
     public void Delete(int id)
     {
         int removeCount=DataSource.Assignments.RemoveAll(a=>a?.Id==id);
         if (removeCount == 0)
-            throw new NotImplementedException($"Assignments with ID={id} not exists");
+            throw new Exception($"Assignments with ID={id} not exists");
     }
 
     public void DeleteAll()
@@ -40,10 +40,12 @@ public class AssignmentImplementation : IAssignment
 
     public void Update(Assignment item)
     {
-       int index = DataSource.Assignments.FindIndex(a=>a?.Id==item.Id);
-     if(index<0)
-        throw new NotImplementedException("Assignment not found");
-        DataSource.Assignments[index] = item;   
+       var assignment =Read(item.Id);
+     if(assignment ==null)
+        throw new Exception($"Assignments with ID={item.Id} not exists");
+        DataSource.Assignments.Remove(assignment);
+        DataSource.Assignments.Add(assignment);
     }
+
 }
 
