@@ -14,13 +14,15 @@ public class VolunteerImplementation : IVolunteer
 
     public void Delete(int id)
     {
-       
+        int removeCount = DataSource.Volunteers.RemoveAll(c => c?.Id == id);
+        if (removeCount == 0)
+            throw new NotImplementedException("Call not found");
     }
 
     public void DeleteAll()
     {
+        DataSource.Volunteers.Clear();
 
-        throw new NotImplementedException();
     }
 
     public Volunteer? Read(int id)
@@ -30,11 +32,14 @@ public class VolunteerImplementation : IVolunteer
 
     public List<Volunteer> ReadAll()
     {
-        throw new NotImplementedException();
+        return new List<Volunteer>(DataSource.Volunteers);
     }
 
     public void Update(Volunteer item)
     {
-        throw new NotImplementedException();
+        int index = DataSource.Volunteers.FindIndex(v => v.Id == item.Id);
+        if(index==-1)
+           throw new NotImplementedException();
+        DataSource.Volunteers[index] = item;
     }
 }
