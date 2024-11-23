@@ -12,7 +12,8 @@ public static class Initialization
     //...
     private static void createVolunteers()
     {
-
+        string [] name = {"Sari","Pnina","Shira","Chaya","Yosi","Beni","Tamar","Eli","Moshe","Chana","Ari","Chaim","Shani","Yonatan","David"}
+        string[] email = {"Sari@gmail.com"
     }
     private static void createCalls()
     {
