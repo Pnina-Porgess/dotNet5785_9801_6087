@@ -1,8 +1,8 @@
 ﻿namespace DO;
-public enum Job
+public enum Role
 {
-    volunteer,
-    manager  
+    Volunteer,
+    Manager  
 }
 public enum DistanceType
 {
