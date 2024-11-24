@@ -21,7 +21,11 @@ public record Call
    double Latitude,
    DateTime TimeOfOpen,
    DateTime MaxTimeToFinish
-);
+)
+{
+    public Call() : this(0, TypeOfReading.sari,null,null,0,0) { }
+}
+;
 
 
 

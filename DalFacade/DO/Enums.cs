@@ -1,8 +1,8 @@
 ﻿namespace DO;
-public enum Job
+public enum Role
 {
-    volunteer,
-    manager  
+    Volunteer,
+    Manager  
 }
 public enum DistanceType
 {
@@ -13,7 +13,10 @@ public enum DistanceType
 
 public enum TypeOfReading
 {
-   
+  sari,
+  pnina,
+  alufot
+
 
 }
 public enum TypeOfEndTime
