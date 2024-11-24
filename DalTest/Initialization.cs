@@ -41,6 +41,24 @@ public static class Initialization
    "Yonatan97K50x", "David34Q85v"
 };
 
+        // Array of coordinates for each city with latitude and longitude
+        (double Latitude, double Longitude)[] coordinates = {
+    (31.7683, 35.2137), // Jerusalem
+    (32.0853, 34.7818), // Tel Aviv
+    (32.7940, 34.9896), // Haifa
+    (31.2518, 34.7913), // Beer Sheva
+    (31.8044, 34.6553), // Ashdod
+    (32.3215, 34.8532), // Netanya
+    (31.9706, 34.7925), // Rishon LeZion
+    (32.0840, 34.8878), // Petah Tikva
+    (32.0158, 34.7874), // Holon
+    (32.0809, 34.8333), // Bnei Brak
+    (31.8948, 34.8093), // Rehovot
+    (32.0236, 34.7502), // Bat Yam
+    (32.1663, 34.8436), // Herzliya
+    (32.4340, 34.9196), // Hadera
+    (29.5581, 34.9482)  // Eilat
+};
 
         for (int i = 0; i < names.Length; i++)
         {
@@ -53,13 +71,10 @@ public static class Initialization
             string email = emails[i];
             string phone = phones[i];
             string password=passwords[i];
-            double Latitude=s_rand.NextDouble()*(33.0-29.5)+29.5;
-            double Longitude= s_rand.NextDouble() * (35.9 - 34.2) + 34.2;
-            Role MyRole= (Role)s_rand.Next(0,Enum.GetValues(typeof(Role)).Length);
-            bool IsActive = true;
+            double Latitude= coordinates[i].Latitude;   
+            double Longitude= coordinates[i].Longitude;
             double MaximumDistance = s_rand.Next(5, 50);
-            DistanceType MyDistanceType = (DistanceType)s_rand.Next(0, Enum.GetValues(typeof(DistanceType)).Length);
-            s_dalVolunteer!.Create(new Volunteer(id,name, email, phone, MyRole, IsActive, MyDistanceType, MaximumDistance, password, Latitude, Longitude));
+            s_dalVolunteer!.Create(new Volunteer(id,name, email, phone, Role.Volunteer, true, DistanceType.AerialDistance, MaximumDistance, password,addresses[i], Longitude, Latitude));
 
         }
 

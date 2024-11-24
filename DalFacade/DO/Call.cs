@@ -22,6 +22,7 @@ public record Call
    DateTime TimeOfOpen,
    DateTime MaxTimeToFinish
 );
+public call() : this{ }
 
 
 

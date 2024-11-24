@@ -8,7 +8,7 @@ internal static class Config
     private static int nextCallId = startCallId;
     internal static int NextCallId { get => nextCallId++; }
 
-    internal const int startAssignmentId = 1000;
+    internal const int startAssignmentId = 2000;
     private static int nextAssignmentId = startAssignmentId;
     internal static int NextAssignmentId { get => nextAssignmentId++; }
     internal static DateTime Clock { get; set; } = DateTime.Now;
