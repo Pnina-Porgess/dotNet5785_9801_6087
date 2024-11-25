@@ -4,27 +4,37 @@ using DO;
 
 namespace DalTest;
 
-    internal class Program
-    {
-         private static IVolunteer? s_dalVolunteer = new VolunteerImplementation(); //stage 1
-        private static ICall? s_dalCall = new CallImplementation(); //stage 1
-        private static IAssignment? s_dalAssignment = new AssignmentImplementation(); //stage 1
-        private static IConfig? s_dalConfig = new ConfigImplementation(); //s
-      
-    }
-
-public enum MainMenu
+internal class Program
 {
-    ExitMainMenu,
-    AssignmentSubmenu,
-    VolunteerSubmenu,
-    CallSubmenu,
-    InitializeData,
-    DisplayAllData,
-    ConfigSubmenu,
-    ResetDatabase
-}
+    private static IVolunteer? s_dalVolunteer = new VolunteerImplementation(); //stage 1
+    private static ICall? s_dalCall = new CallImplementation(); //stage 1
+    private static IAssignment? s_dalAssignment = new AssignmentImplementation(); //stage 1
+    private static IConfig? s_dalConfig = new ConfigImplementation();
+    public enum MainMenu
+    {
+        ExitMainMenu,
+        AssignmentSubmenu,
+        VolunteerSubmenu,
+        CallSubmenu,
+        InitializeData,
+        DisplayAllData,
+        ConfigSubmenu,
+        ResetDatabase
+    }
+    public enum SubMenu
+    {
+        Exit,
+        Create,
+        Read,
+        ReadAll,
+        UpDate,
+        Delete,
+        DeleteAll
+    }
+    private static void Create(string choice)
+    {
 
+    }
 
 static void main(string[] args)
 {   
@@ -42,27 +52,37 @@ static void main(string[] args)
         case MainMenu.ExitMainMenu:
       //      break;
 
-        case MainMenu.AssignmentSubmenu:
-        case MainMenu.VolunteerSubmenu:
-        case MainMenu.CallSubmenu:
+                break;
+
+            case MainMenu.AssignmentSubmenu:
+
+                break;
+
+            case MainMenu.VolunteerSubmenu:
+
+                break;
+
+            case MainMenu.CallSubmenu:
 
             break;
         case MainMenu.InitializeData:
             Console.WriteLine("יציאה מהתפריט הראשי...");
 
-            break;
-        case MainMenu.DisplayAllData:
+                break;
+            case MainMenu.DisplayAllData:
 
 
-            break;
-        case MainMenu.ConfigSubmenu:
+                break;
+            case MainMenu.ConfigSubmenu:
 
 
             break;
         case MainMenu.ResetDatabase:
  
 
-            break;
+                break;
+        }
     }
 }
+
 

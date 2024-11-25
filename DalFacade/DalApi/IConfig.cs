@@ -2,6 +2,8 @@
 public interface IConfig
 {
     DateTime Clock { get; set; }
-    public TimeSpan RiskRange { get; set; }
+
+    TimeSpan GetRiskRange();
+    void SetRiskRange(TimeSpan value);
     void Reset();
 }

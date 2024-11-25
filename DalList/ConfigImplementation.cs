@@ -9,13 +9,21 @@ public class ConfigImplementation : IConfig
         get => Config.Clock;
         set => Config.Clock = value;
     }
-    public TimeSpan RiskRange
+
+    public TimeSpan GetRiskRange()
     {
-        get => Config.RiskRange;
-        set => Config.RiskRange = value;
+        return Config.RiskRange;
     }
+
+    public void SetRiskRange(TimeSpan value)
+    {
+        Config.RiskRange = value;
+    }
+
     public void Reset()
     {
         Config.Reset();
     }
+ 
+
 }
