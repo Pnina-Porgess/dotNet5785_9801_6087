@@ -200,8 +200,8 @@ public static class Initialization
             DateTime maxTime = (DateTime)callsList[i].MaxTimeToFinish;
             TimeSpan diff = maxTime - minTime - TimeSpan.FromHours(2);
             DateTime randomTime = minTime.AddMinutes(s_rand.Next((int)diff.TotalMinutes));
-            s_dalAssignment!.Create(new Assignment(0,callsList[i].Id,volunteersList[s_rand.Next(callsList.Count)].Id,(TypeOfEndTime) 
-            s_rand.Next(Enum.GetValues(typeof(TypeOfEndTime)).Length - 1), randomTime.AddHours(2),randomTime));
+            s_dalAssignment!.Create(new Assignment(0, callsList[i].Id, volunteersList[s_rand.Next(callsList.Count)].Id, (TypeOfEndTime)
+            s_rand.Next(Enum.GetValues(typeof(TypeOfEndTime)).Length - 1), randomTime.AddHours(2), randomTime));
         }
 
     }
