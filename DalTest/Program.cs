@@ -32,6 +32,19 @@ internal class Program
         Delete,
         DeleteAll
     }
+    private enum ConfigSubmenu
+    {
+        Exit,
+        AdvanceClockByMinute,
+        AdvanceClockByHour,
+        AdvanceClockByDay,
+        AdvanceClockByMonth,
+        AdvanceClockByYear,
+        DisplayClock,
+        ChangeClockOrRiskRange,
+        DisplayConfigVar,
+        Reset
+    }
     private static Volunteer CreateVolunteer(int id)
     {
         Console.Write("Enter your name");
@@ -90,25 +103,160 @@ internal class Program
         DateTime EndTime = DateTime.Parse(Console.ReadLine()!);
         return new Assignment(id, CallId, volunteerId, typeOfEndTime, EndTime);
     }
-        private static void Create(string choice)
-    private enum ConfigSubmenu
-    {
-        Exit,
-        AdvanceClockByMinute,
-        AdvanceClockByHour,
-        AdvanceClockByDay,
-        AdvanceClockByMonth,
-        AdvanceClockByYear,
-        DisplayClock,
-        ChangeClockOrRiskRange,
-        DisplayConfigVar,
-        Reset
-    }
+ 
     private static void Create(string choice)
     {
+        Console.WriteLine("Enter your details");
+        Console.Write("Enter ID: ");
+        int yourId = int.Parse(Console.ReadLine()!);
+        switch (choice)
+        {
+            case "VolunteerSubmenu":
+                Volunteer Vol = CreateVolunteer(yourId);
+                s_dalVolunteer.Create(Vol);
+                break;
+            case "CallSubmenu":
+                Call Call = CreateCall(yourId);
+                s_dalCall.Create(Call);
+                break;
+            case "AssignmentSubmenu":
+                Assignment Ass = CreateAssignment(yourId);
+                s_dalAssignment.Create(Ass);
+                break;
 
+        }
     }
-    private static void ConfigSubmenuu() {
+                private static void Update(string choice)
+                {
+                    Console.WriteLine("Enter your details");
+                    Console.Write("Enter ID: ");
+                    int yourId = int.Parse(Console.ReadLine()!);
+                    switch (choice)
+                    {
+                        case "VolunteerSubmenu":
+                            Volunteer Vol = CreateVolunteer(yourId);
+                            s_dalVolunteer.Update(Vol);
+                            break;
+                        case "CallSubmenu":
+                            Call Call = CreateCall(yourId);
+                            s_dalCall.Update(Call);
+                            break;
+                        case "AssignmentSubmenu":
+                            Assignment Ass = CreateAssignment(yourId);
+                            s_dalAssignment.Update(Ass);
+                            break;
+                    }
+                }
+                private static void Read(string choice)
+                {
+                    Console.WriteLine("Enter ID: ");
+                    int yourId = int.Parse(Console.ReadLine()!);
+                    switch (choice)
+                    {
+                        case "VolunteerSubmenu":
+                            s_dalVolunteer.Read(yourId);
+                            break;
+                        case "CallSubmenu":
+                            s_dalCall.Delete(yourId);
+                            break;
+                        case "AssignmentSubmenu":
+                            s_dalAssignment.Delete(yourId);
+                            break;
+                    }
+                }
+                private static void ReadAll(string choice)
+                {
+
+                    switch (choice)
+                    {
+                        case "VolunteerSubmenu":
+                            Console.Write(s_dalVolunteer.ReadAll());
+                            break;
+                        case "CallSubmenu":
+                            Console.Write(s_dalCall.ReadAll());
+                            break;
+                        case "AssignmentSubmenu":
+                            Console.Write(s_dalAssignment.ReadAll());
+                            break;
+                    }
+                }
+                private static void Delete(string choice)
+                {
+                    Console.WriteLine("Enter ID: ");
+                    int yourId = int.Parse(Console.ReadLine()!);
+                    switch (choice)
+                    {
+                        case "VolunteerSubmenu":
+                            s_dalVolunteer.Delete(yourId);
+                            break;
+                        case "CallSubmenu":
+                            s_dalCall.Delete(yourId);
+                            break;
+                        case "AssignmentSubmenu":
+                            s_dalAssignment.Delete(yourId);
+                            break;
+                    }
+                }
+
+                private static void DeleteAll(string choice)
+                {
+                    switch (choice)
+                    {
+                        case "VolunteerSubmenu":
+                            s_dalVolunteer.DeleteAll();
+                            break;
+                        case "CallSubmenu":
+                            s_dalCall.DeleteAll();
+                            break;
+                        case "AssignmentSubmenu":
+                            s_dalAssignment.DeleteAll();
+                            break;
+                    }
+                }
+                private static void EntityMenu(string choice)
+                {
+                    Console.WriteLine("Enter a number");
+                    foreach (SubMenu option in Enum.GetValues(typeof(SubMenu)))
+                    {
+                        Console.WriteLine($"{(int)option}. {option}");
+                    }
+                    if (!Enum.TryParse(Console.ReadLine(), out SubMenu subChoice)) throw new FormatException("Invalid choice");
+                    while (subChoice is not SubMenu.Exit)
+                    {
+                        switch (subChoice)
+                        {
+                            case SubMenu.Create:
+                                Create(choice);
+                                break;
+                            case SubMenu.Read:
+                                Console.WriteLine("Enter Your ID");
+
+                                Read(choice);
+                                break;
+                            case SubMenu.ReadAll:
+                                ReadAll(choice);
+                                break;
+                            case SubMenu.Delete:
+                                Delete(choice);
+                                break;
+                            case SubMenu.DeleteAll:
+                                DeleteAll(choice);
+                                break;
+                            case SubMenu.UpDate:
+                                Update(choice);
+                                break;
+                            case SubMenu.Exit:
+                                return;
+                            default:
+                                Console.WriteLine("Your choise is not valid, please enter agiam");
+                                break;
+                        }
+                        Console.WriteLine("Enter a number");
+                        Enum.TryParse(Console.ReadLine(), out subChoice);
+                    }
+                }
+    private static void ConfigSubmenuu()
+    {
 
         Console.WriteLine("Config Menu:");
         foreach (MainMenu option in Enum.GetValues(typeof(ConfigSubmenu)))
@@ -118,8 +266,9 @@ internal class Program
         Console.Write("Select an option: ");
         if (!Enum.TryParse(Console.ReadLine(), out ConfigSubmenu userInput)) throw new FormatException("Invalid choice");
         {
-            while (userInput is not ConfigSubmenu.Exit){ 
-            switch (userInput)
+            while (userInput is not ConfigSubmenu.Exit)
+            {
+                switch (userInput)
                 {
                     case ConfigSubmenu.AdvanceClockByMinute:
 
@@ -152,240 +301,71 @@ internal class Program
                             Console.WriteLine($"RiskRange update to: {s_dalConfig.GetRiskRange()}");
                         }
                         break;
-                        break;
+
                     case ConfigSubmenu.Reset:
                         s_dalConfig.Reset();
                         break;
-        Console.WriteLine("Enter your details");
-        Console.Write("Enter ID: ");
-        int yourId = int.Parse(Console.ReadLine()!);
-        switch (choice)
-        {
-            case "VolunteerSubmenu":
-                Volunteer Vol = CreateVolunteer(yourId);
-                s_dalVolunteer.Create(Vol);
-                break;
-            case "CallSubmenu":
-                Call Call = CreateCall(yourId);
-                s_dalCall.Create(Call);
-                break;
-            case "AssignmentSubmenu":
-                Assignment Ass = CreateAssignment(yourId);
-                s_dalAssignment.Create(Ass);
-                break;
-        }
-    }
 
-    private static void Update(string choice)
-    {
-        Console.WriteLine("Enter your details");
-        Console.Write("Enter ID: ");
-        int yourId = int.Parse(Console.ReadLine()!);
-        switch (choice)
-        {
-            case "VolunteerSubmenu":
-                Volunteer Vol = CreateVolunteer(yourId);
-                s_dalVolunteer.Update(Vol);
-                break;
-            case "CallSubmenu":
-                Call Call = CreateCall(yourId);
-                s_dalCall.Update(Call);
-                break;
-            case "AssignmentSubmenu":
-                Assignment Ass = CreateAssignment(yourId);
-                s_dalAssignment.Update(Ass);
-                break;
-        }
-    }
+                        Console.WriteLine("Enter your details");
+                        Console.Write("Enter ID: ");
+                        int yourId = int.Parse(Console.ReadLine()!);
+                }
 
-    private static void Read(string choice)
-    {
-        Console.WriteLine("Enter ID: ");
-        int yourId = int.Parse(Console.ReadLine()!);
-        switch (choice)
-        {
-            case "VolunteerSubmenu":
-                s_dalVolunteer.Read(yourId);
-                break;
-            case "CallSubmenu":
-                s_dalCall.Delete(yourId);
-                break;
-            case "AssignmentSubmenu":
-                s_dalAssignment.Delete(yourId);
-                break;
-        }
-    }
-    private static void ReadAll(string choice)
-    {
-    
-        switch (choice)
-        {
-            case "VolunteerSubmenu":
-              Console.Write( s_dalVolunteer.ReadAll());
-                break;
-            case "CallSubmenu":
-                Console.Write(s_dalCall.ReadAll());
-                break;
-            case "AssignmentSubmenu":
-                Console.Write(s_dalAssignment.ReadAll());
-                break;
-        }
-    }
-    private static void Delete(string choice)
-    {
-        Console.WriteLine("Enter ID: ");
-        int yourId = int.Parse(Console.ReadLine()!);
-        switch (choice)
-        {
-            case "VolunteerSubmenu":
-                s_dalVolunteer.Delete(yourId);
-                break;
-            case "CallSubmenu":
-                s_dalCall.Delete(yourId);
-                break;
-            case "AssignmentSubmenu":
-                s_dalAssignment.Delete(yourId);
-                break;
-        }
-    }
-
-    private static void DeleteAll(string choice)
-    {
-        switch (choice)
-        {
-            case "VolunteerSubmenu":
-                s_dalVolunteer.DeleteAll();
-                break;
-            case "CallSubmenu":
-                s_dalCall.DeleteAll();
-                break;
-            case "AssignmentSubmenu":
-                s_dalAssignment.DeleteAll();
-                break;
-        }
-    }
-    private static void EntityMenu(string choice)
-    {
-        Console.WriteLine("Enter a number");
-        foreach (SubMenu option in Enum.GetValues(typeof(SubMenu)))
-        {
-            Console.WriteLine($"{(int)option}. {option}");
-        }
-        if (!Enum.TryParse(Console.ReadLine(), out SubMenu subChoice)) throw new FormatException("Invalid choice");
-        while (subChoice is not SubMenu.Exit)
-        {
-            switch (subChoice)
-            {
-                case SubMenu.Create:
-                    Create(choice);
-                    break;
-                case SubMenu.Read:
-                    Console.WriteLine("Enter Your ID");
-
-                    Read(choice);
-                    break;
-                case SubMenu.ReadAll:
-                    ReadAll(choice);
-                    break;
-                case SubMenu.Delete:
-                    Delete(choice);
-                    break;
-                case SubMenu.DeleteAll:
-                    DeleteAll(choice);
-                    break;
-                case SubMenu.UpDate:
-                    UpDate(choice);
-                    break;
-                case SubMenu.Exit:
-                    return;
-                default:
-                    Console.WriteLine("Your choise is not valid, please enter agiam");
-                    break;
             }
-            Console.WriteLine("Enter a number");
-            Enum.TryParse(Console.ReadLine(), out subChoice);
         }
     }
     static void main(string[] args)
-{   
-    Console.WriteLine("Main Menu:");
-    foreach (MainMenu option in Enum.GetValues(typeof(MainMenu)))
-    {
-        Console.WriteLine($"{(int)option}. {option}");
-    }
-    Console.Write("Select an option: ");
-    //int userInput;
-    if (!Enum.TryParse(Console.ReadLine(), out MainMenu userInput)) throw new FormatException("Invalid choice");
-        while (userInput is not MainMenu.ExitMainMenu)
-        switch (userInput)
-    {
-            case MainMenu.AssignmentSubmenu:
-            case MainMenu.VolunteerSubmenu:
-            case MainMenu.CallSubmenu:
-              
-            break;
-            case MainMenu.InitializeData:
-          
-                break;
-            case MainMenu.DisplayAllData:
-                break;
-            case MainMenu.ConfigSubmenu:
-            break;
-        case MainMenu.ResetDatabase:
- 
-break;
-        }
-    }
-    {
-        try
-        {
-            Console.WriteLine("Main Menu:");
-            foreach (MainMenu option in Enum.GetValues(typeof(MainMenu)))
-            {
-                Console.WriteLine($"{(int)option}. {option}");
-            }
-            Console.Write("Select an option: ");
-            //int userInput;
-            if (!Enum.TryParse(Console.ReadLine(), out MainMenu userInput)) throw new FormatException("Invalid choice");
-            while (userInput is not MainMenu.ExitMainMenu)
-                switch (userInput)
                 {
-                    case MainMenu.AssignmentSubmenu:
-                    case MainMenu.VolunteerSubmenu:
-                    case MainMenu.CallSubmenu:
-                        string sChoice = userInput.ToString();
-                        EntityMenu(sChoice);
-                        break;
-                    case MainMenu.InitializeData:
-                        Initialization.Do(s_dalVolunteer, s_dalCall, s_dalAssignment, s_dalConfig);
-                        break;
-                    case MainMenu.DisplayAllData:
+                    try
+                    {
+                        Console.WriteLine("Main Menu:");
+                        foreach (MainMenu option in Enum.GetValues(typeof(MainMenu)))
                         {
-                            Console.WriteLine(s_dalVolunteer.ReadAll());
-                            Console.WriteLine(s_dalCall.ReadAll());
-                            Console.WriteLine(s_dalAssignment.ReadAll());
+                            Console.WriteLine($"{(int)option}. {option}");
                         }
-                        break;
-                    case MainMenu.ConfigSubmenu:
-                       
-                            ConfigSubmenuu();
-                       
-                        break;
-                    case MainMenu.ResetDatabase:
-                       
-                            s_dalConfig.Reset(); //stage 1
-                            s_dalVolunteer.DeleteAll(); //stage 1
-                            s_dalCall.DeleteAll(); //stage 1
-                            s_dalAssignment.DeleteAll(); //stage 1
-                 
-                        break;
+                        Console.Write("Select an option: ");
+                        //int userInput;
+                        if (!Enum.TryParse(Console.ReadLine(), out MainMenu userInput)) throw new FormatException("Invalid choice");
+                        while (userInput is not MainMenu.ExitMainMenu)
+                            switch (userInput)
+                            {
+                                case MainMenu.AssignmentSubmenu:
+                                case MainMenu.VolunteerSubmenu:
+                                case MainMenu.CallSubmenu:
+                                    string sChoice = userInput.ToString();
+                                    EntityMenu(sChoice);
+                                    break;
+                                case MainMenu.InitializeData:
+                                    Initialization.Do(s_dalVolunteer, s_dalCall, s_dalAssignment, s_dalConfig);
+                                    break;
+                                case MainMenu.DisplayAllData:
+                                    {
+                                        Console.WriteLine(s_dalVolunteer.ReadAll());
+                                        Console.WriteLine(s_dalCall.ReadAll());
+                                        Console.WriteLine(s_dalAssignment.ReadAll());
+                                    }
+                                    break;
+                                case MainMenu.ConfigSubmenu:
+
+                                    ConfigSubmenuu();
+
+                                    break;
+                                case MainMenu.ResetDatabase:
+
+                                    s_dalConfig.Reset(); //stage 1
+                                    s_dalVolunteer.DeleteAll(); //stage 1
+                                    s_dalCall.DeleteAll(); //stage 1
+                                    s_dalAssignment.DeleteAll(); //stage 1
+
+                                    break;
+                            }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
                 }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
-        }
-    }
-}
+  }
+
 
 
