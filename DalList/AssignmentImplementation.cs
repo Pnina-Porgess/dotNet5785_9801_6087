@@ -9,7 +9,7 @@ public class AssignmentImplementation : IAssignment
 {
     public void Create(Assignment item)
     {
-        int id = Config.NextCallId;
+        int id = Config.NextAssignmentId;
         Assignment copy = item with { Id = id };
         DataSource.Assignments.Add(copy);
        // return copy.Id;

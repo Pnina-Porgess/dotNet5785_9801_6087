@@ -40,6 +40,6 @@ public class VolunteerImplementation : IVolunteer
         if (volunteer == null)
             throw new Exception($"Volunteer with ID={item.Id} not exists");
         DataSource.Volunteers.Remove(volunteer);
-        DataSource.Volunteers.Add(volunteer);
+        DataSource.Volunteers.Add(item);
     }
 }
