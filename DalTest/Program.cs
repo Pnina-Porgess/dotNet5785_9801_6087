@@ -1,77 +1,75 @@
 ﻿using Dal;
 using DalApi;
 using DO;
-using Microsoft.VisualBasic.FileIO;
 
-namespace DalTest
-{
+namespace DalTest;
+
     internal class Program
     {
         private static IVolunteer? s_dalVolunteer = new VolunteerImplementation(); //stage 1
         private static ICall? s_dalCall = new CallImplementation(); //stage 1
         private static IAssignment? s_dalAssignment = new AssignmentImplementation(); //stage 1
-        private static IConfig? s_dalConfig = new ConfigImplementation();
-
-
+        private static IConfig? s_dalConfig = new ConfigImplementation(); //s
+      
     }
-    public enum SubMenu
+
+public enum MainMenu
+{
+    ExitMainMenu,
+    AssignmentSubmenu,
+    VolunteerSubmenu,
+    CallSubmenu,
+    InitializeData,
+    DisplayAllData,
+    ConfigSubmenu,
+    ResetDatabase
+}
+
+
+static void main(string[] args)
+{
+    Console.WriteLine("Main Menu:");
+    foreach (MainMenu option in Enum.GetValues(typeof(MainMenu)))
     {
-        Exit,
-        Create,
-        Read,
-        ReadAll,
-        UpDate,
-        Delete,
-        DeleteAll
+        Console.WriteLine($"{(int)option}. {option}");
     }
-    private static void EntityMenu(string choice)
+    Console.Write("Select an option: ");
+    //int userInput;
+    if (!Enum.TryParse(Console.ReadLine(), out MainMenu userInput)) throw new FormatException("Invalid choice");
+    switch (userInput)
     {
-        Console.WriteLine("Enter a number");
-        foreach (SubMenu option in Enum.GetValues(typeof(SubMenu)))
-        {
-            Console.WriteLine($"{(int)option}. {option}");
-        }
-        if(!Enum.TryParse(Console.ReadLine(), out SubMenu subChoice)) throw new FormatException("BirthDate is invalid!"); 
-        while (subChoice is not SubMenu.Exit)
-        {
-            switch (subChoice)
-            {
-                case SubMenu.Create:
-                    Create(choice);
-                    break;
-                case SubMenu.Read:
-                    Console.WriteLine("Enter Your ID");
-                    int YourId;
-                    if (!Enum.TryParse(Console.ReadLine(), out  YourId)) throw new FormatException("Id is invalid!");
-                    Read(choice, yourId);
-                    break;
-                case SubMenu.ReadAll:
-                    ReadAll(choice);
-                    break;
-                case SubMenu.Delete:
-                    Delete(choice);
-                    break;
-                case SubMenu.DeleteAll:
-                    DeleteAll(choice);
-                    break;
-                case SubMenu.UpDate:
-                    UpDate(choice);
-                    break;
-                case SubMenu.Exit:
-                    return;
-                default:
-                    Console.WriteLine("Your choise is not valid, please enter agiam");
-                    break;
-            }
-            Console.WriteLine("Enter a number");
-            Enum.TryParse(Console.ReadLine(), out subChoice);
+        case MainMenu.ExitMainMenu:
 
-        }
-         }
+            break;
 
-        
+        case MainMenu.AssignmentSubmenu:
 
+            break;
+
+        case MainMenu.VolunteerSubmenu:
+
+            break;
+
+        case MainMenu.CallSubmenu:
+
+
+            break;
+        case MainMenu.InitializeData:
+            Console.WriteLine("יציאה מהתפריט הראשי...");
+
+            break;
+        case MainMenu.DisplayAllData:
+
+
+            break;
+        case MainMenu.ConfigSubmenu:
+
+
+            break;
+        case MainMenu.ResetDatabase:
+            Console.WriteLine("יציאה מהתפריט הראשי...");
+
+            break;
     }
-
-    
+}
 
