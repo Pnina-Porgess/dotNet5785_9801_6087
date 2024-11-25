@@ -7,11 +7,9 @@ public class CallImplementation : ICall
 {
     public void Create(Call item)
     {
-        //for entities with auto id
         int id = Config.NextCallId;
         Call copy = item with { Id = id };
         DataSource.Calls.Add(copy);
-        //return copy.Id;
     }
 
     public void Delete(int id)
