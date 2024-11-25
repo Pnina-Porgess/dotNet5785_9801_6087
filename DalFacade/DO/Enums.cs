@@ -16,9 +16,8 @@ public enum TypeOfReading
   sari,
   pnina,
   alufot
-
-
 }
+
 public enum TypeOfEndTime
 {
     treated,
