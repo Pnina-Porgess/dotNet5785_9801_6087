@@ -37,7 +37,7 @@ static void main(string[] args)
     //int userInput;
     if (!Enum.TryParse(Console.ReadLine(), out MainMenu userInput)) throw new FormatException("Invalid choice");
         while (userInput is not MainMenu.ExitMainMenu)
-            switch (userInput)
+        switch (userInput)
     {
         case MainMenu.ExitMainMenu:
       //      break;
