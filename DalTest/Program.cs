@@ -27,7 +27,7 @@ public enum MainMenu
 
 
 static void main(string[] args)
-{
+{   
     Console.WriteLine("Main Menu:");
     foreach (MainMenu option in Enum.GetValues(typeof(MainMenu)))
     {
@@ -36,22 +36,15 @@ static void main(string[] args)
     Console.Write("Select an option: ");
     //int userInput;
     if (!Enum.TryParse(Console.ReadLine(), out MainMenu userInput)) throw new FormatException("Invalid choice");
-    switch (userInput)
+        while (userInput is not MainMenu.ExitMainMenu)
+            switch (userInput)
     {
         case MainMenu.ExitMainMenu:
-
-            break;
+      //      break;
 
         case MainMenu.AssignmentSubmenu:
-
-            break;
-
         case MainMenu.VolunteerSubmenu:
-
-            break;
-
         case MainMenu.CallSubmenu:
-
 
             break;
         case MainMenu.InitializeData:
@@ -67,7 +60,7 @@ static void main(string[] args)
 
             break;
         case MainMenu.ResetDatabase:
-            Console.WriteLine("יציאה מהתפריט הראשי...");
+ 
 
             break;
     }
