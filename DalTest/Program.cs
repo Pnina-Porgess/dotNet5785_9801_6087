@@ -321,119 +321,7 @@ namespace DalTest
             Enum.TryParse(Console.ReadLine(), out subChoice);
         }
     }
-    private static void ConfigSubmenuu()
-    {
-        Console.WriteLine("Config Menu:");
-        foreach (ConfigSubmenu option in Enum.GetValues(typeof(ConfigSubmenu)))
-        {
-            Console.WriteLine($"{(int)option}. {option}");
-        }
-        Console.Write("Select an option: ");
-        if (!Enum.TryParse(Console.ReadLine(), out ConfigSubmenu userInput)) throw new FormatException("Invalid choice");
-        {
-            while (userInput is not ConfigSubmenu.Exit)
-            {
-                switch (userInput)
-                {
-                    case ConfigSubmenu.AdvanceClockByMinute:
-                        s_dalConfig.Clock = s_dalConfig.Clock.AddMinutes(1);
-                        break;
-                    case ConfigSubmenu.AdvanceClockByHour:
-                        s_dalConfig.Clock = s_dalConfig.Clock.AddHours(1);
-                        break;
-                    case ConfigSubmenu.AdvanceClockByDay:
-                        s_dalConfig.Clock = s_dalConfig.Clock.AddDays(1);
-                        break;
-                    case ConfigSubmenu.AdvanceClockByMonth:
-                        s_dalConfig.Clock = s_dalConfig.Clock.AddMonths(1);
-                        break;
-                    case ConfigSubmenu.AdvanceClockByYear:
-                        s_dalConfig.Clock = s_dalConfig.Clock.AddYears(1);
-                        break;
-                    case ConfigSubmenu.DisplayClock:
-                        Console.WriteLine(s_dalConfig.Clock);
-                        break;
-                    case ConfigSubmenu.ChangeClockOrRiskRange:
-                        Console.WriteLine($"RiskRange : {s_dalConfig.GetRiskRange()}");
-                        break;
-                    case ConfigSubmenu.DisplayConfigVar:
-                        Console.Write("Enter a new value for RiskRange (in HH:MM:SS format):");
-                        string riskRangeInput = Console.ReadLine();
-                        if (!TimeSpan.TryParse(riskRangeInput, out TimeSpan newRiskRange)) throw new FormatException("Invalid choice");
-                        {
-        private static void DeleteAll(string choice)
-        {
-            try
-            {
-                switch (choice)
-                {
-                    case "VolunteerSubmenu":
-                        s_dalVolunteer.DeleteAll();
-                        break;
-                    case "CallSubmenu":
-                        s_dalCall.DeleteAll();
-                        break;
-                    case "AssignmentSubmenu":
-                        s_dalAssignment.DeleteAll();
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in DeleteAll function: {ex.Message}");
-            }
-        }
-
-        private static void EntityMenu(string choice)
-        {
-            try
-            {
-                Console.WriteLine("Enter a number");
-                foreach (SubMenu option in Enum.GetValues(typeof(SubMenu)))
-                {
-                    Console.WriteLine($"{(int)option}. {option}");
-                }
-                if (!Enum.TryParse(Console.ReadLine(), out SubMenu subChoice)) throw new FormatException("Invalid choice");
-
-                while (subChoice != 0)
-                {
-                    switch (subChoice)
-                    {
-                        case SubMenu.Create:
-                            Create(choice);
-                            break;
-                        case SubMenu.Read:
-                            Console.WriteLine("Enter Your ID");
-                            Read(choice);
-                            break;
-                        case SubMenu.ReadAll:
-                            ReadAll(choice);
-                            break;
-                        case SubMenu.Delete:
-                            Delete(choice);
-                            break;
-                        case SubMenu.DeleteAll:
-                            DeleteAll(choice);
-                            break;
-                        case SubMenu.UpDate:
-                            Update(choice);
-                            break;
-                        case SubMenu.Exit:
-                            return;
-                        default:
-                            Console.WriteLine("Your choice is not valid, please enter again");
-                            break;
-                    }
-                    Console.WriteLine("Enter a number");
-                    Enum.TryParse(Console.ReadLine(), out subChoice);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in EntityMenu function: {ex.Message}");
-            }
-        }
-
+    
         private static void ConfigSubmenuu()
         {
             try
@@ -477,20 +365,23 @@ namespace DalTest
                             if (!TimeSpan.TryParse(riskRangeInput, out TimeSpan newRiskRange)) throw new FormatException("Invalid format");
                             s_dalConfig.SetRiskRange(newRiskRange);
                             Console.WriteLine($"RiskRange update to: {s_dalConfig.GetRiskRange()}");
-                        }
-                        break;
+                           break;
 
                     case ConfigSubmenu.Reset:
                         s_dalConfig.Reset();
                         break;
                     case ConfigSubmenu.Exit:
                         return;
-                            Console.WriteLine($"RiskRange updated to: {s_dalConfig.GetRiskRange()}");
-                            break;
-                        case ConfigSubmenu.Reset:
-                            s_dalConfig.Reset();
-                            break;
                     }
+
+                    Console.WriteLine("Config Menu:");
+                    foreach (ConfigSubmenu option in Enum.GetValues(typeof(ConfigSubmenu)))
+                    {
+                        Console.WriteLine($"{(int)option}. {option}");
+                    }
+                    Console.Write("Select an option: ");
+                    if (!Enum.TryParse(Console.ReadLine(), out  userInput)) throw new FormatException("Invalid choice");
+
                 }
             }
             catch (Exception ex)
@@ -563,3 +454,4 @@ namespace DalTest
         }
     }
 }
+
