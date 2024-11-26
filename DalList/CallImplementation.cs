@@ -44,8 +44,5 @@ public class CallImplementation : ICall
         DataSource.Calls.Add(call);
     }
 
-    void ICall.Create(Call item)
-    {
-        throw new NotImplementedException();
-    }
+   
 }

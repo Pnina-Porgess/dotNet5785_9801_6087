@@ -1,5 +1,7 @@
 ﻿using DalApi;
 using DO;
+using System.Numerics;
+using System.Xml.Linq;
 
 namespace DalTest;
 
@@ -31,10 +33,23 @@ public static class Initialization
     "053-789-2134", "050-125-6789", "052-456-7890", "054-654-3210", "055-123-7894"
 };
         string[] addresses = {
-    "Jerusalem", "Tel Aviv", "Haifa", "Beer Sheva", "Ashdod",
-    "Netanya", "Rishon LeZion", "Petah Tikva", "Holon", "Bnei Brak",
-    "Rehovot", "Bat Yam", "Herzliya", "Hadera", "Eilat"
+    "Jerusalem, King George St.", // Jerusalem
+    "Tel Aviv, Rothschild Blvd.", // Tel Aviv
+    "Haifa, Carmel Beach", // Haifa
+    "Beer Sheva, Ben Gurion Blvd.", // Beer Sheva
+    "Ashdod, HaShalom St.", // Ashdod
+    "Netanya, Herzl St.", // Netanya
+    "Rishon LeZion, Neot Afeka St.", // Rishon LeZion
+    "Petah Tikva, HaSharon St.", // Petah Tikva
+    "Holon, Jabotinsky St.", // Holon
+    "Bnei Brak, Rabbi Akiva St.", // Bnei Brak
+    "Rehovot, Herzl St.", // Rehovot
+    "Bat Yam, Ben Gurion Blvd.", // Bat Yam
+    "Herzliya, Sokolov St.", // Herzliya
+    "Hadera, HaSharon Blvd.", // Hadera
+    "Eilat, HaTmarim St." // Eilat
 };
+
         string[] passwords = {
     "Sari45G92h","Pnina87Z56j", "Shira32X19b", "Chaya54L72k", "Yosi18M91q", "Beni39P65a",
     "Tamar75V21n", "Eli26W83f", "Moshe90R47z", "Chana63S29m", "Ari42D78c", "Chaim56H14p", "Shani81J67y",
@@ -42,7 +57,7 @@ public static class Initialization
 };
 
         // Array of coordinates for each city with latitude and longitude
-        (double Latitude, double Longitude)[] coordinates = {
+    (double Latitude, double Longitude)[] coordinates = {
     (31.7683, 35.2137), // Jerusalem
     (32.0853, 34.7818), // Tel Aviv
     (32.7940, 34.9896), // Haifa
@@ -60,7 +75,8 @@ public static class Initialization
     (29.5581, 34.9482)  // Eilat
 };
 
-        for (int i = 0; i < names.Length; i++)
+        s_dalVolunteer!.Create(new Volunteer(s_rand.Next(100000000, 999999999), "Shlomo", "Shlomo@gmail.com", "05321234565", Role.Manager, true, DistanceType.AerialDistance, s_rand.Next(5, 50), "Shlomo23A56", "Tel Aviv", 32.0853, 34.7818));
+        for (int i = 0; i < 15; i++)
 
         {
             int id;
@@ -145,7 +161,7 @@ public static class Initialization
     34.7443, 34.8248, 34.9065, 34.8878, 35.2854,
     34.9197, 34.8019, 34.8383, 35.3047, 35.7496,
     35.5833, 35.2940, 35.5683, 35.0944, 34.7383,
-    35.4500, 34.7872, 35.0247
+    35.4500, 34.7872, 35.0247,55,33,55,33
 };
 
         double[] latitudes = {
@@ -158,7 +174,7 @@ public static class Initialization
     32.0171, 32.0684, 32.1782, 32.0840, 32.6082,
     32.4340, 30.6100, 32.0853, 32.9170, 33.0622,
     32.8333, 31.7768, 33.2082, 33.0044, 31.8775,
-    31.8667, 32.0158, 32.4746
+    31.8667, 32.0158, 32.4746,12,45,11,22
 };
 
     string[] addresses = {
@@ -170,15 +186,15 @@ public static class Initialization
     "Kiryat Shmona","Modiin","Safed (Tzfat)","Metula","Dimona", "Yokneam",
     "Bat Yam","Ramat Gan","Kfar Saba","Petah Tikva","Afula","Hadera",
     "Mitzpe Ramon","Bnei Brak","Karmiel","Golan Heights","Sea of Galilee",
-    "Maale Adumim","Qiryat Shemona","Nahariya", "Yavne","Jericho Area","Holon","Harish"
+    "Maale Adumim","Qiryat Shemona","Nahariya", "Yavne","Jericho Area","Holon","Harish"," "," "
 };
 
 
-        for (int i = 0; i < 50; i++)
-        {
 
+        for (int i = 0; i <50 ; i++)
+        {
             TypeOfReading typeOfReading= (TypeOfReading)s_rand.Next(0,Enum.GetValues(typeof(TypeOfReading)).Length);
-            DateTime TimeOfOpen = new DateTime(s_dalConfig.Clock.Hour - 2,1,1); //stage 1
+            DateTime TimeOfOpen = new DateTime(s_dalConfig.Clock.Year ,1,1); 
             DateTime MaxTimeToFinish = TimeOfOpen.AddDays(s_rand.Next((s_dalConfig.Clock - TimeOfOpen).Days));
             double Longitude = longitudes[i];
             double Latitude = latitudes[i];
@@ -186,6 +202,7 @@ public static class Initialization
             string? Description="";
         s_dalCall!.Create(new Call(0,typeOfReading, Description, Adress, Longitude, Latitude, TimeOfOpen, MaxTimeToFinish));
         }
+
     }
 
 
@@ -193,36 +210,43 @@ public static class Initialization
     {
         List<Volunteer>? volunteersList = s_dalVolunteer.ReadAll();
         List<Call>? callsList = s_dalCall.ReadAll();
-        DateTime start = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 7, 0, 0);
+        
         for (int i = 0; i < 50; i++)
         {
             DateTime minTime = callsList[i].TimeOfOpen;
             DateTime maxTime = (DateTime)callsList[i].MaxTimeToFinish;
             TimeSpan diff = maxTime - minTime - TimeSpan.FromHours(2);
             DateTime randomTime = minTime.AddMinutes(s_rand.Next((int)diff.TotalMinutes));
-            s_dalAssignment!.Create(new Assignment(0, callsList[i].Id, volunteersList[s_rand.Next(callsList.Count)].Id, (TypeOfEndTime)
-            s_rand.Next(Enum.GetValues(typeof(TypeOfEndTime)).Length - 1), randomTime.AddHours(2), randomTime));
+            TypeOfEndTime typeOfEndTime;
+            if(i<5)
+            {
+                typeOfEndTime = TypeOfEndTime.CancellationHasExpired;
+            }
+            else
+            {
+                typeOfEndTime = (TypeOfEndTime)s_rand.Next(Enum.GetValues(typeof(TypeOfEndTime)).Length - 1);
+            }
+            s_dalAssignment!.Create(new Assignment( 0,callsList[s_rand.Next(callsList.Count-15)].Id, volunteersList[s_rand.Next(volunteersList.Count)].Id, typeOfEndTime
+            , randomTime.AddHours(2), randomTime));
         }
-
     }
     public static void Do(IVolunteer? dalVolunteer, ICall? dalCall, IAssignment? dalAssignment, IConfig? dalConfig) //stage 1
     {
-        s_dalVolunteer = s_dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!");
-        s_dalCall = s_dalCall ?? throw new NullReferenceException("DAL object can not be null!");
-        s_dalAssignment = s_dalAssignment ?? throw new NullReferenceException("DAL object can not be null!");
-        s_dalConfig = s_dalConfig ?? throw new NullReferenceException("DAL object can not be null!");//stage 1
+        s_dalVolunteer =dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!");
+        s_dalCall = dalCall ?? throw new NullReferenceException("DAL object can not be null!");
+        s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL object can not be null!");
+        s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!");//stage 1
         Console.WriteLine("Reset Configuration values and List values...");
         s_dalConfig.Reset(); //stage 1
         s_dalVolunteer.DeleteAll();
         s_dalCall.DeleteAll();
-        s_dalAssignment.DeleteAll();//stage 1                         //...
+        s_dalAssignment.DeleteAll();//stage 1                         
         Console.WriteLine("Initializing Volunteers list ...");
         Console.WriteLine("Initializing Calls list ...");
         Console.WriteLine("Initializing Assignments list ...");
         createVolunteers();
         createCalls();
         createAssignments();
-        //...
     }
 
 
