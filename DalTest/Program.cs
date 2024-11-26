@@ -79,7 +79,7 @@ namespace DalTest
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in CreateVolunteer: {ex.Message}");
-                throw;
+               
             }
         }
 
@@ -106,7 +106,7 @@ namespace DalTest
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in CreateCall: {ex.Message}");
-                throw;
+               
             }
         }
 
@@ -127,7 +127,7 @@ namespace DalTest
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in CreateAssignment: {ex.Message}");
-                throw;
+              
             }
         }
 
