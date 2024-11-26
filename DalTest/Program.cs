@@ -230,7 +230,6 @@ internal class Program
                     break;
                 case SubMenu.Read:
                     Console.WriteLine("Enter Your ID");
-
                     Read(choice);
                     break;
                 case SubMenu.ReadAll:
@@ -257,9 +256,8 @@ internal class Program
     }
     private static void ConfigSubmenuu()
     {
-
         Console.WriteLine("Config Menu:");
-        foreach (MainMenu option in Enum.GetValues(typeof(ConfigSubmenu)))
+        foreach (ConfigSubmenu option in Enum.GetValues(typeof(ConfigSubmenu)))
         {
             Console.WriteLine($"{(int)option}. {option}");
         }
@@ -271,7 +269,6 @@ internal class Program
                 switch (userInput)
                 {
                     case ConfigSubmenu.AdvanceClockByMinute:
-
                         s_dalConfig.Clock = s_dalConfig.Clock.AddMinutes(1);
                         break;
                     case ConfigSubmenu.AdvanceClockByHour:
@@ -293,7 +290,7 @@ internal class Program
                         Console.WriteLine($"RiskRange : {s_dalConfig.GetRiskRange()}");
                         break;
                     case ConfigSubmenu.DisplayConfigVar:
-                        Console.Write("הזן ערך חדש עבור RiskRange (בפורמט שעות:דקות:שניות): ");
+                        Console.Write("Enter a new value for RiskRange (in HH:MM:SS format):");
                         string riskRangeInput = Console.ReadLine();
                         if (!TimeSpan.TryParse(riskRangeInput, out TimeSpan newRiskRange)) throw new FormatException("Invalid choice");
                         {
@@ -305,16 +302,14 @@ internal class Program
                     case ConfigSubmenu.Reset:
                         s_dalConfig.Reset();
                         break;
-
-                        Console.WriteLine("Enter your details");
-                        Console.Write("Enter ID: ");
-                        int yourId = int.Parse(Console.ReadLine()!);
+                    case ConfigSubmenu.Exit:
+                        return;
                 }
 
             }
         }
     }
-    static void main(string[] args)
+    static void Main(string[] args)
     {
         try
         {
@@ -324,7 +319,6 @@ internal class Program
                 Console.WriteLine($"{(int)option}. {option}");
             }
             Console.Write("Select an option: ");
-            //int userInput;
             if (!Enum.TryParse(Console.ReadLine(), out MainMenu userInput)) throw new FormatException("Invalid choice");
             while (userInput is not MainMenu.ExitMainMenu)
                 switch (userInput)
@@ -346,19 +340,16 @@ internal class Program
                         }
                         break;
                     case MainMenu.ConfigSubmenu:
-
                         ConfigSubmenuu();
-
                         break;
                     case MainMenu.ResetDatabase:
-
                         s_dalConfig.Reset(); //stage 1
                         s_dalVolunteer.DeleteAll(); //stage 1
                         s_dalCall.DeleteAll(); //stage 1
                         s_dalAssignment.DeleteAll(); //stage 1
-
                         break;
                 }
+            Console.Write("Select an option: ");
         }
         catch (Exception ex)
         {
