@@ -43,7 +43,7 @@ namespace DalTest
             AdvanceClockByMonth,
             AdvanceClockByYear,
             DisplayClock,
-            ChangeRiskRange,
+            ChangeClockOrRiskRange,
             DisplayConfigVar,
             Reset
         }
@@ -265,11 +265,12 @@ namespace DalTest
     }
     private static void EntityMenu(string choice)
     {
-        Console.WriteLine("Enter a number");
         foreach (SubMenu option in Enum.GetValues(typeof(SubMenu)))
         {
             Console.WriteLine($"{(int)option}. {option}");
-        }
+              
+            }
+        Console.Write("Select an option: ");
         if (!Enum.TryParse(Console.ReadLine(), out SubMenu subChoice)) throw new FormatException("Invalid choice");
         while (subChoice is not SubMenu.Exit)
         {
@@ -300,8 +301,12 @@ namespace DalTest
                     Console.WriteLine("Your choise is not valid, please enter agiam");
                     break;
             }
-            Console.WriteLine("Enter a number");
-            Enum.TryParse(Console.ReadLine(), out subChoice);
+            foreach (SubMenu option in Enum.GetValues(typeof(SubMenu)))
+                {
+                    Console.WriteLine($"{(int)option}. {option}");
+                }
+            Console.Write("Select an option: ");
+            if (!Enum.TryParse(Console.ReadLine(), out  subChoice)) throw new FormatException("Invalid choice");
         }
     }
     
@@ -339,17 +344,38 @@ namespace DalTest
                         case ConfigSubmenu.DisplayClock:
                             Console.WriteLine(s_dalConfig!.Clock);
                             break;
+                        case ConfigSubmenu.ChangeClockOrRiskRange:
+                            Console.WriteLine("Enter property for change (Clock or Risk range): ");
+                            string prop = Console.ReadLine()!;
+                            if (prop == "clock")
+                            {
+                                Console.WriteLine("Enter a new value for clock (YYYY-MM-DD HH:MM):");
+                                string clockInput =Console.ReadLine();
+                                if (!DateTime.TryParse(clockInput, out DateTime updatClock)) throw new FormatException("Invalid format");
+                                s_dalConfig.Clock = updatClock;
+                                Console.WriteLine($"RiskRange update to: {s_dalConfig.Clock}");
+                                break;
+                            }
+                            else
+                            {
+                                Console.Write("Enter a new value for RiskRange (in format (HH:MM:SS): ");
+                                string riskRangeInput = Console.ReadLine()!;
+                                if (!TimeSpan.TryParse(riskRangeInput, out TimeSpan newRiskRange)) throw new FormatException("Invalid format");
+                                s_dalConfig!.SetRiskRange(newRiskRange);
+                                Console.WriteLine($"RiskRange update to: {s_dalConfig.GetRiskRange()}");
+                            }
+                                break;
+
                         case ConfigSubmenu.DisplayConfigVar:
-                            Console.WriteLine($"RiskRange: {s_dalConfig!.GetRiskRange()}");
+                            Console.WriteLine("Enter property for display (Clock or Risk range): ");
+                            string _prop = Console.ReadLine()!;
+                            if (_prop == "Clock")
+                                Console.WriteLine(s_dalConfig.Clock);
+                            else
+                                Console.WriteLine($"RiskRange: {s_dalConfig!.GetRiskRange()}");
                             break;
-                        case ConfigSubmenu.ChangeRiskRange:
-                            Console.Write("Enter a new value for RiskRange (in format HH:MM:SS): ");
-                            string riskRangeInput = Console.ReadLine()!;
-                            if (!TimeSpan.TryParse(riskRangeInput, out TimeSpan newRiskRange)) throw new FormatException("Invalid format");
-                            s_dalConfig!.SetRiskRange(newRiskRange);
-                            Console.WriteLine($"RiskRange update to: {s_dalConfig.GetRiskRange()}");
-                           break;
-                         case ConfigSubmenu.Reset:
+
+                        case ConfigSubmenu.Reset:
                             s_dalConfig!.Reset();
                             break;
                     case ConfigSubmenu.Exit:

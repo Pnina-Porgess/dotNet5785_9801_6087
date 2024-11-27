@@ -95,7 +95,7 @@ public static class Initialization
     34.7443, 34.8248, 34.9065, 34.8878, 35.2854,
     34.9197, 34.8019, 34.8383, 35.3047, 35.7496,
     35.5833, 35.2940, 35.5683, 35.0944, 34.7383,
-    35.4500, 34.7872, 35.0247,34.3233,35.4545
+    35.4500, 34.7872, 35.0247,34.3233,35.4545,32.0835,32.0722
 };
 
         double[] latitudes = {
@@ -108,7 +108,7 @@ public static class Initialization
     32.0171, 32.0684, 32.1782, 32.0840, 32.6082,
     32.4340, 30.6100, 32.0853, 32.9170, 33.0622,
     32.8333, 31.7768, 33.2082, 33.0044, 31.8775,
-    31.8667, 32.0158, 32.4746,31.2334,32.4554,
+    31.8667, 32.0158, 32.4746,31.2334,32.4554,34.8547,34.7934
 };
 
         string[] addresses = {
@@ -120,7 +120,7 @@ public static class Initialization
     "HaGalil, Metula", "HaTomer, Dimona", "HaGilboa, Yokneam", "Ben Gurion, Bat Yam", "Jabotinsky, Ramat Gan",  "Herzl, Kfar Saba",
     "Rothschild Blvd, Petah Tikva", "Shderot HaMeginim, Afula",  "HaBanim, Hadera","Eilat, Mitzpe Ramon","Rabbi Akiva, Bnei Brak","HaMeyasdim, Karmiel",
     "Givat Yoav, Golan Heights","Ginosar, Sea of Galilee","HaNegev, Maale Adumim", "HaTamar, Qiryat Shemona","Sderot HaGalil, Nahariya", "Hachalutzim, Yavne",
-    "Ein Esariya, Jericho Area","Sokolov, Holon","Harish Boulevard, Harish", "Bar Ilan, Bnei Brak","Eilat, Machtesh Rimon"
+    "Ein Esariya, Jericho Area","Sokolov, Holon","Harish Boulevard, Harish", "Bar Ilan, Bnei Brak","Eilat, Machtesh Rimon","Geha Highway","Ayalon Highway",
 };
 
 
