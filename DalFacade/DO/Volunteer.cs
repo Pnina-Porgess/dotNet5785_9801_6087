@@ -4,7 +4,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace DO;
 
 /// <summary>
-/// 
+/// Creates a new volunteer
 /// </summary>
 /// <param name="Id">Personal unique ID of the Volunteer (as in national id card)</param>
 /// <param name="Name">Private Name of the Volunteer</param>
@@ -12,8 +12,8 @@ namespace DO;
 /// <param name="Email">Email number of the Volunteer</param>
 /// <param name="Password">Password of the Volunteer</param>
 /// <param name="Adress">A complete and true address in the correct format of the volunteer.</param>
-/// <param name="Latitude"></param>
-/// <param name="Longitude"></param>
+///  <param name="Latitude">Geographic latitude of the volunteer (nullable)</param>
+///  <param name="Longitude">Geographic longitude of the volunteer (nullable)</param>
 /// <param name="Role">Manager or volunteer</param>
 /// <param name="IsActive">Is the volunteer active or inactive?</param>
 /// <param name="MaximumDistance">The maximum distance to receive a assigment.</param>
