@@ -32,19 +32,20 @@ public static class Initialization
     "050-987-1234", "054-112-3345", "053-785-9513", "052-312-6578", "055-654-9872",
     "053-789-2134", "050-125-6789", "052-456-7890", "054-654-3210", "055-123-7894"
 };
+        //I used GPT to create this array
         string[] addresses = {
     "Jerusalem, King George St.", "Tel Aviv, Rothschild Blvd.", "Haifa, Carmel Beach", "Beer Sheva, Ben Gurion Blvd.", 
     "Ashdod, HaShalom St.", "Netanya, Herzl St.", "Rishon LeZion, Neot Afeka St.", "Petah Tikva, HaSharon St.", "Holon, Jabotinsky St.", 
     "Bnei Brak, Rabbi Akiva St.", "Rehovot, Herzl St.", "Bat Yam, Ben Gurion Blvd.","Herzliya, Sokolov St.","Hadera, HaSharon Blvd.","Eilat, HaTmarim St." 
 };
-
+        //I used GPT to create this array
         string[] passwords = {
     "Sari45G92h","Pnina87Z56j", "Shira32X19b", "Chaya54L72k", "Yosi18M91q", "Beni39P65a",
     "Tamar75V21n", "Eli26W83f", "Moshe90R47z", "Chana63S29m", "Ari42D78c", "Chaim56H14p", "Shani81J67y",
    "Yonatan97K50x", "David34Q85v"
 };
-
-    (double Latitude, double Longitude)[] coordinates = {
+        //I used GPT to create this array
+        (double Latitude, double Longitude)[] coordinates = {
     (31.7683, 35.2137),(32.0853, 34.7818), (32.7940, 34.9896), (31.2518, 34.7913), (31.8044, 34.6553), 
     (32.3215, 34.8532), (31.9706, 34.7925), (32.0840, 34.8878), (32.0158, 34.7874),  (32.0809, 34.8333), 
     (31.8948, 34.8093), (32.0236, 34.7502), (32.1663, 34.8436), (32.4340, 34.9196),(29.5581, 34.9482) 
@@ -73,6 +74,7 @@ public static class Initialization
    
     private static void createCalls()
     {
+       // I used GPT to create this array
         string[] issues = {
     "Flat tire", "Engine failure", "Battery is dead", "Ran out of fuel", "Locked keys inside the car", "Brake system malfunction",
     "Overheated engine", "Warning light is on","Strange noise from the engine", "Headlights are not working", "Power steering failure","Transmission problem",
@@ -84,7 +86,7 @@ public static class Initialization
     "Trunk won’t open","Excessive smoke from exhaust","Battery terminals are corroded","Parking brake is stuck","Fuel gauge is not accurate",
     "Airbag warning light is on","Steering wheel is stiff","Horn is not working","Dashboard lights flickering"
      };
-  
+        //I used GPT to create this array
         double[] longitudes = {
     34.8697, 34.8951, 35.2105, 34.8048, 34.8708,
     34.9482, 35.4732, 34.7746, 34.9640, 34.7915,
@@ -97,7 +99,7 @@ public static class Initialization
     35.5833, 35.2940, 35.5683, 35.0944, 34.7383,
     35.4500, 34.7872, 35.0247,34.3233,35.4545,32.0835,32.0722
 };
-
+        //I used GPT to create this array
         double[] latitudes = {
     32.3488, 31.9575, 31.7781, 32.1250, 32.0004,
     29.5580, 31.5590, 32.0628, 32.7980, 31.2525,
@@ -110,7 +112,7 @@ public static class Initialization
     32.8333, 31.7768, 33.2082, 33.0044, 31.8775,
     31.8667, 32.0158, 32.4746,31.2334,32.4554,34.8547,34.7934
 };
-
+        //I used GPT to create this array
         string[] addresses = {
     "Highway 2, Central Israel","Highway 6, Central Israel", "Begin Boulevard, Jerusalem","Glilot Interchange, Tel Aviv",
     "HaTmarim, Eilat", "Ein Gedi, Dead Sea","Rothschild Blvd, Tel Aviv","Carmel Beach, Haifa","Soroka Hospital, Beer Sheva",

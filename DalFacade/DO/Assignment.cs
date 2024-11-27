@@ -1,6 +1,6 @@
 ﻿namespace DO;
 /// <summary>
-/// 
+/// It is an assignment-type entity that matches between a call and a volunteer
 /// </summary>
 /// <param name="Id"></param>
 /// <param name="CallId"></param>
