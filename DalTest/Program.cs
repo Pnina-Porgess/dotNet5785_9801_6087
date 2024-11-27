@@ -60,55 +60,53 @@ namespace DalTest
                 Console.Write("Enter your password");
                 string password = Console.ReadLine()!;
                 Console.Write("Enter (0 for Manager, 1 for Volunteer, etc.): ");
-                Role role = (Role)int.Parse(Console.ReadLine()!);
+                if (!Enum.TryParse(Console.ReadLine(), out Role role)) throw new FormatException("Invalid choice");
                 Console.Write("Is Active? (true/false): ");
                 bool active = bool.Parse(Console.ReadLine()!);
                 Console.Write("Enter your address");
                 string address = Console.ReadLine()!;
                 Console.Write("Enter your Maximum Distance");
-                double maximumDistance = double.Parse(Console.ReadLine()!);
+                if (!double.TryParse(Console.ReadLine(), out double maximumDistance)) throw new FormatException("Invalid choice");
                 Console.Write("Enter your Latitude");
-                double latitude = double.Parse(Console.ReadLine()!);
+                if (!double.TryParse(Console.ReadLine(), out double latitude)) throw new FormatException("Invalid choice");
                 Console.Write("Enter your Longitude");
-                double longitude = double.Parse(Console.ReadLine()!);
+                if (!double.TryParse(Console.ReadLine(), out double longitude)) throw new FormatException("Invalid choice");
                 Console.Write("Enter Distance Type (0 for Aerial Distance, 1 for Walking Distance, 2 for Driving Distance, etc.): ");
                 DistanceType distanceType = (DistanceType)int.Parse(Console.ReadLine()!);
                 return new Volunteer(id, name, email, phone, role, active, distanceType, maximumDistance, password, address, longitude, latitude);
-           
         }
 
         private static Call CreateCall(int id)
        
             {
                 Console.Write("Enter Call Type (0 for Type1, 1 for Type2, etc.): ");
-                TypeOfReading typeOfReading = (TypeOfReading)int.Parse(Console.ReadLine()!);
+                if (!Enum.TryParse(Console.ReadLine(), out TypeOfReading typeOfReading)) throw new FormatException("Invalid choice");
                 Console.Write("Enter Description of the problem");
                 string description = Console.ReadLine()!;
                 Console.Write("Enter your address");
                 string address = Console.ReadLine()!;
                 Console.Write("Enter your Latitude");
-                double latitude = double.Parse(Console.ReadLine()!);
+                if (!double.TryParse(Console.ReadLine(), out double latitude)) throw new FormatException("Invalid choice");
                 Console.Write("Enter your Longitude");
-                double longitude = double.Parse(Console.ReadLine()!);
+                if (!double.TryParse(Console.ReadLine(), out double longitude)) throw new FormatException("Invalid choice");
                 Console.Write("Enter Opening Time (YYYY-MM-DD HH:MM): ");
-                DateTime openingTime = DateTime.Parse(Console.ReadLine()!);
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime openingTime)) throw new FormatException("Invalid choice");
                 Console.Write("Enter Max Time Finish Calling (YYYY-MM-DD HH:MM): ");
-                DateTime maxClosing = DateTime.Parse(Console.ReadLine()!);
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime maxClosing)) throw new FormatException("Invalid choice");
                 return new Call(id, typeOfReading, description, address, longitude, latitude, openingTime, maxClosing);
             
         }
 
         private static Assignment CreateAssignment(int id)
         {
-            
                 Console.Write("Enter Call ID: ");
-                int callId = int.Parse(Console.ReadLine()!);
+                if (!int.TryParse(Console.ReadLine(), out int callId)) throw new FormatException("Invalid choice");
                 Console.Write("Enter Volunteer ID: ");
-                int volunteerId = int.Parse(Console.ReadLine()!);
+                if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new FormatException("Invalid choice");
                 Console.Write("Enter Type Of End Time: 0 for treated, 1 for Self Cancellation, 2 for CancelingAnAdministrator, 4 for CancellationHasExpired ");
-                TypeOfEndTime typeOfEndTime = (TypeOfEndTime)int.Parse(Console.ReadLine()!);
+                if (!Enum.TryParse(Console.ReadLine(), out TypeOfEndTime typeOfEndTime)) throw new FormatException("Invalid choice");
                 Console.Write("Enter Ending Time of Treatment (YYYY-MM-DD HH:MM): ");
-                DateTime endTime = DateTime.Parse(Console.ReadLine()!);
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime endTime)) throw new FormatException("Invalid choice");
                 return new Assignment(id, callId, volunteerId, typeOfEndTime, endTime);
         
           
@@ -120,7 +118,7 @@ namespace DalTest
             {
                 Console.WriteLine("Enter your details");
                 Console.Write("Enter ID: ");
-                int yourId = int.Parse(Console.ReadLine()!);
+                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new FormatException("Invalid choice");
                 switch (choice)
                 {
                     case "VolunteerSubmenu":
@@ -149,7 +147,7 @@ namespace DalTest
             {
                 Console.WriteLine("Enter your details");
                 Console.Write("Enter ID: ");
-                int yourId = int.Parse(Console.ReadLine()!);
+                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new FormatException("Invalid choice");
                 switch (choice)
                 {
                     case "VolunteerSubmenu":
@@ -177,7 +175,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter ID: ");
-                int yourId = int.Parse(Console.ReadLine()!);
+                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new FormatException("Invalid choice");
                 switch (choice)
                 {
                     case "VolunteerSubmenu":
@@ -228,8 +226,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter ID: ");
-                int yourId = int.Parse(Console.ReadLine()!);
-                switch (choice)
+                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new FormatException("Invalid choice"); switch (choice)
                 {
                     case "VolunteerSubmenu":
                         s_dalVolunteer!.Delete(yourId);
