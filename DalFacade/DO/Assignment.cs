@@ -1,14 +1,14 @@
 ﻿namespace DO;
 /// <summary>
-/// It is an assignment-type entity that matches between a call and a volunteer
+/// Assignment Entity represents a link between a call and a volunteer
 /// </summary>
-/// <param name="Id"></param>
-/// <param name="CallId"></param>
-/// <param name="VolunteerId"></param>
-/// <param name="EntryTime"></param>
-/// <param name="EndTime"></param>
-/// <param name="TypeOfEndTime"></param>
-
+/// <param name="Id">Unique identifier for the assignment entity</param>
+/// <param name="CallId">The ID of the call being handled</param>
+/// <param name="VolunteerId">The ID of the volunteer handling the call</param>
+/// <param name="StartDateTime">The time the call was assigned to the volunteer</param>
+/// <param name="EndDateTime">The time the volunteer finished handling the call (nullable)</param>
+/// <param name="CompletionType">Enum indicating how the call was completed (nullable)</param>
+/// 
 public record Assignment
 (
     int Id,
