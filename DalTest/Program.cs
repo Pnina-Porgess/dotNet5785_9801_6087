@@ -43,7 +43,7 @@ namespace DalTest
             AdvanceClockByMonth,
             AdvanceClockByYear,
             DisplayClock,
-            ChangeClockOrRiskRange,
+            ChangeRiskRange,
             DisplayConfigVar,
             Reset
         }
@@ -356,20 +356,19 @@ namespace DalTest
                         case ConfigSubmenu.DisplayClock:
                             Console.WriteLine(s_dalConfig.Clock);
                             break;
-                        case ConfigSubmenu.ChangeClockOrRiskRange:
+                        case ConfigSubmenu.DisplayConfigVar:
                             Console.WriteLine($"RiskRange: {s_dalConfig.GetRiskRange()}");
                             break;
-                        case ConfigSubmenu.DisplayConfigVar:
+                        case ConfigSubmenu.ChangeRiskRange:
                             Console.Write("Enter a new value for RiskRange (in format HH:MM:SS): ");
                             string riskRangeInput = Console.ReadLine();
                             if (!TimeSpan.TryParse(riskRangeInput, out TimeSpan newRiskRange)) throw new FormatException("Invalid format");
                             s_dalConfig.SetRiskRange(newRiskRange);
                             Console.WriteLine($"RiskRange update to: {s_dalConfig.GetRiskRange()}");
                            break;
-
-                    case ConfigSubmenu.Reset:
-                        s_dalConfig.Reset();
-                        break;
+                         case ConfigSubmenu.Reset:
+                            s_dalConfig.Reset();
+                            break;
                     case ConfigSubmenu.Exit:
                         return;
                     }
