@@ -198,13 +198,13 @@ namespace DalTest
                 switch (choice)
                 {
                     case "VolunteerSubmenu":
-                        s_dalVolunteer.Read(yourId);
+                        Console.WriteLine(s_dalVolunteer.Read(yourId));
                         break;
                     case "CallSubmenu":
-                        s_dalCall.Delete(yourId);
+                        Console.WriteLine(s_dalCall.Read(yourId));
                         break;
                     case "AssignmentSubmenu":
-                        s_dalAssignment.Delete(yourId);
+                        Console.WriteLine(s_dalAssignment.Read(yourId));
                         break;
                 }
             }
