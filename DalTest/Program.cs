@@ -50,22 +50,21 @@ namespace DalTest
 
         private static Volunteer CreateVolunteer(int id)
         {
-            try
-            {
+           
                 Console.Write("Enter your name");
-                string name = Console.ReadLine();
+                string name = Console.ReadLine()!;
                 Console.Write("Enter your email");
-                string email = Console.ReadLine();
+                string email = Console.ReadLine()!;
                 Console.Write("Enter your phone");
-                string phone = Console.ReadLine();
+                string phone = Console.ReadLine()!;
                 Console.Write("Enter your password");
-                string password = Console.ReadLine();
+                string password = Console.ReadLine()!;
                 Console.Write("Enter (0 for Manager, 1 for Volunteer, etc.): ");
                 Role role = (Role)int.Parse(Console.ReadLine()!);
                 Console.Write("Is Active? (true/false): ");
                 bool active = bool.Parse(Console.ReadLine()!);
                 Console.Write("Enter your address");
-                string address = Console.ReadLine();
+                string address = Console.ReadLine()!;
                 Console.Write("Enter your Maximum Distance");
                 double maximumDistance = double.Parse(Console.ReadLine()!);
                 Console.Write("Enter your Latitude");
@@ -75,45 +74,33 @@ namespace DalTest
                 Console.Write("Enter Distance Type (0 for Aerial Distance, 1 for Walking Distance, 2 for Driving Distance, etc.): ");
                 DistanceType distanceType = (DistanceType)int.Parse(Console.ReadLine()!);
                 return new Volunteer(id, name, email, phone, role, active, distanceType, maximumDistance, password, address, longitude, latitude);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in CreateVolunteer: {ex.Message}");
-                throw;
-            }
+           
         }
 
         private static Call CreateCall(int id)
-        {
-            try
+       
             {
                 Console.Write("Enter Call Type (0 for Type1, 1 for Type2, etc.): ");
                 TypeOfReading typeOfReading = (TypeOfReading)int.Parse(Console.ReadLine()!);
                 Console.Write("Enter Description of the problem");
-                string description = Console.ReadLine();
+                string description = Console.ReadLine()!;
                 Console.Write("Enter your address");
-                string address = Console.ReadLine();
+                string address = Console.ReadLine()!;
                 Console.Write("Enter your Latitude");
                 double latitude = double.Parse(Console.ReadLine()!);
                 Console.Write("Enter your Longitude");
                 double longitude = double.Parse(Console.ReadLine()!);
                 Console.Write("Enter Opening Time (YYYY-MM-DD HH:MM): ");
-                DateTime openingTime = DateTime.Parse(Console.ReadLine());
+                DateTime openingTime = DateTime.Parse(Console.ReadLine()!);
                 Console.Write("Enter Max Time Finish Calling (YYYY-MM-DD HH:MM): ");
-                DateTime maxClosing = DateTime.Parse(Console.ReadLine());
+                DateTime maxClosing = DateTime.Parse(Console.ReadLine()!);
                 return new Call(id, typeOfReading, description, address, longitude, latitude, openingTime, maxClosing);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in CreateCall: {ex.Message}");
-                throw;
-            }
+            
         }
 
         private static Assignment CreateAssignment(int id)
         {
-            try
-            {
+            
                 Console.Write("Enter Call ID: ");
                 int callId = int.Parse(Console.ReadLine()!);
                 Console.Write("Enter Volunteer ID: ");
@@ -123,12 +110,8 @@ namespace DalTest
                 Console.Write("Enter Ending Time of Treatment (YYYY-MM-DD HH:MM): ");
                 DateTime endTime = DateTime.Parse(Console.ReadLine()!);
                 return new Assignment(id, callId, volunteerId, typeOfEndTime, endTime);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in CreateAssignment: {ex.Message}");
-                throw;
-            }
+        
+          
         }
 
         private static void Create(string choice)
@@ -142,15 +125,15 @@ namespace DalTest
                 {
                     case "VolunteerSubmenu":
                         Volunteer vol = CreateVolunteer(yourId);
-                        s_dalVolunteer.Create(vol);
+                        s_dalVolunteer!.Create(vol);
                         break;
                     case "CallSubmenu":
                         Call call = CreateCall(yourId);
-                        s_dalCall.Create(call);
+                        s_dalCall!.Create(call);
                         break;
                     case "AssignmentSubmenu":
                         Assignment ass = CreateAssignment(yourId);
-                        s_dalAssignment.Create(ass);
+                        s_dalAssignment!.Create(ass);
                         break;
                 }
             }
@@ -171,15 +154,15 @@ namespace DalTest
                 {
                     case "VolunteerSubmenu":
                         Volunteer vol = CreateVolunteer(yourId);
-                        s_dalVolunteer.Update(vol);
+                        s_dalVolunteer!.Update(vol);
                         break;
                     case "CallSubmenu":
                         Call call = CreateCall(yourId);
-                        s_dalCall.Update(call);
+                        s_dalCall!.Update(call);
                         break;
                     case "AssignmentSubmenu":
                         Assignment ass = CreateAssignment(yourId);
-                        s_dalAssignment.Update(ass);
+                        s_dalAssignment!.Update(ass);
                         break;
                 }
             }
@@ -198,13 +181,13 @@ namespace DalTest
                 switch (choice)
                 {
                     case "VolunteerSubmenu":
-                        Console.WriteLine(s_dalVolunteer.Read(yourId));
+                        Console.WriteLine(s_dalVolunteer!.Read(yourId));
                         break;
                     case "CallSubmenu":
-                        Console.WriteLine(s_dalCall.Read(yourId));
+                        Console.WriteLine(s_dalCall!.Read(yourId));
                         break;
                     case "AssignmentSubmenu":
-                        Console.WriteLine(s_dalAssignment.Read(yourId));
+                        Console.WriteLine(s_dalAssignment!.Read(yourId));
                         break;
                 }
             }
@@ -249,13 +232,13 @@ namespace DalTest
                 switch (choice)
                 {
                     case "VolunteerSubmenu":
-                        s_dalVolunteer.Delete(yourId);
+                        s_dalVolunteer!.Delete(yourId);
                         break;
                     case "CallSubmenu":
-                        s_dalCall.Delete(yourId);
+                        s_dalCall!.Delete(yourId);
                         break;
                     case "AssignmentSubmenu":
-                        s_dalAssignment.Delete(yourId);
+                        s_dalAssignment!.Delete(yourId);
                         break;
                 }
             }
@@ -270,13 +253,13 @@ namespace DalTest
         switch (choice)
         {
             case "VolunteerSubmenu":
-                s_dalVolunteer.DeleteAll();
+                s_dalVolunteer!.DeleteAll();
                 break;
             case "CallSubmenu":
-                s_dalCall.DeleteAll();
+                s_dalCall!.DeleteAll();
                 break;
             case "AssignmentSubmenu":
-                s_dalAssignment.DeleteAll();
+                s_dalAssignment!.DeleteAll();
                 break;
         }
     }
@@ -339,35 +322,35 @@ namespace DalTest
                     switch (userInput)
                     {
                         case ConfigSubmenu.AdvanceClockByMinute:
-                            s_dalConfig.Clock = s_dalConfig.Clock.AddMinutes(1);
+                            s_dalConfig!.Clock = s_dalConfig.Clock.AddMinutes(1);
                             break;
                         case ConfigSubmenu.AdvanceClockByHour:
-                            s_dalConfig.Clock = s_dalConfig.Clock.AddHours(1);
+                            s_dalConfig!.Clock = s_dalConfig.Clock.AddHours(1);
                             break;
                         case ConfigSubmenu.AdvanceClockByDay:
-                            s_dalConfig.Clock = s_dalConfig.Clock.AddDays(1);
+                            s_dalConfig!.Clock = s_dalConfig.Clock.AddDays(1);
                             break;
                         case ConfigSubmenu.AdvanceClockByMonth:
-                            s_dalConfig.Clock = s_dalConfig.Clock.AddMonths(1);
+                            s_dalConfig!.Clock = s_dalConfig.Clock.AddMonths(1);
                             break;
                         case ConfigSubmenu.AdvanceClockByYear:
-                            s_dalConfig.Clock = s_dalConfig.Clock.AddYears(1);
+                            s_dalConfig!.Clock = s_dalConfig.Clock.AddYears(1);
                             break;
                         case ConfigSubmenu.DisplayClock:
-                            Console.WriteLine(s_dalConfig.Clock);
+                            Console.WriteLine(s_dalConfig!.Clock);
                             break;
                         case ConfigSubmenu.DisplayConfigVar:
-                            Console.WriteLine($"RiskRange: {s_dalConfig.GetRiskRange()}");
+                            Console.WriteLine($"RiskRange: {s_dalConfig!.GetRiskRange()}");
                             break;
                         case ConfigSubmenu.ChangeRiskRange:
                             Console.Write("Enter a new value for RiskRange (in format HH:MM:SS): ");
-                            string riskRangeInput = Console.ReadLine();
+                            string riskRangeInput = Console.ReadLine()!;
                             if (!TimeSpan.TryParse(riskRangeInput, out TimeSpan newRiskRange)) throw new FormatException("Invalid format");
-                            s_dalConfig.SetRiskRange(newRiskRange);
+                            s_dalConfig!.SetRiskRange(newRiskRange);
                             Console.WriteLine($"RiskRange update to: {s_dalConfig.GetRiskRange()}");
                            break;
                          case ConfigSubmenu.Reset:
-                            s_dalConfig.Reset();
+                            s_dalConfig!.Reset();
                             break;
                     case ConfigSubmenu.Exit:
                         return;
@@ -425,10 +408,10 @@ namespace DalTest
                                 ConfigSubmenuu();
                                 break;
                             case MainMenu.ResetDatabase:
-                                s_dalConfig.Reset(); //stage 1
-                                s_dalVolunteer.DeleteAll(); //stage 1
-                                s_dalCall.DeleteAll(); //stage 1
-                                s_dalAssignment.DeleteAll(); //stage 1
+                                s_dalConfig!.Reset(); //stage 1
+                                s_dalVolunteer!.DeleteAll(); //stage 1
+                                s_dalCall!.DeleteAll(); //stage 1
+                                s_dalAssignment!.DeleteAll(); //stage 1
                                 break;
                         }
                     }

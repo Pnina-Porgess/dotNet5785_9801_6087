@@ -33,21 +33,9 @@ public static class Initialization
     "053-789-2134", "050-125-6789", "052-456-7890", "054-654-3210", "055-123-7894"
 };
         string[] addresses = {
-    "Jerusalem, King George St.", // Jerusalem
-    "Tel Aviv, Rothschild Blvd.", // Tel Aviv
-    "Haifa, Carmel Beach", // Haifa
-    "Beer Sheva, Ben Gurion Blvd.", // Beer Sheva
-    "Ashdod, HaShalom St.", // Ashdod
-    "Netanya, Herzl St.", // Netanya
-    "Rishon LeZion, Neot Afeka St.", // Rishon LeZion
-    "Petah Tikva, HaSharon St.", // Petah Tikva
-    "Holon, Jabotinsky St.", // Holon
-    "Bnei Brak, Rabbi Akiva St.", // Bnei Brak
-    "Rehovot, Herzl St.", // Rehovot
-    "Bat Yam, Ben Gurion Blvd.", // Bat Yam
-    "Herzliya, Sokolov St.", // Herzliya
-    "Hadera, HaSharon Blvd.", // Hadera
-    "Eilat, HaTmarim St." // Eilat
+    "Jerusalem, King George St.", "Tel Aviv, Rothschild Blvd.", "Haifa, Carmel Beach", "Beer Sheva, Ben Gurion Blvd.", 
+    "Ashdod, HaShalom St.", "Netanya, Herzl St.", "Rishon LeZion, Neot Afeka St.", "Petah Tikva, HaSharon St.", "Holon, Jabotinsky St.", 
+    "Bnei Brak, Rabbi Akiva St.", "Rehovot, Herzl St.", "Bat Yam, Ben Gurion Blvd.","Herzliya, Sokolov St.","Hadera, HaSharon Blvd.","Eilat, HaTmarim St." 
 };
 
         string[] passwords = {
@@ -56,23 +44,10 @@ public static class Initialization
    "Yonatan97K50x", "David34Q85v"
 };
 
-        // Array of coordinates for each city with latitude and longitude
     (double Latitude, double Longitude)[] coordinates = {
-    (31.7683, 35.2137), // Jerusalem
-    (32.0853, 34.7818), // Tel Aviv
-    (32.7940, 34.9896), // Haifa
-    (31.2518, 34.7913), // Beer Sheva
-    (31.8044, 34.6553), // Ashdod
-    (32.3215, 34.8532), // Netanya
-    (31.9706, 34.7925), // Rishon LeZion
-    (32.0840, 34.8878), // Petah Tikva
-    (32.0158, 34.7874), // Holon
-    (32.0809, 34.8333), // Bnei Brak
-    (31.8948, 34.8093), // Rehovot
-    (32.0236, 34.7502), // Bat Yam
-    (32.1663, 34.8436), // Herzliya
-    (32.4340, 34.9196), // Hadera
-    (29.5581, 34.9482)  // Eilat
+    (31.7683, 35.2137),(32.0853, 34.7818), (32.7940, 34.9896), (31.2518, 34.7913), (31.8044, 34.6553), 
+    (32.3215, 34.8532), (31.9706, 34.7925), (32.0840, 34.8878), (32.0158, 34.7874),  (32.0809, 34.8333), 
+    (31.8948, 34.8093), (32.0236, 34.7502), (32.1663, 34.8436), (32.4340, 34.9196),(29.5581, 34.9482) 
 };
 
         s_dalVolunteer!.Create(new Volunteer(s_rand.Next(100000000, 999999999), "Shlomo", "Shlomo@gmail.com", "05321234565", Role.Manager, true, DistanceType.AerialDistance, s_rand.Next(5, 50), "Shlomo23A56", "Tel Aviv", 32.0853, 34.7818));
@@ -99,56 +74,15 @@ public static class Initialization
     private static void createCalls()
     {
         string[] issues = {
-    "Flat tire",
-    "Engine failure",
-    "Battery is dead",
-    "Ran out of fuel",
-    "Locked keys inside the car",
-    "Brake system malfunction",
-    "Overheated engine",
-    "Warning light is on",
-    "Strange noise from the engine",
-    "Headlights are not working",
-    "Power steering failure",
-    "Transmission problem",
-    "Exhaust system damage",
-    "Car won’t start",
-    "Tire tread is worn out",
-    "Leaking oil",
-    "Windshield wipers are broken",
-    "Clutch is slipping",
-    "Car stuck in gear",
-    "AC is not working",
-    "Heater is not functioning",
-    "Radiator is leaking",
-    "Alternator failure",
-    "Starter motor failure",
-    "Car is vibrating while driving",
-    "Brake pads are worn out",
-    "Broken timing belt",
-    "Suspension problem",
-    "Check engine light is blinking",
-    "Fuel pump failure",
-    "Spark plugs need replacement",
-    "Catalytic converter issue",
-    "Car pulling to one side while driving",
-    "Broken fan belt",
-    "Electric window not working",
-    "Central locking system failure",
-    "Flat spare tire",
-    "Key fob is not functioning",
-    "Damaged side mirror",
-    "Tail lights are not working",
-    "Hood won’t close",
-    "Trunk won’t open",
-    "Excessive smoke from exhaust",
-    "Battery terminals are corroded",
-    "Parking brake is stuck",
-    "Fuel gauge is not accurate",
-    "Airbag warning light is on",
-    "Steering wheel is stiff",
-    "Horn is not working",
-    "Dashboard lights flickering"
+    "Flat tire", "Engine failure", "Battery is dead", "Ran out of fuel", "Locked keys inside the car", "Brake system malfunction",
+    "Overheated engine", "Warning light is on","Strange noise from the engine", "Headlights are not working", "Power steering failure","Transmission problem",
+    "Exhaust system damage","Car won’t start","Tire tread is worn out","Leaking oil", "Windshield wipers are broken","Clutch is slipping",
+    "Car stuck in gear","AC is not working","Heater is not functioning","Radiator is leaking", "Alternator failure","Starter motor failure",
+    "Car is vibrating while driving","Brake pads are worn out","Broken timing belt","Suspension problem", "Check engine light is blinking","Fuel pump failure",
+    "Spark plugs need replacement","Catalytic converter issue","Car pulling to one side while driving","Broken fan belt", "Electric window not working",
+    "Central locking system failure","Flat spare tire","Key fob is not functioning","Damaged side mirror","Tail lights are not working","Hood won’t close",
+    "Trunk won’t open","Excessive smoke from exhaust","Battery terminals are corroded","Parking brake is stuck","Fuel gauge is not accurate",
+    "Airbag warning light is on","Steering wheel is stiff","Horn is not working","Dashboard lights flickering"
      };
   
         double[] longitudes = {
@@ -161,7 +95,7 @@ public static class Initialization
     34.7443, 34.8248, 34.9065, 34.8878, 35.2854,
     34.9197, 34.8019, 34.8383, 35.3047, 35.7496,
     35.5833, 35.2940, 35.5683, 35.0944, 34.7383,
-    35.4500, 34.7872, 35.0247,55,33,55,33
+    35.4500, 34.7872, 35.0247,34.3233,35.4545
 };
 
         double[] latitudes = {
@@ -174,27 +108,28 @@ public static class Initialization
     32.0171, 32.0684, 32.1782, 32.0840, 32.6082,
     32.4340, 30.6100, 32.0853, 32.9170, 33.0622,
     32.8333, 31.7768, 33.2082, 33.0044, 31.8775,
-    31.8667, 32.0158, 32.4746,12,45,11,22
+    31.8667, 32.0158, 32.4746,31.2334,32.4554,
 };
 
-    string[] addresses = {
-    "Highway 2","Highway 6","Begin Boulevard,Jerusalem","Glilot Interchange",
-    "Ben Gurion Airport","Eilat","Dead Sea","Tel Aviv, Rothschild Blvd",
-    "Haifa, Carmel Beach","Beer Sheva, Soroka Hospital","Nazareth","Tiberias",
-    "Ashdod","Ashkelon","Rishon Lezion","Netanya","Acre (Akko)","Herzliya",
-    "Rehovot","Arad","Caesarea","Zikhron Ya'akov","Raanana","Kiryat Gat",
-    "Kiryat Shmona","Modiin","Safed (Tzfat)","Metula","Dimona", "Yokneam",
-    "Bat Yam","Ramat Gan","Kfar Saba","Petah Tikva","Afula","Hadera",
-    "Mitzpe Ramon","Bnei Brak","Karmiel","Golan Heights","Sea of Galilee",
-    "Maale Adumim","Qiryat Shemona","Nahariya", "Yavne","Jericho Area","Holon","Harish"," "," "
+        string[] addresses = {
+    "Highway 2, Central Israel","Highway 6, Central Israel", "Begin Boulevard, Jerusalem","Glilot Interchange, Tel Aviv",
+    "HaTmarim, Eilat", "Ein Gedi, Dead Sea","Rothschild Blvd, Tel Aviv","Carmel Beach, Haifa","Soroka Hospital, Beer Sheva",
+    "El-Rama, Nazareth", "Kinneret, Tiberias","Port Road, Ashdod","Herzl, Ashkelon","Jabotinsky, Rishon Lezion","Ben Gurion, Netanya",
+    "Shderot HaMeginim, Acre (Akko)","Sokolov, Herzliya","Weizmann Institute, Rehovot","Haatzmaut, Arad","Jabotinsky, Caesarea",
+    "HaMeyasdim, Zikhron Ya'akov", "Ahuza, Raanana", "Jabotinsky, Kiryat Gat","Golan, Kiryat Shmona","Ze'ev Jabotinsky, Modiin", "HaRabbanim, Safed (Tzfat)",
+    "HaGalil, Metula", "HaTomer, Dimona", "HaGilboa, Yokneam", "Ben Gurion, Bat Yam", "Jabotinsky, Ramat Gan",  "Herzl, Kfar Saba",
+    "Rothschild Blvd, Petah Tikva", "Shderot HaMeginim, Afula",  "HaBanim, Hadera","Eilat, Mitzpe Ramon","Rabbi Akiva, Bnei Brak","HaMeyasdim, Karmiel",
+    "Givat Yoav, Golan Heights","Ginosar, Sea of Galilee","HaNegev, Maale Adumim", "HaTamar, Qiryat Shemona","Sderot HaGalil, Nahariya", "Hachalutzim, Yavne",
+    "Ein Esariya, Jericho Area","Sokolov, Holon","Harish Boulevard, Harish", "Bar Ilan, Bnei Brak","Eilat, Machtesh Rimon"
 };
+
 
 
 
         for (int i = 0; i <50 ; i++)
         {
             TypeOfReading typeOfReading= (TypeOfReading)s_rand.Next(0,Enum.GetValues(typeof(TypeOfReading)).Length);
-            DateTime TimeOfOpen = new DateTime(s_dalConfig.Clock.Year ,1,1); 
+            DateTime TimeOfOpen = new DateTime(s_dalConfig!.Clock.Year ,1,1); 
             DateTime MaxTimeToFinish = TimeOfOpen.AddDays(s_rand.Next((s_dalConfig.Clock - TimeOfOpen).Days));
             double Longitude = longitudes[i];
             double Latitude = latitudes[i];
@@ -208,8 +143,8 @@ public static class Initialization
 
     private static void createAssignments()
     {
-        List<Volunteer>? volunteersList = s_dalVolunteer.ReadAll();
-        List<Call>? callsList = s_dalCall.ReadAll();
+        List<Volunteer>? volunteersList = s_dalVolunteer!.ReadAll();
+        List<Call>? callsList = s_dalCall!.ReadAll();
         
         for (int i = 0; i < 50; i++)
         {
