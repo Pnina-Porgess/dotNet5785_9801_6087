@@ -87,7 +87,7 @@ namespace DalTest
                 string address = Console.ReadLine()!;
                 Console.Write("Enter your Latitude");
                 if (!double.TryParse(Console.ReadLine(), out double latitude)) throw new FormatException("Invalid format");
-                Console.Write("Enter your Longitude");
+                Console.Write("Enter your Longitude");31
                 if (!double.TryParse(Console.ReadLine(), out double longitude)) throw new FormatException("Invalid format");
                 Console.Write("Enter Opening Time (YYYY-MM-DD HH:MM): ");
                 if (!DateTime.TryParse(Console.ReadLine(), out DateTime openingTime)) throw new FormatException("Invalid format");
