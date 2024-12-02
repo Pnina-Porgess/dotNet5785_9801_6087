@@ -7,11 +7,14 @@ namespace DalTest;
 
 public static class Initialization
 {
-    private static IVolunteer? s_dalVolunteer; //stage 1
-    private static ICall? s_dalCall; //stage 1
-    private static IAssignment? s_dalAssignment; //stage 1
-    private static IConfig? s_dalConfig; //stage 1
+    //private static IVolunteer? s_dalVolunteer; //stage 1
+   // private static ICall? s_dalCall; //stage 1
+   // private static IAssignment? s_dalAssignment; //stage 1
+   // private static IConfig? s_dalConfig; //stage 1
+    private static IDal? s_dal; //stage 2
     private static readonly Random s_rand = new();
+    private const int MIN_ID = 200000000;
+    private const int MAX_ID = 400000000;
 
     private static void createVolunteers()
     {
@@ -51,14 +54,14 @@ public static class Initialization
     (31.8948, 34.8093), (32.0236, 34.7502), (32.1663, 34.8436), (32.4340, 34.9196),(29.5581, 34.9482) 
 };
 
-        s_dalVolunteer!.Create(new Volunteer(s_rand.Next(100000000, 999999999), "Shlomo", "Shlomo@gmail.com", "05321234565", Role.Manager, true, DistanceType.AerialDistance, s_rand.Next(5, 50), "Shlomo23A56", "Tel Aviv", 32.0853, 34.7818));
+        s_dal!.Volunteer.Create(new Volunteer(s_rand.Next(MIN_ID, MAX_ID), "Shlomo", "Shlomo@gmail.com", "05321234565", Role.Manager, true, DistanceType.AerialDistance, s_rand.Next(5, 50), "Shlomo23A56", "Tel Aviv", 32.0853, 34.7818));
         for (int i = 0; i < 15; i++)
 
         {
             int id;
             do
                 id = s_rand.Next(100000000, 999999999);
-            while (s_dalVolunteer!.Read(id) != null);
+            while (s_dal.Volunteer.Read(id) != null);
              id = s_rand.Next(100000000, 999999999);
             string name = names[i];
             string email = emails[i];
@@ -67,7 +70,7 @@ public static class Initialization
             double Latitude = coordinates[i].Latitude;
             double Longitude = coordinates[i].Longitude;
             double MaximumDistance = s_rand.Next(5, 50);
-            s_dalVolunteer!.Create(new Volunteer(id, name, email, phone, Role.Volunteer, true, DistanceType.AerialDistance, MaximumDistance, password, addresses[i], Longitude, Latitude));
+            s_dal!.Volunteer.Create(new Volunteer(id, name, email, phone, Role.Volunteer, true, DistanceType.AerialDistance, MaximumDistance, password, addresses[i], Longitude, Latitude));
 
         }
     }
@@ -131,13 +134,13 @@ public static class Initialization
         for (int i = 0; i <50 ; i++)
         {
             TypeOfReading typeOfReading= (TypeOfReading)s_rand.Next(0,Enum.GetValues(typeof(TypeOfReading)).Length);
-            DateTime TimeOfOpen = new DateTime(s_dalConfig!.Clock.Year ,1,1); 
-            DateTime MaxTimeToFinish = TimeOfOpen.AddDays(s_rand.Next((s_dalConfig.Clock - TimeOfOpen).Days));
+            DateTime TimeOfOpen = new DateTime(s_dal!.Config.Clock.Year ,1,1); 
+            DateTime MaxTimeToFinish = TimeOfOpen.AddDays(s_rand.Next((s_dal!.Config.Clock - TimeOfOpen).Days));
             double Longitude = longitudes[i];
             double Latitude = latitudes[i];
             string? Adress= addresses[i];
             string? Description="";
-        s_dalCall!.Create(new Call(0,typeOfReading, Description, Adress, Longitude, Latitude, TimeOfOpen, MaxTimeToFinish));
+        s_dal!.Call.Create(new Call(0,typeOfReading, Description, Adress, Longitude, Latitude, TimeOfOpen, MaxTimeToFinish));
         }
 
     }
@@ -145,8 +148,8 @@ public static class Initialization
 
     private static void createAssignments()
     {
-        List<Volunteer>? volunteersList = s_dalVolunteer!.ReadAll();
-        List<Call>? callsList = s_dalCall!.ReadAll();
+        List<Volunteer>? volunteersList = s_dal!.Volunteer!.ReadAll();
+        List<Call>? callsList = s_dal!.Call.ReadAll();
         
         for (int i = 0; i < 50; i++)
         {
@@ -163,28 +166,29 @@ public static class Initialization
             {
                 typeOfEndTime = (TypeOfEndTime)s_rand.Next(Enum.GetValues(typeof(TypeOfEndTime)).Length - 1);
             }
-            s_dalAssignment!.Create(new Assignment( 0,callsList[s_rand.Next(callsList.Count-15)].Id, volunteersList[s_rand.Next(volunteersList.Count)].Id, typeOfEndTime
+            s_dal!.Assignment!.Create(new Assignment( 0,callsList[s_rand.Next(callsList.Count-15)].Id, volunteersList[s_rand.Next(volunteersList.Count)].Id, typeOfEndTime
             , randomTime.AddHours(2), randomTime));
         }
     }
-    public static void Do(IVolunteer? dalVolunteer, ICall? dalCall, IAssignment? dalAssignment, IConfig? dalConfig) //stage 1
+    public static void Do(IDal dal) //stage 2
     {
-        s_dalVolunteer =dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!");
-        s_dalCall = dalCall ?? throw new NullReferenceException("DAL object can not be null!");
-        s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL object can not be null!");
-        s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!");//stage 1
+        //s_dalStudent = dalStudent ?? throw new NullReferenceException("DAL object can not be null!"); // stage 1
+        //s_dalCourse = dalCourse ?? throw new NullReferenceException("DAL object can not be null!"); // stage 1
+        //s_dalLink = dalStudentInCourse ?? throw new NullReferenceException("DAL object can not be null!"); // stage 1
+        //s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1
+        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
+
         Console.WriteLine("Reset Configuration values and List values...");
-        s_dalConfig.Reset(); //stage 1
-        s_dalVolunteer.DeleteAll();
-        s_dalCall.DeleteAll();
-        s_dalAssignment.DeleteAll();//stage 1                         
-        Console.WriteLine("Initializing Volunteers list ...");
-        Console.WriteLine("Initializing Calls list ...");
-        Console.WriteLine("Initializing Assignments list ...");
+        //s_dalConfig.Reset(); //stage 1
+        //s_dalStudent.DeleteAll(); //stage 1
+        //...
+        s_dal.ResetDB();//stage 2
+
         createVolunteers();
         createCalls();
         createAssignments();
     }
+
 
 
 }
