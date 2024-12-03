@@ -10,7 +10,7 @@ namespace DalTest
         //private static ICourse? s_dalCourse = new CourseImlementation(); //stage 1
         //private static ILink? s_dalLink = new LinkImplementation(); //stage 1
         //private static IConfig? s_dalConfig = new ConfigImplementation(); //stage 1
-         static readonly IDal s_dal = new Dal.DalList(); //stage 2
+         private static readonly IDal s_dal = new Dal.DalList(); //stage 2
 
         public enum MainMenu
         {
@@ -88,7 +88,7 @@ namespace DalTest
                 string address = Console.ReadLine()!;
                 Console.Write("Enter your Latitude");
                 if (!double.TryParse(Console.ReadLine(), out double latitude)) throw new FormatException("Invalid format");
-                Console.Write("Enter your Longitude");31
+                Console.Write("Enter your Longitude");
                 if (!double.TryParse(Console.ReadLine(), out double longitude)) throw new FormatException("Invalid format");
                 Console.Write("Enter Opening Time (YYYY-MM-DD HH:MM): ");
                 if (!DateTime.TryParse(Console.ReadLine(), out DateTime openingTime)) throw new FormatException("Invalid format");
