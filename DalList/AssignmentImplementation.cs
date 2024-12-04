@@ -29,14 +29,15 @@ public class AssignmentImplementation : IAssignment
 
     public Assignment? Read(int id)
     {
-        var assignment=DataSource.Assignments.Find(a=>a.Id==id);
-        return assignment;
+        return DataSource.Assignments.FirstOrDefault(a=>a.Id==id);
+  
     }
 
-    public List<Assignment> ReadAll()
-    {
-        return new List<Assignment>(DataSource.Assignments);
-    }
+    public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null) //stage 2
+        => filter == null
+            ? DataSource.Assignments.Select(item => item)
+            : DataSource.Assignments.Where(filter);
+
 
     public void Update(Assignment item)
     {

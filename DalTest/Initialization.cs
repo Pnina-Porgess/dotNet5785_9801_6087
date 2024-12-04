@@ -148,8 +148,8 @@ public static class Initialization
 
     private static void createAssignments()
     {
-        List<Volunteer>? volunteersList = s_dal!.Volunteer!.ReadAll();
-        List<Call>? callsList = s_dal!.Call.ReadAll();
+        List<Volunteer>? volunteersList = s_dal!.Volunteer.ReadAll();
+        List<Call>? callsList =s_dal!.Call.ReadAll();
         
         for (int i = 0; i < 50; i++)
         {

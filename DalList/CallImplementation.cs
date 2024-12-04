@@ -26,14 +26,15 @@ internal class CallImplementation : ICall
 
     public Call? Read(int id)
     {
-        var call = DataSource.Calls.Find(c => c.Id == id);
-        return call;
+       return DataSource.Calls.FirstOrDefault(c => c.Id == id);
+       
     }
 
-    public List<Call> ReadAll()
-    {
-        return new List<Call>(DataSource.Calls);
-    }
+    public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null) //stage 2
+       => filter == null
+           ? DataSource.Calls.Select(item => item)
+            : DataSource.Calls.Where(filter);
+
 
     public void Update(Call item)
     {
