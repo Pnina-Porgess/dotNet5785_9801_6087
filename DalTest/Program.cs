@@ -13,7 +13,7 @@ namespace DalTest
         //private static ICourse? s_dalCourse = new CourseImlementation(); //stage 1
         //private static ILink? s_dalLink = new LinkImplementation(); //stage 1
         //private static IConfig? s_dalConfig = new ConfigImplementation(); //stage 1
-         static readonly IDal s_dal = new DalList(); //stage 2
+         private static readonly IDal s_dal = new Dal.DalList(); //stage 2
 
         public enum MainMenu
         {
@@ -64,17 +64,17 @@ namespace DalTest
                 Console.Write("Enter your password");
                 string password = Console.ReadLine()!;
                 Console.Write("Enter (0 for Manager, 1 for Volunteer, etc.): ");
-                if (!Enum.TryParse(Console.ReadLine(), out Role role)) throw new FormatException("Invalid format");
+                if (!Enum.TryParse(Console.ReadLine(), out Role role)) throw new InvalidFormatException("Invalid format");
                 Console.Write("Is Active? (true/false): ");
                 bool active = bool.Parse(Console.ReadLine()!);
                 Console.Write("Enter your address");
                 string address = Console.ReadLine()!;
                 Console.Write("Enter your Maximum Distance");
-                if (!double.TryParse(Console.ReadLine(), out double maximumDistance)) throw new FormatException("Invalid format");
+                if (!double.TryParse(Console.ReadLine(), out double maximumDistance)) throw new InvalidFormatException("Invalid format");
                 Console.Write("Enter your Latitude");
-                if (!double.TryParse(Console.ReadLine(), out double latitude)) throw new FormatException("Invalid format");
+                if (!double.TryParse(Console.ReadLine(), out double latitude)) throw new InvalidFormatException("Invalid format");
                 Console.Write("Enter your Longitude");
-                if (!double.TryParse(Console.ReadLine(), out double longitude)) throw new FormatException("Invalid format");
+                if (!double.TryParse(Console.ReadLine(), out double longitude)) throw new InvalidFormatException("Invalid format");
                 Console.Write("Enter Distance Type (0 for Aerial Distance, 1 for Walking Distance, 2 for Driving Distance, etc.): ");
                 DistanceType distanceType = (DistanceType)int.Parse(Console.ReadLine()!);
                 return new Volunteer(id, name, email, phone, role, active, distanceType, maximumDistance, password, address, longitude, latitude);
@@ -90,13 +90,13 @@ namespace DalTest
                 Console.Write("Enter your address");
                 string address = Console.ReadLine()!;
                 Console.Write("Enter your Latitude");
-                if (!double.TryParse(Console.ReadLine(), out double latitude)) throw new FormatException("Invalid format");
+                if (!double.TryParse(Console.ReadLine(), out double latitude)) throw new InvalidFormatException("Invalid format");
                 Console.Write("Enter your Longitude");
-                if (!double.TryParse(Console.ReadLine(), out double longitude)) throw new FormatException("Invalid format");
+                if (!double.TryParse(Console.ReadLine(), out double longitude)) throw new InvalidFormatException("Invalid format");
                 Console.Write("Enter Opening Time (YYYY-MM-DD HH:MM): ");
-                if (!DateTime.TryParse(Console.ReadLine(), out DateTime openingTime)) throw new FormatException("Invalid format");
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime openingTime)) throw new InvalidFormatException("Invalid format");
                 Console.Write("Enter Max Time Finish Calling (YYYY-MM-DD HH:MM): ");
-                if (!DateTime.TryParse(Console.ReadLine(), out DateTime maxClosing)) throw new FormatException("Invalid format");
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime maxClosing)) throw new InvalidFormatException("Invalid format");
                 return new Call(id, typeOfReading, description, address, longitude, latitude, openingTime, maxClosing);
             
         }
@@ -104,13 +104,13 @@ namespace DalTest
         private static Assignment CreateAssignment(int id)
         {
                 Console.Write("Enter Call ID: ");
-                if (!int.TryParse(Console.ReadLine(), out int callId)) throw new FormatException("Invalid choice");
+                if (!int.TryParse(Console.ReadLine(), out int callId)) throw new InvalidFormatException("Invalid format");
                 Console.Write("Enter Volunteer ID: ");
-                if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new FormatException("Invalid choice");
+                if (!int.TryParse(Console.ReadLine(), out int volunteerId)) throw new InvalidFormatException("Invalid format");
                 Console.Write("Enter Type Of End Time: 0 for treated, 1 for Self Cancellation, 2 for CancelingAnAdministrator, 4 for CancellationHasExpired ");
                 if (!Enum.TryParse(Console.ReadLine(), out TypeOfEndTime typeOfEndTime)) throw new FormatException("Invalid choice");
                 Console.Write("Enter Ending Time of Treatment (YYYY-MM-DD HH:MM): ");
-                if (!DateTime.TryParse(Console.ReadLine(), out DateTime endTime)) throw new FormatException("Invalid choice");
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime endTime)) throw new InvalidFormatException("Invalid format");
                 return new Assignment(id, callId, volunteerId, typeOfEndTime, endTime);
         
           
@@ -122,7 +122,7 @@ namespace DalTest
             {
                 Console.WriteLine("Enter your details");
                 Console.Write("Enter ID: ");
-                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new FormatException("Invalid format");
+                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new InvalidFormatException("Invalid format");
                 switch (choice)
                 {
                     case "VolunteerSubmenu":
@@ -151,7 +151,7 @@ namespace DalTest
             {
                 Console.WriteLine("Enter your details");
                 Console.Write("Enter ID: ");
-                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new FormatException("Invalid format");
+                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new InvalidFormatException("Invalid format");
                 switch (choice)
                 {
                     case "VolunteerSubmenu":
@@ -179,7 +179,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter ID: ");
-                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new FormatException("Invalid format");
+                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new InvalidFormatException("Invalid format");
                 switch (choice)
                 {
                     case "VolunteerSubmenu":
@@ -230,7 +230,7 @@ namespace DalTest
             try
             {
                 Console.WriteLine("Enter ID: ");
-                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new FormatException("Invalid format");
+                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new InvalidFormatException("Invalid format");
                 switch (choice)
                 {
                     case "VolunteerSubmenu":
@@ -308,7 +308,7 @@ namespace DalTest
                     Console.WriteLine($"{(int)option}. {option}");
                 }
             Console.Write("Select an option: ");
-            if (!Enum.TryParse(Console.ReadLine(), out  subChoice)) throw new FormatException("Invalid choice");
+            if (!Enum.TryParse(Console.ReadLine(), out  subChoice)) throw new InvalidFormatException("Invalid choice");
         }
     }
     
@@ -353,7 +353,7 @@ namespace DalTest
                             {
                                 Console.WriteLine("Enter a new value for clock (YYYY-MM-DD HH:MM):");
                                 string clockInput =Console.ReadLine();
-                                if (!DateTime.TryParse(clockInput, out DateTime updatClock)) throw new FormatException("Invalid format");
+                                if (!DateTime.TryParse(clockInput, out DateTime updatClock)) throw new InvalidFormatException("Invalid format");
                                 s_dal!.Config.Clock = updatClock;
                                 Console.WriteLine($"RiskRange update to: {s_dal!.Config.Clock}");
                                 break;
@@ -362,7 +362,7 @@ namespace DalTest
                             {
                                 Console.Write("Enter a new value for RiskRange (in format (HH:MM:SS): ");
                                 string riskRangeInput = Console.ReadLine()!;
-                                if (!TimeSpan.TryParse(riskRangeInput, out TimeSpan newRiskRange)) throw new FormatException("Invalid format");
+                                if (!TimeSpan.TryParse(riskRangeInput, out TimeSpan newRiskRange)) throw new InvalidFormatException("Invalid format");
                                 s_dal!.Config.SetRiskRange(newRiskRange);
                                 Console.WriteLine($"RiskRange update to: {s_dal!.Config.GetRiskRange()}");
                             }

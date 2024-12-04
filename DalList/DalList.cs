@@ -1,7 +1,4 @@
 ﻿using DalApi;
-
-namespace Dal;
-
 sealed public class DalList : IDal
 {
     public IAssignment Assignment { get; } = new AssignmentImplementation();
