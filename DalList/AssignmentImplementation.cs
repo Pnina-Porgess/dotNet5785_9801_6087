@@ -12,14 +12,13 @@ public class AssignmentImplementation : IAssignment
         int id = Config.NextAssignmentId;
         Assignment copy = item with { Id = id };
         DataSource.Assignments.Add(copy);
-       // return copy.Id;
     }
 
     public void Delete(int id)
     {
         int removeCount=DataSource.Assignments.RemoveAll(a=>a?.Id==id);
         if (removeCount == 0)
-            throw new Exception($"Assignment faild,Volunteer with ID={id} not exists");
+            throw new DalDoesNotExistException($"Assignment faild,Volunteer with ID={id} not exists");
     }
 
     public void DeleteAll()
@@ -42,7 +41,7 @@ public class AssignmentImplementation : IAssignment
     {
        var assignment =Read(item.Id);
      if(assignment ==null)
-        throw new Exception($"Assignments faild,Volunteer with ID={item.Id} not exists");
+        throw new DalDoesNotExistException($"Assignments faild,Volunteer with ID={item.Id} not exists");
         DataSource.Assignments.Remove(assignment);
         DataSource.Assignments.Add(assignment);
     }

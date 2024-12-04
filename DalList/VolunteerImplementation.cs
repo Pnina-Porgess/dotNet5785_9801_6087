@@ -8,7 +8,7 @@ internal class VolunteerImplementation : IVolunteer
     public void Create(Volunteer item)
     {
         if(DataSource.Volunteers.Any(v=>v.Id == item.Id)) 
-         throw new NotImplementedException($"Volunteer with ID={item.Id} already exists");
+         throw new DalAlreadyExistsException($"Volunteer with ID={item.Id} already exists");
         DataSource.Volunteers.Add(item);
     }
 
@@ -16,7 +16,7 @@ internal class VolunteerImplementation : IVolunteer
     {
         int removeCount = DataSource.Volunteers.RemoveAll(c => c?.Id == id);
         if (removeCount == 0)
-            throw new NotImplementedException($"Volunteer with ID={id} not exists");
+            throw new DalDoesNotExistException($"Volunteer with ID={id} not exists");
     }
 
     public void DeleteAll()
@@ -38,7 +38,7 @@ internal class VolunteerImplementation : IVolunteer
     {
         var volunteer = Read(item.Id);
         if (volunteer == null)
-            throw new Exception($"Volunteer with ID={item.Id} not exists");
+            throw new DalDoesNotExistException($"Volunteer with ID={item.Id} not exists");
         DataSource.Volunteers.Remove(volunteer);
         DataSource.Volunteers.Add(item);
     }

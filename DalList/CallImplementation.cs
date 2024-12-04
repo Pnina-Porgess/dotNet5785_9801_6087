@@ -16,7 +16,7 @@ internal class CallImplementation : ICall
     {
         int removeCount = DataSource.Calls.RemoveAll(c => c?.Id == id);
         if (removeCount == 0)
-            throw new Exception($"Call faild,Volunteer with ID={id} not exists");
+            throw new DalDoesNotExistException($"Call faild,Volunteer with ID={id} not exists");
     }
 
     public void DeleteAll()
@@ -39,7 +39,7 @@ internal class CallImplementation : ICall
     {
         var call = Read(item.Id);
         if (call == null)
-            throw new Exception($"Call faild,Volunteer with ID={item.Id} not exists");
+            throw new DalDoesNotExistException($"Call faild,Volunteer with ID={item.Id} not exists");
         DataSource.Calls.Remove(call);
         DataSource.Calls.Add(call);
     }

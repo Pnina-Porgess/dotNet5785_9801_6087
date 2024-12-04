@@ -6,12 +6,22 @@ public class DalDoesNotExistException : Exception
 {
     public DalDoesNotExistException(string? message) : base(message) { }
 }
+
+[Serializable]
 public class DalAlreadyExistsException : Exception
 {
     public DalAlreadyExistsException(string? message) : base(message) { }
 }
+
+[Serializable]
 public class DalDeletionImpossible : Exception
 {
     public DalDeletionImpossible(string? message) : base(message) { }
+}
+
+[Serializable]
+public class InvalidFormatException : Exception
+{
+    public InvalidFormatException(string? message) : base(message) { }
 }
 
