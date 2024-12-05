@@ -16,8 +16,12 @@ public static class Initialization
     private const int MIN_ID = 200000000;
     private const int MAX_ID = 400000000;
 
+    /// <summary>
+    /// The function creates 15 volunteers
+    /// </summary>
     private static void createVolunteers()
     {
+ 
         string[] names = {
     "Sari", "Pnina", "Shira", "Chaya", "Yosi",
     "Beni", "Tamar", "Eli", "Moshe", "Chana",
@@ -74,7 +78,11 @@ public static class Initialization
 
         }
     }
-   
+
+    /// <summary>
+    /// The function creates 50 calls
+    /// </summary>
+
     private static void createCalls()
     {
        // I used GPT to create this array
@@ -145,12 +153,14 @@ public static class Initialization
 
     }
 
-
+    /// <summary>
+    /// The function creates 50 assignments
+    /// </summary>
     private static void createAssignments()
     {
-        List<Volunteer>? volunteersList = s_dal!.Volunteer.ReadAll();
-        List<Call>? callsList =s_dal!.Call.ReadAll();
-        
+        List<Volunteer>? volunteersList = s_dal!.Volunteer.ReadAll().ToList(); 
+        List<Call>? callsList = s_dal!.Call.ReadAll().ToList(); 
+
         for (int i = 0; i < 50; i++)
         {
             DateTime minTime = callsList[i].TimeOfOpen;
@@ -170,6 +180,14 @@ public static class Initialization
             , randomTime.AddHours(2), randomTime));
         }
     }
+
+
+    /// <summary>
+    /// Initializes the DAL (Data Access Layer) and resets the database. 
+    /// It then creates sample data for Volunteers, Calls, and Assignments.
+    /// </summary>
+    /// <param name="dal">The DAL instance to be used for database operations.</param>
+    /// <exception cref="NullReferenceException">Thrown if the provided DAL object is null.</exception>
     public static void Do(IDal dal) //stage 2
     {
         //s_dalStudent = dalStudent ?? throw new NullReferenceException("DAL object can not be null!"); // stage 1
