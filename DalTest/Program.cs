@@ -5,7 +5,6 @@ using Microsoft.VisualBasic;
 using System;
 using Dal;
 
-
 namespace DalTest
 {
     internal class Program
@@ -467,4 +466,3 @@ namespace DalTest
         }
     }
 }
-
