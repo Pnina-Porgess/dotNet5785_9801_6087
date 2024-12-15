@@ -3,42 +3,61 @@ using DalApi;
 using DO;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using System.Xml.Linq;
 
 internal class VolunteerImplementation : IVolunteer
 {
+    
     public void Create(Volunteer item)
     {
-        throw new NotImplementedException();
-    }
-
-    public void Delete(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void DeleteAll()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Volunteer? Read(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Volunteer? Read(Func<Volunteer, bool> filter)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
-    {
-        throw new NotImplementedException();
+        List<Volunteer> Volunteer = XMLTools.LoadListFromXMLSerializer<Volunteer>(Config.s_volunteers_xml);
+        Volunteer.Add(item);
+        XMLTools.SaveListToXMLSerializer(Volunteer, Config.s_volunteers_xml);
     }
 
     public void Update(Volunteer item)
     {
-        throw new NotImplementedException();
+        List<Volunteer> volunteers = XMLTools.LoadListFromXMLSerializer<Volunteer>(Config.s_volunteers_xml);
+        if (volunteers.RemoveAll(it => it.Id == item.Id) == 0)
+            throw new DalDoesNotExistException($"Course with ID={item.Id} does Not exist");
+        volunteers.Add(item);
+        XMLTools.SaveListToXMLSerializer(volunteers, Config.s_volunteers_xml);
     }
+
+    public void Delete(int id)
+    {
+        List<Volunteer> volunteers = XMLTools.LoadListFromXMLSerializer<Volunteer>(Config.s_volunteers_xml);
+        if (volunteers.RemoveAll(it => it.Id == id) == 0)
+            throw new DalDoesNotExistException($"Course with ID={id} does Not exist");
+        XMLTools.SaveListToXMLSerializer(volunteers, Config.s_volunteers_xml);
+    }
+    public void DeleteAll()
+    {
+        XMLTools.SaveListToXMLSerializer(new List<Volunteer>(), Config.s_volunteers_xml);
+    }
+
+
+    public  Volunteer? Read(int id)
+    {
+        List<Volunteer> volunteers = XMLTools.LoadListFromXMLSerializer<Volunteer>(Config.s_volunteers_xml);
+        return volunteers.FirstOrDefault(call => call.Id == id);
+    }
+
+    public Volunteer? Read(Func<Volunteer, bool> filter)
+    {
+        List<Volunteer> volunteers = XMLTools.LoadListFromXMLSerializer<Volunteer>(Config.s_volunteers_xml);
+        return volunteers.FirstOrDefault(filter);
+
+    }
+
+    public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
+    {
+        List<Volunteer> volunteers = XMLTools.LoadListFromXMLSerializer<Volunteer>(Config.s_volunteers_xml);
+        return filter == null ? volunteers : volunteers.Where(filter);
+    }
+
+  
 }
 

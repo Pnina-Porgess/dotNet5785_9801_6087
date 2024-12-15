@@ -11,7 +11,7 @@ internal class CallImplementation : ICall
         List<Call> Calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
         int id = Config.NextCallId;
         Call copy = item with { Id = id };
-        Calls.Add(item);
+        Calls.Add(copy);
         XMLTools.SaveListToXMLSerializer(Calls, Config.s_calls_xml);
     }
 
@@ -55,8 +55,10 @@ internal class CallImplementation : ICall
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
         return filter == null ? calls : calls.Where(filter);
     }
-    
 
-   
+    public IEnumerable<Volunteer> ReadAll(Func<Assignment, bool>? filter = null)
+    {
+        throw new NotImplementedException();
+    }
 }
 

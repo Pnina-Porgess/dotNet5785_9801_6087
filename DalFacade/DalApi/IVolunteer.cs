@@ -1,3 +1,8 @@
 ﻿namespace DalApi;
 using DO;
-public interface IVolunteer : ICrud<Volunteer> { }
+using System;
+using System.Collections.Generic;
+
+public interface IVolunteer : ICrud<Volunteer>
+{
+}

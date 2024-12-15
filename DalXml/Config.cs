@@ -1,4 +1,6 @@
-﻿namespace Dal;
+﻿using System.Xml.Linq;
+
+namespace Dal;
 internal static class Config
 {
     internal const string s_data_config_xml = "data-config";
@@ -23,7 +25,12 @@ internal static class Config
         get => XMLTools.GetConfigDateVal(s_data_config_xml, "Clock");
         set => XMLTools.SetConfigDateVal(s_data_config_xml, "Clock", value);
     }
-    internal static TimeSpan RiskRange { get;  set; }
+    internal static TimeSpan RiskRange
+    {
+        get => XMLTools.GetConfigTimeSpanVal(s_data_config_xml, "RiskRange");
+        set => XMLTools.SetConfigTimeSpanVal(s_data_config_xml, "RiskRange", value);
+    }
+
     internal static void Reset()
     {
         NextCallId = 1000;
