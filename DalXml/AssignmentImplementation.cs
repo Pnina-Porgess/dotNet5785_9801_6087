@@ -34,22 +34,21 @@ using System.Xml.Linq;
             );
         }
 
-        public void Create(Assignment item)
-        {
-            XElement assignmentsRoot = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
-            if (assignmentsRoot.Elements().Any(assignment => (int?)assignment.Element("Id") == item.Id))
-                throw new DalAlreadyExistsException($"Assignment with ID={item.Id} already exists.");
+    public void Create(Assignment item)
+    {
+        XElement assignmentsRoot = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
+        item = item with { Id = Config.NextAssignmentId };
+        if (assignmentsRoot.Elements().Any(assignment => (int?)assignment.Element("Id") == item.Id))
+        throw new DalAlreadyExistsException($"Assignment with ID={item.Id} already exists.");
+        assignmentsRoot.Add(CreateAssignmentElement(item));
+        XMLTools.SaveListToXMLElement(assignmentsRoot, Config.s_assignments_xml);
+    }
 
-            assignmentsRoot.Add(CreateAssignmentElement(item));
-            XMLTools.SaveListToXMLElement(assignmentsRoot, Config.s_assignments_xml);
-        }
-
-        public Assignment? Read(int id)
+    public Assignment? Read(int id)
         {
             XElement? assignmentElement = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml)
                 .Elements()
                 .FirstOrDefault(a => (int?)a.Element("Id") == id);
-
             return assignmentElement == null ? null : GetAssignmentFromElement(assignmentElement);
         }
 
@@ -66,21 +65,18 @@ using System.Xml.Linq;
             var assignments = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml)
                 .Elements()
                 .Select(GetAssignmentFromElement);
-
             return filter == null ? assignments : assignments.Where(filter);
         }
 
         public void Update(Assignment item)
         {
             XElement assignmentsRoot = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
-
             XElement? assignmentElement = assignmentsRoot
                 .Elements()
                 .FirstOrDefault(a => (int?)a.Element("Id") == item.Id);
 
             if (assignmentElement == null)
                 throw new DalDoesNotExistException($"Assignment with ID={item.Id} does not exist.");
-
             assignmentElement.Remove();
             assignmentsRoot.Add(CreateAssignmentElement(item));
             XMLTools.SaveListToXMLElement(assignmentsRoot, Config.s_assignments_xml);
@@ -89,7 +85,6 @@ using System.Xml.Linq;
         public void Delete(int id)
         {
             XElement assignmentsRoot = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
-
             XElement? assignmentElement = assignmentsRoot
                 .Elements()
                 .FirstOrDefault(a => (int?)a.Element("Id") == id);
