@@ -148,7 +148,7 @@ public static class Initialization
             double Latitude = latitudes[i];
             string? Adress= addresses[i];
             string? Description="";
-        s_dal!.Call.Create(new Call(0,typeOfReading, Description, Adress, Longitude, Latitude, TimeOfOpen, MaxTimeToFinish));
+        s_dal!.Call.Create(new Call(typeOfReading, Description, Adress, Longitude, Latitude, TimeOfOpen, MaxTimeToFinish));
         }
 
     }
@@ -176,7 +176,7 @@ public static class Initialization
             {
                 typeOfEndTime = (TypeOfEndTime)s_rand.Next(Enum.GetValues(typeof(TypeOfEndTime)).Length - 1);
             }
-            s_dal!.Assignment!.Create(new Assignment( 0,callsList[s_rand.Next(callsList.Count-15)].Id, volunteersList[s_rand.Next(volunteersList.Count)].Id, typeOfEndTime
+            s_dal!.Assignment!.Create(new Assignment(callsList[s_rand.Next(callsList.Count-15)].Id, volunteersList[s_rand.Next(volunteersList.Count)].Id, typeOfEndTime
             , randomTime.AddHours(2), randomTime));
         }
     }
