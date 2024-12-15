@@ -14,7 +14,7 @@ namespace DalTest
         //private static ICourse? s_dalCourse = new CourseImlementation(); //stage 1
         //private static ILink? s_dalLink = new LinkImplementation(); //stage 1
         //private static IConfig? s_dalConfig = new ConfigImplementation(); //stage 1
-        // private static readonly IDal s_dal = new Dal.DalList(); //stage 2
+       //  private static readonly IDal s_dal = new Dal.DalList(); //stage 2
         static readonly IDal s_dal = new Dal.DalXml();//stage3
 
         public enum MainMenu

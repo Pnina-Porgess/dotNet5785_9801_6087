@@ -23,7 +23,7 @@ public record Call
    DateTime MaxTimeToFinish
 )
 {
-    public Call() : this(0, TypeOfReading.sari, "", "", 0, 0, DateTime.Now, DateTime.Now) { }
+    public Call() : this(0, TypeOfReading.FlatTire, "", "", 0, 0, DateTime.Now, DateTime.Now) { }
 }
 ;
 

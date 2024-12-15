@@ -13,9 +13,9 @@ public enum DistanceType
 
 public enum TypeOfReading
 {
-  sari,
-  pnina,
-  alufot
+  FlatTire,   
+    DeadBattery, 
+    EngineFailure 
 }
 
 public enum TypeOfEndTime
