@@ -1,3 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ArrayOfAssignments>
-</ArrayOfAssignments>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Assignments>
+  <Assignment>
+    <Id>0</Id>
+    <CallId>1002</CallId>
+    <VolunteerId>679478571</VolunteerId>
+    <TypeOfEndTime>CancellationHasExpired</TypeOfEndTime>
+    <EntryTime>2024-03-12T05:31:00</EntryTime>
+    <EndTime>2024-03-12T03:31:00</EndTime>
+  </Assignment>
+</Assignments>

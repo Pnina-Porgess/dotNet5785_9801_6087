@@ -1,3 +1,503 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfCall>
+<ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Call>
+    <Id>1000</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Highway 2, Central Israel</Adress>
+    <Longitude>34.8697</Longitude>
+    <Latitude>32.3488</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-03-22T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1001</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Highway 6, Central Israel</Adress>
+    <Longitude>34.8951</Longitude>
+    <Latitude>31.9575</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-06-23T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1002</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Begin Boulevard, Jerusalem</Adress>
+    <Longitude>35.2105</Longitude>
+    <Latitude>31.7781</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-02-29T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1003</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Glilot Interchange, Tel Aviv</Adress>
+    <Longitude>34.8048</Longitude>
+    <Latitude>32.125</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-10-08T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1004</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>HaTmarim, Eilat</Adress>
+    <Longitude>34.8708</Longitude>
+    <Latitude>32.0004</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-06-17T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1005</Id>
+    <TypeOfReading>sari</TypeOfReading>
+    <Description />
+    <Adress>Ein Gedi, Dead Sea</Adress>
+    <Longitude>34.9482</Longitude>
+    <Latitude>29.558</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-09-20T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1006</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Rothschild Blvd, Tel Aviv</Adress>
+    <Longitude>35.4732</Longitude>
+    <Latitude>31.559</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-10-10T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1007</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Carmel Beach, Haifa</Adress>
+    <Longitude>34.7746</Longitude>
+    <Latitude>32.0628</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-03-24T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1008</Id>
+    <TypeOfReading>sari</TypeOfReading>
+    <Description />
+    <Adress>Soroka Hospital, Beer Sheva</Adress>
+    <Longitude>34.964</Longitude>
+    <Latitude>32.798</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-02-25T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1009</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>El-Rama, Nazareth</Adress>
+    <Longitude>34.7915</Longitude>
+    <Latitude>31.2525</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-04-04T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1010</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Kinneret, Tiberias</Adress>
+    <Longitude>35.3035</Longitude>
+    <Latitude>32.6996</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-09-28T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1011</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Port Road, Ashdod</Adress>
+    <Longitude>35.5312</Longitude>
+    <Latitude>32.7922</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-09-17T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1012</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Herzl, Ashkelon</Adress>
+    <Longitude>34.6499</Longitude>
+    <Latitude>31.8014</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-07-29T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1013</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Jabotinsky, Rishon Lezion</Adress>
+    <Longitude>34.5743</Longitude>
+    <Latitude>31.6693</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-01-16T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1014</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Ben Gurion, Netanya</Adress>
+    <Longitude>34.8043</Longitude>
+    <Latitude>31.9648</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-03-23T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1015</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Shderot HaMeginim, Acre (Akko)</Adress>
+    <Longitude>34.85</Longitude>
+    <Latitude>32.3329</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-12-01T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1016</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Sokolov, Herzliya</Adress>
+    <Longitude>35.0738</Longitude>
+    <Latitude>32.9234</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-08-31T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1017</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Weizmann Institute, Rehovot</Adress>
+    <Longitude>34.8447</Longitude>
+    <Latitude>32.1663</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-12-04T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1018</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Haatzmaut, Arad</Adress>
+    <Longitude>34.8111</Longitude>
+    <Latitude>31.8941</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-05-30T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1019</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Jabotinsky, Caesarea</Adress>
+    <Longitude>35.2137</Longitude>
+    <Latitude>31.2586</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-04-18T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1020</Id>
+    <TypeOfReading>sari</TypeOfReading>
+    <Description />
+    <Adress>HaMeyasdim, Zikhron Ya'akov</Adress>
+    <Longitude>34.8925</Longitude>
+    <Latitude>32.5113</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-11-16T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1021</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Ahuza, Raanana</Adress>
+    <Longitude>34.9537</Longitude>
+    <Latitude>32.5726</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-04-24T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1022</Id>
+    <TypeOfReading>sari</TypeOfReading>
+    <Description />
+    <Adress>Jabotinsky, Kiryat Gat</Adress>
+    <Longitude>34.8703</Longitude>
+    <Latitude>32.1847</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-06-13T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1023</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Golan, Kiryat Shmona</Adress>
+    <Longitude>34.764</Longitude>
+    <Latitude>31.6096</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-04-30T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1024</Id>
+    <TypeOfReading>sari</TypeOfReading>
+    <Description />
+    <Adress>Ze'ev Jabotinsky, Modiin</Adress>
+    <Longitude>35.5683</Longitude>
+    <Latitude>33.2082</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-11-23T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1025</Id>
+    <TypeOfReading>sari</TypeOfReading>
+    <Description />
+    <Adress>HaRabbanim, Safed (Tzfat)</Adress>
+    <Longitude>35.0063</Longitude>
+    <Latitude>31.8996</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-01-21T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1026</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>HaGalil, Metula</Adress>
+    <Longitude>35.496</Longitude>
+    <Latitude>32.9646</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-08-26T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1027</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>HaTomer, Dimona</Adress>
+    <Longitude>35.5773</Longitude>
+    <Latitude>33.279</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-12-03T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1028</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>HaGilboa, Yokneam</Adress>
+    <Longitude>35.0345</Longitude>
+    <Latitude>31.0707</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-04-07T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1029</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Ben Gurion, Bat Yam</Adress>
+    <Longitude>35.1047</Longitude>
+    <Latitude>32.6672</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-07-10T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1030</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Jabotinsky, Ramat Gan</Adress>
+    <Longitude>34.7443</Longitude>
+    <Latitude>32.0171</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-06-19T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1031</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Herzl, Kfar Saba</Adress>
+    <Longitude>34.8248</Longitude>
+    <Latitude>32.0684</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-05-29T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1032</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Rothschild Blvd, Petah Tikva</Adress>
+    <Longitude>34.9065</Longitude>
+    <Latitude>32.1782</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-11-12T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1033</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Shderot HaMeginim, Afula</Adress>
+    <Longitude>34.8878</Longitude>
+    <Latitude>32.084</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-03-03T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1034</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>HaBanim, Hadera</Adress>
+    <Longitude>35.2854</Longitude>
+    <Latitude>32.6082</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-08-20T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1035</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Eilat, Mitzpe Ramon</Adress>
+    <Longitude>34.9197</Longitude>
+    <Latitude>32.434</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-06-11T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1036</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Rabbi Akiva, Bnei Brak</Adress>
+    <Longitude>34.8019</Longitude>
+    <Latitude>30.61</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-07-03T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1037</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>HaMeyasdim, Karmiel</Adress>
+    <Longitude>34.8383</Longitude>
+    <Latitude>32.0853</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-02-03T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1038</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Givat Yoav, Golan Heights</Adress>
+    <Longitude>35.3047</Longitude>
+    <Latitude>32.917</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-04-21T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1039</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Ginosar, Sea of Galilee</Adress>
+    <Longitude>35.7496</Longitude>
+    <Latitude>33.0622</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-12-02T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1040</Id>
+    <TypeOfReading>sari</TypeOfReading>
+    <Description />
+    <Adress>HaNegev, Maale Adumim</Adress>
+    <Longitude>35.5833</Longitude>
+    <Latitude>32.8333</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-01-17T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1041</Id>
+    <TypeOfReading>sari</TypeOfReading>
+    <Description />
+    <Adress>HaTamar, Qiryat Shemona</Adress>
+    <Longitude>35.294</Longitude>
+    <Latitude>31.7768</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-05-12T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1042</Id>
+    <TypeOfReading>sari</TypeOfReading>
+    <Description />
+    <Adress>Sderot HaGalil, Nahariya</Adress>
+    <Longitude>35.5683</Longitude>
+    <Latitude>33.2082</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-07-19T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1043</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Hachalutzim, Yavne</Adress>
+    <Longitude>35.0944</Longitude>
+    <Latitude>33.0044</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-01-04T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1044</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Ein Esariya, Jericho Area</Adress>
+    <Longitude>34.7383</Longitude>
+    <Latitude>31.8775</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-05-14T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1045</Id>
+    <TypeOfReading>pnina</TypeOfReading>
+    <Description />
+    <Adress>Sokolov, Holon</Adress>
+    <Longitude>35.45</Longitude>
+    <Latitude>31.8667</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-03-18T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1046</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Harish Boulevard, Harish</Adress>
+    <Longitude>34.7872</Longitude>
+    <Latitude>32.0158</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-08-09T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1047</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Bar Ilan, Bnei Brak</Adress>
+    <Longitude>35.0247</Longitude>
+    <Latitude>32.4746</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-01-31T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1048</Id>
+    <TypeOfReading>sari</TypeOfReading>
+    <Description />
+    <Adress>Eilat, Machtesh Rimon</Adress>
+    <Longitude>34.3233</Longitude>
+    <Latitude>31.2334</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-08-14T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1049</Id>
+    <TypeOfReading>alufot</TypeOfReading>
+    <Description />
+    <Adress>Geha Highway</Adress>
+    <Longitude>35.4545</Longitude>
+    <Latitude>32.4554</Latitude>
+    <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2024-01-12T00:00:00</MaxTimeToFinish>
+  </Call>
 </ArrayOfCall>
