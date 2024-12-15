@@ -1,26 +1,23 @@
 ﻿using DalApi;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Dal;
 
 sealed public class DalXml : IDal
 {
 
-public IAssignment Assignment => throw new NotImplementedException();
+    public IAssignment Assignment { get; } = new AssignmentImplementation();
 
-    public IVolunteer Volunteer => throw new NotImplementedException();
+    public IVolunteer Volunteer { get; } = new VolunteerImplementation();
+    public ICall Call { get; } = new CallImplementation();
 
-    public ICall Call => throw new NotImplementedException();
-
-    public IConfig Config => throw new NotImplementedException();
+    public IConfig Config { get; } = new ConfigImplementation();
 
     public void ResetDB()
     {
-        throw new NotImplementedException();
+        Assignment.DeleteAll();
+        Volunteer.DeleteAll();
+        Call.DeleteAll();
+        Config.Reset();
     }
+
 }
 

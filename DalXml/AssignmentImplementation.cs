@@ -1,13 +1,14 @@
-﻿using DalApi;
+﻿namespace Dal;
+using DalApi;
 using DO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Dal
-{
-    internal class AssignmentImplementation : ICrud<Assignment>
+
+
+    internal class AssignmentImplementation : IAssignment
     {
         private static XElement CreateAssignmentElement(Assignment item)
         {
@@ -105,4 +106,4 @@ namespace Dal
             XMLTools.SaveListToXMLElement(new XElement("Assignments"), Config.s_assignments_xml);
         }
     }
-}
+
