@@ -5,6 +5,7 @@ using DO;
 using Microsoft.VisualBasic;
 using System;
 using Dal;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DalTest
 {
@@ -17,6 +18,7 @@ namespace DalTest
        //  private static readonly IDal s_dal = new Dal.DalList(); //stage 2
         static readonly IDal s_dal = new Dal.DalXml();//stage3
 
+        ///enum for The possibilities of the main menu  
         public enum MainMenu
         {
             ExitMainMenu,
@@ -29,6 +31,9 @@ namespace DalTest
             ResetDatabase
         }
 
+
+        /// enum for the submenu options (for each entity)
+
         public enum SubMenu
         {
             Exit,
@@ -39,7 +44,7 @@ namespace DalTest
             Delete,
             DeleteAll
         }
-
+        /// enum for the submenu options (for the config)
         private enum ConfigSubmenu
         {
             Exit,
@@ -53,7 +58,7 @@ namespace DalTest
             DisplayConfigVar,
             Reset
         }
-
+        /// A function that creates a volunteer
         private static Volunteer CreateVolunteer(int id)
         {
            
@@ -81,7 +86,7 @@ namespace DalTest
                 DistanceType distanceType = (DistanceType)int.Parse(Console.ReadLine()!);
                 return new Volunteer(id, name, email, phone, role, active, distanceType, maximumDistance, password, address, longitude, latitude);
         }
-
+        /// A function that creates a call
         private static Call CreateCall(int id)
        
             {
@@ -102,7 +107,7 @@ namespace DalTest
                 return new Call(id, typeOfReading, description, address, longitude, latitude, openingTime, maxClosing);
             
         }
-
+        /// A function that creates a assignment
         private static Assignment CreateAssignment(int id)
         {
                 Console.Write("Enter Call ID: ");
@@ -117,26 +122,27 @@ namespace DalTest
         
           
         }
-
+        /// A function that creates an entity
         private static void Create(string choice)
         {
             try
             {
-                Console.WriteLine("Enter your details");
-                Console.Write("Enter ID: ");
-                if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new InvalidFormatException("Invalid format");
+                
                 switch (choice)
                 {
                     case "VolunteerSubmenu":
+                        Console.WriteLine("Enter your details");
+                        Console.Write("Enter ID: ");
+                        if (!int.TryParse(Console.ReadLine(), out int yourId)) throw new InvalidFormatException("Invalid format");
                         Volunteer vol = CreateVolunteer(yourId);
                         s_dal.Volunteer.Create(vol);
                         break;
                     case "CallSubmenu":
-                        Call call = CreateCall(yourId);
+                        Call call = CreateCall(0);
                         s_dal!.Call.Create(call);
                         break;
                     case "AssignmentSubmenu":
-                        Assignment ass = CreateAssignment(yourId);
+                        Assignment ass = CreateAssignment(0);
                         s_dal!.Assignment.Create(ass);
                         break;
                 }
@@ -146,7 +152,7 @@ namespace DalTest
                 Console.WriteLine($"Error in Create function: {ex.Message}");
             }
         }
-
+        ///A function that updates an entity
         private static void Update(string choice)
         {
             try
@@ -176,6 +182,7 @@ namespace DalTest
             }
         }
 
+        /// A function that calls a certain entity by its ID
         private static void Read(string choice)
         {
             try
@@ -200,6 +207,8 @@ namespace DalTest
                 Console.WriteLine($"Error in Read function: {ex.Message}");
             }
         }
+
+        /// A function that displays all of the selected specific entity
 
         private static void ReadAll(string choice)
         {
@@ -227,6 +236,8 @@ namespace DalTest
             }
         }
 
+        ///A function that deletes according to the ID 
+
         private static void Delete(string choice)
         {
             try
@@ -251,8 +262,8 @@ namespace DalTest
                 Console.WriteLine($"Error in Delete function: {ex.Message}");
             }
         }
-
-    private static void DeleteAll(string choice)
+        /// A function that deletes the entire entity
+        private static void DeleteAll(string choice)
     {
         switch (choice)
         {
@@ -267,7 +278,8 @@ namespace DalTest
                 break;
         }
     }
-    private static void EntityMenu(string choice)
+        /// A function that displays the menu for each specific entity according to the selected entity
+        private static void EntityMenu(string choice)
     {
         foreach (SubMenu option in Enum.GetValues(typeof(SubMenu)))
         {
@@ -313,7 +325,7 @@ namespace DalTest
             if (!Enum.TryParse(Console.ReadLine(), out  subChoice)) throw new InvalidFormatException("Invalid choice");
         }
     }
-    
+        /// A function that creates the submenu for the Config
         private static void ConfigSubmenuu()
         {
             try
@@ -401,7 +413,7 @@ namespace DalTest
                 Console.WriteLine($"Error in ConfigSubmenu function: {ex.Message}");
             }
         }
-
+        ///The main function that manages the entire program
         private static void Main(string[] args)
         {
             try

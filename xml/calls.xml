@@ -500,4 +500,24 @@
     <TimeOfOpen>2024-01-01T00:00:00</TimeOfOpen>
     <MaxTimeToFinish>2024-11-05T00:00:00</MaxTimeToFinish>
   </Call>
+  <Call>
+    <Id>1050</Id>
+    <TypeOfReading>DeadBattery</TypeOfReading>
+    <Description>dss</Description>
+    <Adress>dwe</Adress>
+    <Longitude>11</Longitude>
+    <Latitude>33</Latitude>
+    <TimeOfOpen>2022-12-12T12:12:00</TimeOfOpen>
+    <MaxTimeToFinish>2023-12-12T11:11:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1051</Id>
+    <TypeOfReading>DeadBattery</TypeOfReading>
+    <Description>ngfds</Description>
+    <Adress>wsert</Adress>
+    <Longitude>11</Longitude>
+    <Latitude>33</Latitude>
+    <TimeOfOpen>2022-12-12T12:12:00</TimeOfOpen>
+    <MaxTimeToFinish>2023-11-11T11:11:00</MaxTimeToFinish>
+  </Call>
 </ArrayOfCall>
