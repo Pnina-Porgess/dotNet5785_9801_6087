@@ -28,9 +28,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "xml", "xml", "{61926653-A9B
 		xml\volunteers.xml = xml\volunteers.xml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LB", "LB\LB.csproj", "{0EFBECBE-1786-4D7A-90E0-E00ECD3B6DC0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlTest", "LB\BlTest.csproj", "{0EFBECBE-1786-4D7A-90E0-E00ECD3B6DC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LbTest", "LbTest\LbTest.csproj", "{26E62D40-46AA-4F96-80C8-E94C8E95BC90}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL", "LbTest\BL.csproj", "{26E62D40-46AA-4F96-80C8-E94C8E95BC90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
