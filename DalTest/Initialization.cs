@@ -187,14 +187,15 @@ public static class Initialization
     /// </summary>
     /// <param name="dal">The DAL instance to be used for database operations.</param>
     /// <exception cref="NullReferenceException">Thrown if the provided DAL object is null.</exception>
-    public static void Do(IDal dal) //stage 2
+    //public static void Do(IDal dal) //stage 2
+    public static void Do() //stage 4
     {
         //s_dalStudent = dalStudent ?? throw new NullReferenceException("DAL object can not be null!"); // stage 1
         //s_dalCourse = dalCourse ?? throw new NullReferenceException("DAL object can not be null!"); // stage 1
         //s_dalLink = dalStudentInCourse ?? throw new NullReferenceException("DAL object can not be null!"); // stage 1
         //s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!"); //stage 1
-        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
-
+        //s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
+        s_dal = DalApi.Factory.Get; //stage 4
         Console.WriteLine("Reset Configuration values and List values...");
         //s_dalConfig.Reset(); //stage 1
         //s_dalStudent.DeleteAll(); //stage 1

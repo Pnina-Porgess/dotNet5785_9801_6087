@@ -15,8 +15,10 @@ namespace DalTest
         //private static ICourse? s_dalCourse = new CourseImlementation(); //stage 1
         //private static ILink? s_dalLink = new LinkImplementation(); //stage 1
         //private static IConfig? s_dalConfig = new ConfigImplementation(); //stage 1
-       //  private static readonly IDal s_dal = new Dal.DalList(); //stage 2
-        static readonly IDal s_dal = new Dal.DalXml();//stage3
+        //static readonly IDal s_dal = new DalList(); //stage 2
+        //static readonly IDal s_dal = new DalXml(); //stage 3
+        static readonly IDal s_dal = Factory.Get; //stage 4
+
 
         ///enum for The possibilities of the main menu  
         public enum MainMenu
@@ -440,7 +442,8 @@ namespace DalTest
                                 break;
                             case MainMenu.InitializeData:
                                 //Initialization.Do(s_dalStudent, s_dalCourse, s_dalLink, s_dalConfig); //stage 1
-                                Initialization.Do(s_dal); //stage 2
+                                //Initialization.Do(s_dal); //stage 2
+                                Initialization.Do(); //stage 4
 
                                 break;
                             case MainMenu.DisplayAllData:
