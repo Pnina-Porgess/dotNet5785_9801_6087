@@ -143,7 +143,7 @@ public static class Initialization
         {
             TypeOfReading typeOfReading= (TypeOfReading)s_rand.Next(0,Enum.GetValues(typeof(TypeOfReading)).Length);
             DateTime TimeOfOpen = new DateTime(s_dal!.Config.Clock.Year ,1,1); 
-            DateTime MaxTimeToFinish = TimeOfOpen.AddDays(s_rand.Next((s_dal!.Config.Clock - TimeOfOpen).Days));
+            DateTime MaxTimeToFinish = TimeOfOpen.AddDays(s_rand.Next((s_dal!.Config.Clock - TimeOfOpen).Days)+1);
             double Longitude = longitudes[i];
             double Latitude = latitudes[i];
             string? Adress= addresses[i];
