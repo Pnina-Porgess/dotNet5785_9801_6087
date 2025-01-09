@@ -1,7 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk"> 
 
-
- 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -19,7 +17,7 @@
     <UseCommonOutputDirectory>true</UseCommonOutputDirectory>
     <RootNamespace />
 
-
+  </PropertyGroup>
 
    <ItemGroup>
     <ProjectReference Include="..\DalFacade\DalFacade.csproj" />
@@ -27,9 +25,7 @@
     <ProjectReference Include="..\DalTest\DalTest.csproj" />
     <ProjectReference Include="..\DalXml\DalXml.csproj" />
   </ItemGroup>
-  </PropertyGroup>
-	</Project>
-
+	
   <ItemGroup>
     <Folder Include="Helpers\" />
     <Folder Include="BlImplementation\" />
@@ -39,36 +35,4 @@
 
 </Project>
 
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<BaseOutputPath>$(SolutionDir)\bin\</BaseOutputPath>
-		<OutputPath>$(SolutionDir)\bin\</OutputPath>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<UseCommonOutputDirectory>true</UseCommonOutputDirectory>
-		<RootNamespace />
-	
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<BaseOutputPath>$(SolutionDir)\bin\</BaseOutputPath>
-		<OutputPath>$(SolutionDir)\bin\</OutputPath>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<UseCommonOutputDirectory>true</UseCommonOutputDirectory>
-		<RootNamespace />
-	
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<BaseOutputPath>$(SolutionDir)\bin\</BaseOutputPath>
-		<OutputPath>$(SolutionDir)\bin\</OutputPath>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<UseCommonOutputDirectory>true</UseCommonOutputDirectory>
-		<RootNamespace />
 	
