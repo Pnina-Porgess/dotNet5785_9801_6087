@@ -1,4 +1,4 @@
-﻿namespace LB
+﻿namespace BL
 {
     public class Class1
     {
