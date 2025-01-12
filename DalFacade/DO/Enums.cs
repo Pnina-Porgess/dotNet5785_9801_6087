@@ -15,7 +15,8 @@ public enum TypeOfReading
 {
   FlatTire,   
     DeadBattery, 
-    EngineFailure 
+    EngineFailure,
+    None
 }
 
 public enum TypeOfEndTime
