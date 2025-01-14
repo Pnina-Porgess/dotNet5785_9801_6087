@@ -9,7 +9,6 @@ namespace BO
     /// </summary>
     public class Volunteer    {
         public int Id { get; init; } /// Volunteer ID - Unique and immutable after initialization.
-
         public string FullName { get; set; }/// Full name of the volunteer (first and last name).
         public string Phone { get; set; }///Mobile phone number of the volunteer.
         public string Email { get; set; } /// Email address of the volunteer.

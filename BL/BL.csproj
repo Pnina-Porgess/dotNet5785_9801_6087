@@ -9,7 +9,18 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <UseCommonOutputDirectory>true</UseCommonOutputDirectory>
     <RootNamespace />
-  </PropertyGroup>
+  </PropertyGroup> 
+  <ItemGroup>
+    <Compile Remove="BlApi\**" />
+    <Compile Remove="BlImplementation\**" />
+    <Compile Remove="Helpers\**" />
+    <EmbeddedResource Remove="BlApi\**" />
+    <EmbeddedResource Remove="BlImplementation\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <None Remove="BlApi\**" />
+    <None Remove="BlImplementation\**" />
+    <None Remove="Helpers\**" />
+  </ItemGroup>
 
 
 
@@ -18,14 +29,6 @@
 	<ProjectReference Include="..\DalList\DalList.csproj" />
 	<ProjectReference Include="..\DalXml\DalXml.csproj" />
 	<ProjectReference Include="..\DalTest\DalTest.csproj" />
-</ItemGroup>
-
-
-
-<ItemGroup>
-  <Folder Include="Helpers\" />
-  <Folder Include="BlImplementation\" />
-  <Folder Include="BlApi\" />
 </ItemGroup>
 
 
