@@ -13,13 +13,10 @@
   <ItemGroup>
     <Compile Remove="BlApi\**" />
     <Compile Remove="BlImplementation\**" />
-    <Compile Remove="Helpers\**" />
     <EmbeddedResource Remove="BlApi\**" />
     <EmbeddedResource Remove="BlImplementation\**" />
-    <EmbeddedResource Remove="Helpers\**" />
     <None Remove="BlApi\**" />
     <None Remove="BlImplementation\**" />
-    <None Remove="Helpers\**" />
   </ItemGroup>
 
 
