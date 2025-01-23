@@ -11,11 +11,8 @@
     <RootNamespace />
   </PropertyGroup> 
   <ItemGroup>
-    <Compile Remove="BlApi\**" />
     <Compile Remove="BlImplementation\**" />
-    <EmbeddedResource Remove="BlApi\**" />
     <EmbeddedResource Remove="BlImplementation\**" />
-    <None Remove="BlApi\**" />
     <None Remove="BlImplementation\**" />
   </ItemGroup>
 
