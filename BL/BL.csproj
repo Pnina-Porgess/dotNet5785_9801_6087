@@ -11,9 +11,9 @@
     <RootNamespace />
   </PropertyGroup> 
   <ItemGroup>
-    <Compile Remove="BlImplementation\**" />
-    <EmbeddedResource Remove="BlImplementation\**" />
-    <None Remove="BlImplementation\**" />
+    <Compile Remove="VolunteerSortBy\**" />
+    <EmbeddedResource Remove="VolunteerSortBy\**" />
+    <None Remove="VolunteerSortBy\**" />
   </ItemGroup>
 
 

@@ -22,6 +22,7 @@ public class VolunteerInList
     public int? CurrentCallId { get; set; } // The ID of the call currently being handled by the volunteer, if any. Found in DO.Assignment where actual end time is null.
 
     public TypeOfReading CurrentCallType { get; set; } // Type of the call currently being handled by the volunteer. If no call is being handled, the value is None.
+
 }
 
 
