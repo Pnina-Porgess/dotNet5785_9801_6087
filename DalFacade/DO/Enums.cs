@@ -25,7 +25,6 @@ public enum TypeOfEndTime
     SelfCancellation,
     CancelingAnAdministrator,
     CancellationHasExpired
-
 }
 
 

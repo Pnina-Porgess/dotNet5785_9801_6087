@@ -9,12 +9,7 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <UseCommonOutputDirectory>true</UseCommonOutputDirectory>
     <RootNamespace />
-  </PropertyGroup> 
-  <ItemGroup>
-    <Compile Remove="VolunteerSortBy\**" />
-    <EmbeddedResource Remove="VolunteerSortBy\**" />
-    <None Remove="VolunteerSortBy\**" />
-  </ItemGroup>
+  </PropertyGroup>
 
 
 
