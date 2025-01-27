@@ -9,6 +9,7 @@ public enum CallStatusEnum
 /// </summary>
 public enum CallType
 {
+    None,
     Regular,
     Emergency,
     HighPriority

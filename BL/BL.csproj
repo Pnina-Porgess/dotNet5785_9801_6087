@@ -9,12 +9,7 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <UseCommonOutputDirectory>true</UseCommonOutputDirectory>
     <RootNamespace />
-  </PropertyGroup> 
-  <ItemGroup>
-    <Compile Remove="BlImplementation\**" />
-    <EmbeddedResource Remove="BlImplementation\**" />
-    <None Remove="BlImplementation\**" />
-  </ItemGroup>
+  </PropertyGroup>
 
 
 
