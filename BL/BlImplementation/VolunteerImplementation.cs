@@ -13,14 +13,47 @@ internal class VolunteerImplementation : IVolunteer
 
     public void AddVolunteer(BO.Volunteer volunteer)
     {
-        throw new NotImplementedException();
-    }
+        try
+        {
+            var existingVolunteer = _dal.Volunteer.Read(v => v.Id == volunteer.Id) ?? throw new DalAlreadyExistsException($"Volunteer with ID={volunteer.Id} already exists.");
+          
+        }
 
     public void DeleteVolunteer(int id)
     {
         throw new NotImplementedException();
     }
 
+    public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null)
+    {
+
+        try
+        {
+            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v =>
+                !isActive.HasValue || v.IsActive == isActive.Value);
+
+            var volunteerList = VolunteerManager.GetVolunteerList(volunteers);
+
+            volunteerList = sortBy.HasValue ? sortBy.Value switch
+            {
+                BO.VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
+                BO.VolunteerSortBy.TotalHandledCalls => volunteerList.OrderByDescending(v => v.TotalHandledCalls).ToList(),
+                BO.VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderByDescending(v => v.TotalCancelledCalls).ToList(),
+                BO.VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderByDescending(v => v.TotalExpiredCalls).ToList(),
+                _ => volunteerList.OrderBy(v => v.Id).ToList()
+            } : volunteerList.OrderBy(v => v.Id).ToList();
+
+            return volunteerList;
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.GeneralDatabaseException("Error accessing data.", ex);
+        }
+        catch (Exception ex)
+        {
+            throw new BO.GeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
+        }
+    }
     public BO.Volunteer GetVolunteerDetails(int volunteerId)
     {
         try
@@ -77,44 +110,6 @@ internal class VolunteerImplementation : IVolunteer
         catch (Exception ex)
         {
             throw new BO.GeneralDatabaseException("An unexpected error occurred while geting Volunteer details.", ex);
-        }
-    }
-
-
-
-
-    public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null)
-    {
-
-        try
-        {
-            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v =>
-                !isActive.HasValue || v.IsActive == isActive.Value);
-
-            var volunteerList = VolunteerManager.GetVolunteerList(volunteers);
-
-            volunteerList = sortBy.HasValue ? sortBy.Value switch
-            {
-                BO.VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
-                BO.VolunteerSortBy.Phone => volunteerList.OrderByDescending(v => v.Phone).ToList(),
-                BO.VolunteerSortBy.Email => volunteerList.OrderByDescending(v => v.Email).ToList(),
-                BO.VolunteerSortBy.Role => volunteerList.OrderByDescending(v => v.Role).ToList(),
-                BO.VolunteerSortBy.MaxDistance => volunteerList.OrderByDescending(v => v.MaxDistance).ToList(),
-                BO.VolunteerSortBy.TotalHandledCalls => volunteerList.OrderBy(v => v.TotalHandledCalls).ToList(),
-                BO.VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderBy(v => v.TotalCanceledCalls).ToList(),
-                BO.VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderBy(v => v.TotalExpiredCalls).ToList(),
-                _ => volunteerList.OrderBy(v => v.Id).ToList()
-            } : volunteerList.OrderBy(v => v.Id).ToList();
-
-            return volunteerList;
-        }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.GeneralDatabaseException("Error accessing data.", ex);
-        }
-        catch (Exception ex)
-        {
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
         }
     }
     public DO.Role Login(string username, string password)

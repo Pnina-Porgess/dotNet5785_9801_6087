@@ -1,14 +1,20 @@
 ﻿using BO;
 using DalApi;
 using DO;
-
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Helpers;
 internal static class VolunteerManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
-    public static IEnumerable <BO.VolunteerInList> GetVolunteerList(IEnumerable<DO.Volunteer> volunteers)
+    internal static IEnumerable<BO.VolunteerInList> GetVolunteerList(IEnumerable<DO.Volunteer> volunteers)
     {
+        if (volunteers is null)
+        {
+            throw new ArgumentNullException(nameof(volunteers));
+        }
+
         var volunteerInList = volunteers.Select(static v =>
           {
               var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
@@ -29,7 +35,90 @@ internal static class VolunteerManager
               };
           }).ToList();
 
-    }   
+    }
+
+    internal static bool IsPasswordStrong(string password)
+    {
+        if (password.Length < 8)
+            return false;
+        if (!password.Any(char.IsUpper))
+            return false;
+        if (!password.Any(char.IsLower))
+            return false;
+        if (!password.Any(char.IsDigit))
+            return false;
+        if (!password.Any(c => "@#$%^&*".Contains(c)))
+            return false;
+        return true;
+    }
+    internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
+    {
+       if (boVolunteer == null)
+    throw new BO.NotFoundException("Volunteer object cannot be null.");
+
+     if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+      throw new BO.InvalidFormatException("Invalid email format.");
+
+        if (boVolunteer.Id < 0 || !IsValidId(boVolunteer.Id))
+            throw new BO.InvalidFormatException("Invalid ID format. ID must be a valid number with a correct checksum.");
+
+        if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Phone, @"^\d{10}$"))
+            throw new BO.InvalidFormatException("Invalid phone number format. Phone number must have 10 digits.");
+
+        if (boVolunteer.FullName.Length < 2)
+            throw new BO.InvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
+
+        if (boVolunteer.Password.Length < 6 || !VolunteerManager.IsPasswordStrong(boVolunteer.Password))
+            throw new BO.InvalidFormatException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
+    }
+
+    internal static bool IsValidId(int id)
+    {
+        string idString = id.ToString();
+        if (idString.Length != 9)
+            return false;
+        int sum = 0;
+
+        for (int i = 0; i < 9; i++)
+        {
+            int digit = int.Parse(idString[i].ToString());
+
+            if (i % 2 == 1)
+                digit *= 2;
+
+            if (digit > 9)
+                digit -= 9;
+
+            sum += digit;
+        }
+
+        return sum % 10 == 0;
+    }
+    internal static string EncryptPassword(string password)
+    {
+        using var sha256 = SHA256.Create();
+        var hashedBytes = sha256?.ComputeHash(Encoding.UTF8.GetBytes(password));
+        return Convert.ToBase64String(hashedBytes!);
+    }
+    internal static DO.Volunteer CreateDoVolunteer(BO.Volunteer boVolunteer)
+    {
+        return new DO.Volunteer(
+            boVolunteer.Id,
+            boVolunteer.FullName,
+            boVolunteer.Phone,
+            boVolunteer.Email,
+            boVolunteer.Role,
+            boVolunteer.IsActive,
+            (DO.DistanceType)boVolunteer.DistanceType,
+            boVolunteer.MaxDistance,
+            EncryptPassword(boVolunteer.Password),
+            boVolunteer.CurrentAddress,
+            boVolunteer.Latitude,
+            boVolunteer.Longitude
+    
+
+        );
+    }
 }
 
 
