@@ -1,13 +1,10 @@
 ﻿using BO;
 using BlApi;
 using DO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace BL
+namespace BlImplementation
 {
-    public class BLCall : ICall
+    public class CallImplementation : ICall
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
         public void AddCall(BO.Call newCall)
@@ -137,8 +134,33 @@ namespace BL
 
         public void DeleteCall(int callId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Retrieve the call by its ID
+                var call = _dal.Call.Read(callId);
+                if (call == null)
+                {
+                    // Throw an exception if the call does not exist
+                    throw new ArgumentException($"Call with ID={callId} does not exist.");
+                }
+
+                // Check if the call can be deleted
+                if (call.Status != CallStatus.Open || call.HasAssignments)
+                {
+                    // If the call is not open or has assignments, throw an exception
+                    throw new InvalidOperationException("Cannot delete a call that is not in 'Open' status or has been assigned.");
+                }
+
+                // Attempt to delete the call
+                _dal.Call.Delete(callId);
+            }
+            catch (Exception ex)
+            {
+                // Catch and rethrow exceptions with appropriate messages
+                throw new InvalidOperationException($"An error occurred while attempting to delete the call: {ex.Message}", ex);
+            }
         }
+
 
         public int[] GetCallCountsByStatus()
         {
@@ -317,7 +339,6 @@ namespace BL
             // עדכון הקריאה במאגר
             _dal.Call.Update(updatedCall);
         }
-
 
     }
 }
