@@ -31,7 +31,8 @@ public record Volunteer
     string? Password = null,
     string? Adress = null,
     double? Latitude = null,
-    double? + = null
+    double? Longitude = null,
+    double? MaxEndTime = null
 )
 {
 public Volunteer(): this(0, "", "", "", Role.Volunteer,false, DistanceType.AerialDistance) { }
