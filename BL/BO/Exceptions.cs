@@ -43,3 +43,56 @@ public class InvalidFormatException : Exception
     protected InvalidFormatException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
         : base(info, context) { }
 }
+/// <summary>
+/// Exception for timeout during the API request.
+/// </summary>
+[Serializable]
+public class TimeoutException : Exception
+{
+    public TimeoutException(string message) : base(message) { }
+
+    public TimeoutException(string message, Exception innerException) : base(message, innerException) { }
+
+    protected TimeoutException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+        : base(info, context) { }
+}
+/// <summary>
+/// Exception for cases where a business layer object does not exist.
+/// </summary>
+[Serializable]
+public class BLDoesNotExist : Exception
+{
+    public BLDoesNotExist(string message) : base(message) { }
+
+    public BLDoesNotExist(string message, Exception innerException) : base(message, innerException) { }
+
+    protected BLDoesNotExist(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+        : base(info, context) { }
+}
+/// <summary>
+/// Exception for general database errors.
+/// </summary>
+[Serializable]
+public class GeneralDatabaseException : Exception
+{
+    public GeneralDatabaseException(string message) : base(message) { }
+
+    public GeneralDatabaseException(string message, Exception innerException) : base(message, innerException) { }
+
+    protected GeneralDatabaseException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+        : base(info, context) { }
+}
+/// <summary>
+/// Exception for cases where a business object does not exist.
+/// </summary>
+[Serializable]
+public class BoDoesNotExistException : Exception
+{
+    public BoDoesNotExistException(string message) : base(message) { }
+
+    public BoDoesNotExistException(string message, Exception innerException) : base(message, innerException) { }
+
+    protected BoDoesNotExistException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+        : base(info, context) { }
+}
+

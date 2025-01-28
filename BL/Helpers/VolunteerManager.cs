@@ -8,6 +8,25 @@ namespace Helpers;
 internal static class VolunteerManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
+    //הופך מתנדב מDO לBO
+    internal static BO.Volunteer MapVolunteer(DO.Volunteer volunteer)
+    {
+        return new BO.Volunteer
+        {
+            Id = volunteer.Id,
+            FullName = volunteer.Name,
+            Phone = volunteer.Phone,
+            Email = volunteer.Email,
+            IsActive = volunteer.IsActive,
+           Role = volunteer.Role,
+
+        };
+    }
+    internal static bool VerifyPassword(string enteredPassword, string storedPassword)
+    {
+        var encryptedPassword = EncryptPassword(enteredPassword);
+        return encryptedPassword == storedPassword;
+    }
     internal static IEnumerable<BO.VolunteerInList> GetVolunteerList(IEnumerable<DO.Volunteer> volunteers)
     {
         if (volunteers is null)
@@ -34,9 +53,10 @@ internal static class VolunteerManager
                         : BO.CallType.None) // אם אין קריאה, נחזיר None
               };
           }).ToList();
+       return volunteerInList;
 
     }
-
+    //ססמא חזקב
     internal static bool IsPasswordStrong(string password)
     {
         if (password.Length < 8)
@@ -51,6 +71,7 @@ internal static class VolunteerManager
             return false;
         return true;
     }
+    //שדות מלאים ותקינים
     internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
     {
        if (boVolunteer == null)
@@ -71,7 +92,7 @@ internal static class VolunteerManager
         if (boVolunteer.Password.Length < 6 || !VolunteerManager.IsPasswordStrong(boVolunteer.Password))
             throw new BO.InvalidFormatException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
     }
-
+//תז תקינה
     internal static bool IsValidId(int id)
     {
         string idString = id.ToString();
@@ -94,12 +115,14 @@ internal static class VolunteerManager
 
         return sum % 10 == 0;
     }
+    //הצפנת הססמא
     internal static string EncryptPassword(string password)
     {
         using var sha256 = SHA256.Create();
         var hashedBytes = sha256?.ComputeHash(Encoding.UTF8.GetBytes(password));
         return Convert.ToBase64String(hashedBytes!);
     }
+    //יוצר VOLUNTEER מעביר מBO TO DO
     internal static DO.Volunteer CreateDoVolunteer(BO.Volunteer boVolunteer)
     {
         return new DO.Volunteer(
@@ -118,6 +141,32 @@ internal static class VolunteerManager
     
 
         );
+    }
+    //בודק שבססמא חזקה ומחזיר כתובת בקווי אורך ורוחב
+    internal static (double? Latitude, double? Longitude) logicalChecking(BO.Volunteer boVolunteer)
+    {
+        IsPasswordStrong(boVolunteer.Password);
+        return Tools.GetCoordinatesFromAddress(boVolunteer.CurrentAddress);
+    }
+    //הרשאות למי שמוסמך
+    internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
+    {
+        if (!(requesterId == boVolunteer.Id) && !(boVolunteer.Role == Role.Manager))
+            throw new UnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
+
+        if (boVolunteer.Role != Role.Manager && boVolunteer.Role !=Role.Volunteer)
+            throw new UnauthorizedAccessException("Only an admin can update the volunteer's role.");
+    }
+    internal static bool CanUpdateFields(int requesterId, DO.Volunteer original, BO.Volunteer boVolunteer)
+    {
+    
+        if (original.Role != boVolunteer.Role)
+        {
+            if (boVolunteer.Role != Role.Manager|| requesterId!= original.Id)
+                return false;
+        }
+
+        return true;
     }
 }
 
