@@ -1,11 +1,11 @@
-﻿using BO;
-using DalApi;
-using DO;
+﻿namespace BlApi;
+using BO;
 using Helpers;
-namespace BlApi;
+
 
 internal class VolunteerImplementation : IVolunteer
 {
+  
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
     public void AddVolunteer(BO.Volunteer volunteer)
@@ -60,38 +60,6 @@ internal class VolunteerImplementation : IVolunteer
         }
     }
 
-
-    public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null)
-    {
-
-        try
-        {
-            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v =>
-                !isActive.HasValue || v.IsActive == isActive.Value);
-
-            var volunteerList = VolunteerManager.GetVolunteerList(volunteers);
-
-            volunteerList = sortBy.HasValue ? sortBy.Value switch
-            {
-                BO.VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
-                BO.VolunteerSortBy.TotalHandledCalls => volunteerList.OrderByDescending(v => v.TotalHandledCalls).ToList(),
-                BO.VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderByDescending(v => v.TotalCancelledCalls).ToList(),
-                BO.VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderByDescending(v => v.TotalExpiredCalls).ToList(),
-                _ => volunteerList.OrderBy(v => v.Id).ToList()
-            } : volunteerList.OrderBy(v => v.Id).ToList();
-
-            return volunteerList;
-        }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.GeneralDatabaseException("Error accessing data.", ex);
-        }
-        catch (Exception ex)
-        {
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
-        }
-    }
-
     public DO.Role Login(string username, string password)
     {
         try
@@ -103,7 +71,7 @@ internal class VolunteerImplementation : IVolunteer
             if (!VolunteerManager.VerifyPassword(password, volunteer.Password!))
                 throw new ArgumentException("The password provided is incorrect.");
 
-            return volunteer.Role;
+            return (DO.Role)volunteer.Role;
         }
         catch (Exception ex)
         {
@@ -129,14 +97,14 @@ internal class VolunteerImplementation : IVolunteer
                     {
                         Id = currentAssignment.Id,
                         CallId = currentAssignment.CallId,
-                        CallType = callDetails.TypeOfReading,
+                        CallType = (BO.TypeOfReading)callDetails.TypeOfReading,
                         Description = callDetails.Description,
                         Address = callDetails.Adress,
                         OpenTime = callDetails.TimeOfOpen,
                         MaxEndTime = callDetails.MaxTimeToFinish,
                         StartTime = currentAssignment.EntryTime,
                         DistanceFromVolunteer = Tools.CalculateDistance(volunteerDO.Latitude, volunteerDO.Longitude, callDetails.Latitude, callDetails.Longitude),
-                        Status = (CallStatusEnum)Tools.CalculateStatus(currentAssignment, callDetails, 30)
+                        Status = Tools.CalculateStatus(callDetails, 30)
                     };
                 }
             }
@@ -152,10 +120,10 @@ internal class VolunteerImplementation : IVolunteer
                 CurrentAddress = volunteerDO.Adress,
                 Latitude = volunteerDO.Latitude,
                 Longitude = volunteerDO.Longitude,
-                Role = volunteerDO.Role,
+                Role = (BO.Role)volunteerDO.Role,
                 IsActive = volunteerDO.IsActive,
                 MaxDistance = volunteerDO.MaximumDistance,
-                DistanceType = volunteerDO.DistanceType,
+                DistanceType = (BO.DistanceType)volunteerDO.DistanceType,
                 CurrentCall = callInProgress
             };
         }
@@ -168,18 +136,17 @@ internal class VolunteerImplementation : IVolunteer
             throw new BO.GeneralDatabaseException("An unexpected error occurred while getting Volunteer details.", ex);
         }
     }
-
     public void UpdateVolunteerDetails(int requesterId, BO.Volunteer volunteerToUpdate)
     {
         try
         {
             Helpers.VolunteerManager.ValidateInputFormat(volunteerToUpdate);
             Helpers.VolunteerManager.ValidatePermissions(requesterId, volunteerToUpdate);
-           var (latitude, longitude)= Tools.GetCoordinatesFromAddress(volunteerToUpdate.CurrentAddress);
+            var (latitude, longitude) = Tools.GetCoordinatesFromAddress(volunteerToUpdate.CurrentAddress!);
             volunteerToUpdate.Latitude = latitude;
             volunteerToUpdate.Longitude = longitude;
             var existingVolunteer = _dal.Volunteer.Read(volunteerToUpdate.Id);
-            if (!Helpers.VolunteerManager.CanUpdateFields(requesterId, existingVolunteer, volunteerToUpdate))
+            if (!Helpers.VolunteerManager.CanUpdateFields(requesterId, existingVolunteer!, volunteerToUpdate))
                 throw new UnauthorizedAccessException("You do not have permission to update the Role field.");
             DO.Volunteer doVolunteer = Helpers.VolunteerManager.CreateDoVolunteer(volunteerToUpdate);
             _dal.Volunteer.Update(doVolunteer);
@@ -197,5 +164,40 @@ internal class VolunteerImplementation : IVolunteer
             throw new BO.GeneralDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
         }
     }
+    public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null)
+    {
+
+        try
+        {
+            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v =>
+                !isActive.HasValue || v.IsActive == isActive.Value);
+
+            var volunteerList = VolunteerManager.GetVolunteerList(volunteers);
+
+            volunteerList = sortBy.HasValue ? sortBy.Value switch
+            {
+
+               VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
+               VolunteerSortBy.TotalHandledCalls => volunteerList.OrderByDescending(v => v.TotalHandledCalls).ToList(),
+              VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderByDescending(v => v.TotalCancelledCalls).ToList(),
+               VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderByDescending(v => v.TotalExpiredCalls).ToList(),
+                _ => volunteerList.OrderBy(v => v.Id).ToList()
+            } : volunteerList.OrderBy(v => v.Id).ToList();
+
+            return volunteerList;
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.GeneralDatabaseException("Error accessing data.", ex);
+        }
+        catch (Exception ex)
+        {
+            throw new BO.GeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
+        }
+    }
+
+  
+   
+ 
 
 }

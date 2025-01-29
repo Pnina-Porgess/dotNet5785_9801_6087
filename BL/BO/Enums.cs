@@ -1,5 +1,40 @@
 ﻿namespace BO;
-public enum CallStatusEnum
+public enum Role
+{
+    Volunteer,
+    Manager
+}
+/// <summary>
+/// 
+/// </summary>
+public enum DistanceType
+{
+    AerialDistance,
+    walkingDistance,
+    drivingDistance
+}
+/// <summary>
+/// 
+/// </summary>
+public enum TypeOfReading
+{
+    FlatTire,
+    DeadBattery,
+    EngineFailure,
+    None
+}
+/// <summary>
+/// 
+/// </summary>
+
+public enum TypeOfEndTime
+{
+    treated,
+    SelfCancellation,
+    CancelingAnAdministrator,
+    CancellationHasExpired
+}
+public enum CallStatusInProgress
 {
     InProgress, // Currently being handled
     AtRisk      // Close to the maximum allowed time
@@ -14,7 +49,18 @@ public enum CallType
     Emergency,
     HighPriority
 }
-
+/// <summary>
+/// Specifies the fields by which a list of volunteers can be sorted.
+/// </summary>
+public enum VolunteerSortBy
+{
+    FullName,
+    IsActive,
+    MaxDistance,
+    TotalHandledCalls,
+    TotalCanceledCalls,
+    TotalExpiredCalls
+}
 /// <summary>
 /// Possible statuses of a call.
 /// </summary>
@@ -37,18 +83,7 @@ public enum CallCompletionType
     Canceled,
     Expired
 }
-/// <summary>
-/// Specifies the fields by which a list of volunteers can be sorted.
-/// </summary>
-public enum VolunteerSortBy
-{         
-    FullName,             
-    IsActive,      
-    MaxDistance,    
-    TotalHandledCalls,  
-    TotalCanceledCalls, 
-    TotalExpiredCalls  
-}
+
 
 /// <summary>
 /// Enum for specifying the field by which calls can be sorted.
@@ -77,20 +112,4 @@ public enum TimeUnit
     Month,
     Year
 }
-/// <summary>
-/// 
-/// </summary>
-public enum DistanceType
-{
-    AerialDistance,
-    walkingDistance,
-    drivingDistance
-}
-/// <summary>
-/// 
-/// </summary>
-//public enum Role
-//{
-//    Volunteer,
-//    Manager
-//}
+

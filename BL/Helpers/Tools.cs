@@ -46,34 +46,15 @@ namespace Helpers;
         return degrees * Math.PI / 180;
     }
 
-    public static CallStatus CalculateStatus(DO.Assignment assignment, DO.Call call, int riskThreshold = 30)
-    {
-        // אם יש זמן סיום להקצאה - הקריאה סגורה
-        if (assignment.EndTime.HasValue)
-        {
-            return CallStatus.Closed;
-        }
+    public static CallStatusInProgress CalculateStatus( DO.Call call, int riskThreshold = 30)
+    { 
 
-        // אם אין הקצאה - בודקים אם הקריאה בסיכון
-        if (assignment.EntryTime == null)
-        {
             var timeToEnd = call.MaxTimeToFinish - ClockManager.Now;
             if (timeToEnd.TotalMinutes <= riskThreshold)
             {
-                return CallStatus.OpenAtRisk;
+                return CallStatusInProgress.AtRisk;
             }
-            return CallStatus.Open;
-        }
-
-        // יש הקצאה פעילה - בודקים אם בסיכון
-        var remainingTime = call.MaxTimeToFinish - ClockManager.Now;
-        if (remainingTime.TotalMinutes <= riskThreshold)
-        {
-            return CallStatus.InProgressAtRisk;
-        }
-
-        // קריאה בטיפול רגיל
-        return CallStatus.InProgress;
+        return CallStatusInProgress.InProgress;
     }
 
     public static (double? Latitude, double? Longitude) GetCoordinatesFromAddress(string address)
