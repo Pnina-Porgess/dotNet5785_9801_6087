@@ -1,11 +1,11 @@
-﻿using BO;
-using Newtonsoft.Json.Linq;
+﻿
 
+using BO;
+using Newtonsoft.Json.Linq;
 namespace Helpers;
     internal static class Tools
     {
-
-    private static readonly DalApi.IDal _dal = DalApi.Factory.Get; //stage 4
+ private static readonly DalApi.IDal _dal = DalApi.Factory.Get; //stage 4
     private static readonly string apiUrl = "https://geocode.maps.co/search?q={0}&api_key={1}";
     private static readonly string apiKey = "6797d46098d51743505867ysm058e34";
 
@@ -48,29 +48,33 @@ namespace Helpers;
 
     public static CallStatus CalculateStatus(DO.Assignment assignment, DO.Call call, int riskThreshold = 30)
     {
-        if (assignment.EndTime == null)
+        // אם יש זמן סיום להקצאה - הקריאה סגורה
+        if (assignment.EndTime.HasValue)
         {
-            if (call.MaxTimeToFinish.)
-            {
-                var remainingTime = call.MaxTimeToFinish.Value - ClockManager.Now;
-
-                if (remainingTime.TotalMinutes <= riskThreshold)
-                {
-                    return CallStatus.InTreatmentWithRisk;
-                }
-                else
-                {
-                    return CallStatus.InTreatment;
-                }
-            }
-            else
-            {
-                return CallStatus.InTreatment;
-            }
+            return CallStatus.Closed;
         }
-        return CallStatus.Closed;
+
+        // אם אין הקצאה - בודקים אם הקריאה בסיכון
+        if (assignment.EntryTime == null)
+        {
+            var timeToEnd = call.MaxTimeToFinish - ClockManager.Now;
+            if (timeToEnd.TotalMinutes <= riskThreshold)
+            {
+                return CallStatus.OpenAtRisk;
+            }
+            return CallStatus.Open;
+        }
+
+        // יש הקצאה פעילה - בודקים אם בסיכון
+        var remainingTime = call.MaxTimeToFinish - ClockManager.Now;
+        if (remainingTime.TotalMinutes <= riskThreshold)
+        {
+            return CallStatus.InProgressAtRisk;
+        }
+
+        // קריאה בטיפול רגיל
+        return CallStatus.InProgress;
     }
-   
 
     public static (double? Latitude, double? Longitude) GetCoordinatesFromAddress(string address)
     {
