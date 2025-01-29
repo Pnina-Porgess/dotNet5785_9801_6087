@@ -95,4 +95,13 @@ public class BoDoesNotExistException : Exception
     protected BoDoesNotExistException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
         : base(info, context) { }
 }
+public class LogicalException : Exception
+{
+    public LogicalException(string message) : base(message) { }
+
+    public LogicalException(string message, Exception innerException) : base(message, innerException) { }
+
+    protected LogicalException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+        : base(info, context) { }
+}
 

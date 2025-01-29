@@ -57,7 +57,7 @@ namespace Helpers;
         return CallStatusInProgress.InProgress;
     }
 
-    public static (double? Latitude, double? Longitude) GetCoordinatesFromAddress(string address)
+    public static (double Latitude, double Longitude) GetCoordinatesFromAddress(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
         {

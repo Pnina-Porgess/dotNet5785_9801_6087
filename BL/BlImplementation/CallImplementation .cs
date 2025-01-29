@@ -1,26 +1,109 @@
 ﻿using BO;
 using BlApi;
 using DO;
+using Helpers;
+using DalApi;
+using System;
 
 namespace BlImplementation
 {
-    public class CallImplementation : ICall
+    public class CallImplementation : BlApi.ICall
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
         public void AddCall(BO.Call newCall)
         {
-                var callDO = new DO.Call
-                (
-                    Id: 0,
-                    TypeOfReading: (TypeOfReading)newCall.Type,
-                    Description: newCall.Description,
-                    Adress: newCall.Address,
-                    Latitude: 0, // Replace with actual data
-                    Longitude: 0, // Replace with actual data
-                    TimeOfOpen: newCall.OpeningTime,
-                    MaxTimeToFinish: newCall?.MaxEndTime ?? DateTime.Now.AddHours(1)
-                );
-                _dal.Call.Create(callDO);
+            CallManager.ValidateInputFormat(newCall);
+            var (latitude, longitude) = CallManager.logicalChecking(newCall);
+            newCall.Latitude = latitude;
+            newCall.Longitude = longitude;
+            var call = CallManager.CreateDoCall(newCall);
+            _dal.Call.Create(call);
+        }
+
+        public void UpdateCall(BO.Call call)
+        {
+            try
+            {
+                CallManager.ValidateInputFormat(call);
+                var (latitude, longitude) = CallManager.logicalChecking(call);
+                call.Latitude = latitude;
+                call.Longitude = longitude;
+                var updatedCall = CallManager.CreateDoCall(call);
+                _dal.Call.Update(updatedCall);
+            }
+            catch (DO.DalAlreadyExistsException ex)
+            {
+                throw new BO.BLDoesNotExist($"There is no call with ID={call.Id} number.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
+            }
+        }
+
+        public void DeleteCall(int callId)
+        {
+            try
+            {
+                if (CallManager.CalculateCallStatus(callId) != CallStatus.Open || CallManager.WasNeverAssigned(callId))
+                {
+                    //?
+                    // If the call is not open or has assignments, throw an exception
+                    throw new InvalidOperationException("Cannot delete a call that is not in 'Open' status or has been assigned.");
+                }
+                // Attempt to delete the call
+                _dal.Call.Delete(callId);
+            }
+            catch (Exception ex)
+            {
+                // Catch and rethrow exceptions with appropriate messages
+                throw new InvalidOperationException($"An error occurred while attempting to delete the call: {ex.Message}", ex);
+            }
+        }
+
+        public BO.Call GetCallDetails(int callId)
+        {
+            // Get call from DAL
+            var dalCall = _dal.Call.Read(callId) ??
+                throw new BO.NotFoundException($"Call with ID={callId} was not found in the system.");
+
+            // Get all assignments for this call
+            var assignments = _dal.Assignment.ReadAll(a => a.CallId == callId).ToList();
+
+            // Load all relevant volunteers in a single query
+            var volunteerIds = assignments
+                .Where(a => a.VolunteerId != 0)
+                .Select(a => a.VolunteerId)
+                .Distinct()
+                .ToList();
+
+            var volunteers = _dal.Volunteer.ReadAll(v => volunteerIds.Contains(v.Id))
+                .ToDictionary(v => v.Id, v => v.Name);
+
+            // Convert assignments to BO.CallAssignInList
+            var assignmentsList = assignments.Select(assignment => new BO.CallAssignInList
+            {
+                VolunteerId = assignment.VolunteerId != 0 ? assignment.VolunteerId : null,
+                VolunteerName = volunteers.GetValueOrDefault(assignment.VolunteerId),
+                AssignmentStartTime = assignment.EntryTime,
+                AssignmentEndTime = assignment.EndTime,
+                CompletionType = assignment.EndTime.HasValue ?
+                    (BO.CallCompletionType)assignment.TypeOfEndTime : null
+            }).ToList();
+
+            // Create and return the BO.Call object
+            return new BO.Call
+            {
+                Id = dalCall.Id,
+                Type = (BO.CallType)dalCall.TypeOfReading,
+                Description = dalCall.Description,
+                Address = dalCall.Adress,
+                Latitude = dalCall.Latitude,
+                Longitude = dalCall.Longitude,
+                OpeningTime = dalCall.TimeOfOpen,
+                MaxEndTime = dalCall.MaxTimeToFinish,
+                Assignments = assignmentsList
+            };
         }
 
         public void CancelCallTreatment(int requesterId, int assignmentId)
@@ -131,51 +214,6 @@ namespace BlImplementation
             }
         }
 
-
-        public void DeleteCall(int callId)
-        {
-            try
-            {
-                // Retrieve the call by its ID
-                var call = _dal.Call.Read(callId);
-                if (call == null)
-                {
-                    // Throw an exception if the call does not exist
-                    throw new ArgumentException($"Call with ID={callId} does not exist.");
-                }
-                CalculateStatus(DO.Assignment currentAssignment,call, int timeMarginMinutes)
-                // Check if the call can be deleted
-                if (call.Status != CallStatus.Open || call.HasAssignments)
-                {
-                    // If the call is not open or has assignments, throw an exception
-                    throw new InvalidOperationException("Cannot delete a call that is not in 'Open' status or has been assigned.");
-                }
-
-                // Attempt to delete the call
-                _dal.Call.Delete(callId);
-            }
-            catch (Exception ex)
-            {
-                // Catch and rethrow exceptions with appropriate messages
-                throw new InvalidOperationException($"An error occurred while attempting to delete the call: {ex.Message}", ex);
-            }
-        }
-
-
-        public int[] GetCallCountsByStatus()
-        {
-            throw new NotImplementedException();
-        }
-
-        public BO.Call GetCallDetails(int callId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<CallInList> GetCalls(CallField? filterField, object? filterValue, CallField? sortField)
-        {
-            throw new NotImplementedException();
-        }
         public IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, CallType? filterType, CallField? sortField)
         {
             try
@@ -242,37 +280,6 @@ namespace BlImplementation
             }
         }
 
-        // Helper method to calculate the distance between the volunteer and the call (simplified example)
-        private double CalculateDistance(double callLatitude, double callLongitude, int volunteerId)
-        {
-            // Retrieve volunteer's current location from the data layer
-            var volunteer = _dal.Volunteer.Read(volunteerId);
-            if (volunteer == null)
-            {
-                throw new ArgumentException($"Volunteer with ID={volunteerId} does not exist.");
-            }
-
-            // Example: You can use a distance calculation formula like Haversine formula
-            double volunteerLatitude = volunteer.Latitude;
-            double volunteerLongitude = volunteer.Longitude;
-
-            // For simplicity, let's assume a placeholder distance calculation here
-            double distance = Math.Sqrt(Math.Pow(callLatitude - volunteerLatitude, 2) + Math.Pow(callLongitude - volunteerLongitude, 2));
-
-            return distance; // Return distance in some unit (e.g., kilometers or miles)
-        }
-
-
-        public IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField)
-        {
-            throw new NotImplementedException();
-        }
-
         public void SelectCallForTreatment(int volunteerId, int callId)
         {
             try
@@ -317,27 +324,22 @@ namespace BlImplementation
             }
         }
 
-
-        public void UpdateCall(BO.Call call)
+        public int[] GetCallCountsByStatus()
         {
-            var existingCall = _dal.Call.Read(call.Id);
-            if (existingCall == null)
-                throw new ArgumentException($"Call with ID={call.Id} does not exist.");
+            throw new NotImplementedException();
+        }
+        public IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField)
+        {
+            throw new NotImplementedException();
+        }
 
-            var updatedCall = new DO.Call
-            (
-                Id: call.Id,
-                TypeOfReading: (TypeOfReading)call.Type, // המרת סוג הקריאה
-                Description: call.Description,
-                Adress: call.Address,
-                Latitude: call.Latitude,
-                Longitude: call.Longitude,
-                TimeOfOpen: call.OpeningTime,
-                MaxTimeToFinish:call.MaxEndTime
-            );
-
-            // עדכון הקריאה במאגר
-            _dal.Call.Update(updatedCall);
+        public IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField)
+        {
+            throw new NotImplementedException();
+        }
+        public IEnumerable<CallInList> GetCalls(CallField? filterField, object? filterValue, CallField? sortField)
+        {
+            throw new NotImplementedException();
         }
 
     }

@@ -148,6 +148,7 @@ internal static class VolunteerManager
         IsPasswordStrong(boVolunteer.Password);
         return Tools.GetCoordinatesFromAddress(boVolunteer.CurrentAddress);
     }
+
     //הרשאות למי שמוסמך
     internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
     {
@@ -165,7 +166,6 @@ internal static class VolunteerManager
             if (boVolunteer.Role != Role.Manager|| requesterId!= original.Id)
                 return false;
         }
-
         return true;
     }
 }
