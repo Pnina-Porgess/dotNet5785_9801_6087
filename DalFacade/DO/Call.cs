@@ -16,7 +16,7 @@ public record Call
    int Id,
    TypeOfReading TypeOfReading,
    string? Description,
-   string? Adress,
+   string Adress,
    double Longitude,
    double Latitude,
    DateTime TimeOfOpen,

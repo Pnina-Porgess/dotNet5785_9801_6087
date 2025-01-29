@@ -1,4 +1,5 @@
-﻿using DalApi;
+﻿using BO;
+using DalApi;
 using DO;
 namespace Helpers;
 
@@ -89,7 +90,7 @@ internal static class CallManager
         if (call.Description.Length < 2)
             throw new BO.InvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
     }
-    internal static (double? Latitude, double? Longitude) logicalChecking(BO.Call call)
+    internal static (double Latitude, double Longitude) logicalChecking(BO.Call call)
     {
         if(call.MaxEndTime<call.OpeningTime)
             throw new BO.InvalidFormatException(".");
@@ -110,5 +111,75 @@ internal static class CallManager
                     TimeOfOpen: newCall.OpeningTime,
                     MaxTimeToFinish: newCall?.MaxEndTime ?? DateTime.Now.AddHours(1)
         );
+    }
+    internal static CallStatus CalculateCallStatus(int callId)
+    {
+        try
+        {
+            //// Get the call from database
+            var call = _dal.Call.Read(callId);
+            if (call == null)
+                throw new ArgumentException($"Call with ID={callId} does not exist.");
+
+            // Get all assignments for this call
+            var assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
+
+            // If there are no assignments at all
+            if (!assignments.Any())
+            {
+                // Check if call has expired
+                if (ClockManager.Now > call.MaxTimeToFinish)
+                    return CallStatus.Expired;
+
+                // Check if call is at risk (less than 30 minutes to expiration)
+                var timeToExpiration = call.MaxTimeToFinish - ClockManager.Now;
+                if (timeToExpiration?.TotalMinutes <= 30)
+                    return CallStatus.OpenAtRisk;
+
+                return CallStatus.Open;
+            }
+
+            // Get the latest active assignment (no EndTime)
+            var activeAssignment = assignments.FirstOrDefault(a => a.EndTime == null);
+            // If there's no active assignment but there are completed assignments
+            if (activeAssignment == null)
+            {
+                // Check if any assignment was completed successfully
+                var successfulAssignment = assignments.Any(a => a.TypeOfEndTime == TypeOfEndTime.treated);
+                return successfulAssignment ? CallStatus.Closed : CallStatus.Open;
+            }
+            // There is an active assignment - check if it's at risk
+            var remainingTime = call.MaxTimeToFinish - ClockManager.Now;
+            if (remainingTime?.TotalMinutes <= 30)
+                return CallStatus.InProgressAtRisk;
+
+            return CallStatus.InProgress;
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Error calculating call status: {ex.Message}", ex);
+        }
+    }
+    internal static bool WasNeverAssigned(int callId)
+    {
+        try
+        {
+            // First verify the call exists
+            var call = _dal.Call.Read(callId);
+            if (call == null)
+            {
+                throw new ArgumentException($"Call with ID={callId} does not exist.");
+            }
+
+            // Check if there are any assignments for this call
+            var assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
+
+            // The call was never assigned if there are no assignments at all
+            return !assignments.Any();
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Error checking call assignment status: {ex.Message}", ex);
+        }
     }
 }
