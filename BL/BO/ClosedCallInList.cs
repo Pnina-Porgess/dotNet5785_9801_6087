@@ -1,6 +1,5 @@
-﻿using DO;
-
-namespace BO;
+﻿
+amespace BO;
 
 /// <summary>
 /// Represents a closed call displayed in the volunteer's call history.

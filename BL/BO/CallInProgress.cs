@@ -1,4 +1,4 @@
-﻿using DO;
+﻿
 using System;
 
 namespace BO
@@ -27,7 +27,7 @@ namespace BO
 
         public double DistanceFromVolunteer { get; set; } // The distance of the call from the current location of the volunteer. Calculated in the logic layer.
 
-        public CallStatusEnum Status { get; set; } // The current status of the call. Possible values: "In Progress" or "At Risk".
+        public CallStatusInProgress Status { get; set; } // The current status of the call. Possible values: "In Progress" or "At Risk".
     }
 }
 
