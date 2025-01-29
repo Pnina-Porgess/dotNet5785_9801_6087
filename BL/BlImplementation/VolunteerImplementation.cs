@@ -136,7 +136,7 @@ internal class VolunteerImplementation : IVolunteer
                         MaxEndTime = callDetails.MaxTimeToFinish,
                         StartTime = currentAssignment.EntryTime,
                         DistanceFromVolunteer = Tools.CalculateDistance(volunteerDO.Latitude, volunteerDO.Longitude, callDetails.Latitude, callDetails.Longitude),
-                        Status = Tools.CalculateStatus(currentAssignment, callDetails, 30)
+                        Status = (CallStatusEnum)Tools.CalculateStatus(currentAssignment, callDetails, 30)
                     };
                 }
             }
