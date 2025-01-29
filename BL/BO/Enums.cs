@@ -41,12 +41,8 @@ public enum CallCompletionType
 /// Specifies the fields by which a list of volunteers can be sorted.
 /// </summary>
 public enum VolunteerSortBy
-{
-    Id,            
-    FullName,     
-    Phone,          
-    Email,         
-    Role,           
+{         
+    FullName,             
     IsActive,      
     MaxDistance,    
     TotalHandledCalls,  
