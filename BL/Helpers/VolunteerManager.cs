@@ -148,6 +148,7 @@ internal static class VolunteerManager
         IsPasswordStrong(boVolunteer.Password);
         return Tools.GetCoordinatesFromAddress(boVolunteer.CurrentAddress);
     }
+
     //הרשאות למי שמוסמך
     internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
     {
@@ -157,6 +158,7 @@ internal static class VolunteerManager
         if (boVolunteer.Role != Role.Manager && boVolunteer.Role !=Role.Volunteer)
             throw new UnauthorizedAccessException("Only an admin can update the volunteer's role.");
     }
+
     internal static bool CanUpdateFields(int requesterId, DO.Volunteer original, BO.Volunteer boVolunteer)
     {
     
@@ -165,7 +167,6 @@ internal static class VolunteerManager
             if (boVolunteer.Role != Role.Manager|| requesterId!= original.Id)
                 return false;
         }
-
         return true;
     }
 }

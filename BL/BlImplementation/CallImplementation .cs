@@ -1,6 +1,8 @@
 ﻿using BO;
 using BlApi;
 using DO;
+using Helpers;
+using DalApi;
 
 namespace BlImplementation
 {
@@ -9,18 +11,15 @@ namespace BlImplementation
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
         public void AddCall(BO.Call newCall)
         {
-                var callDO = new DO.Call
-                (
-                    Id: 0,
-                    TypeOfReading: (TypeOfReading)newCall.Type,
-                    Description: newCall.Description,
-                    Adress: newCall.Address,
-                    Latitude: 0, // Replace with actual data
-                    Longitude: 0, // Replace with actual data
-                    TimeOfOpen: newCall.OpeningTime,
-                    MaxTimeToFinish: newCall?.MaxEndTime ?? DateTime.Now.AddHours(1)
-                );
-                _dal.Call.Create(callDO);
+            CallManager.ValidateInputFormat(newCall);
+            var (latitude, longitude) = CallManager.logicalChecking(newCall);
+           if (latitude != null && longitude != null)
+            {
+                newCall.Latitude = latitude;
+                newCall.Longitude = longitude;
+            }
+            var call = CallManager.CreateDoCall(newCall);
+            _dal.Call.Create(call);
         }
 
         public void CancelCallTreatment(int requesterId, int assignmentId)

@@ -1,5 +1,4 @@
-﻿using BO;
-using DalApi;
+﻿using DalApi;
 using DO;
 namespace Helpers;
 
@@ -18,22 +17,6 @@ internal static class CallManager
             return CallStatus.Expired;
 
         return CallStatus.Open; // Adjust logic as needed
-    }
-
-    // Method to get coordinates from an address
-    internal static (double Latitude, double Longitude) GetCoordinates(string address)
-    {
-        using (var client = new HttpClient())
-        {
-            string url = $"https://geocode.maps.co/search?q={Uri.EscapeDataString(address)}&format=json";
-            var response = client.GetStringAsync(url).Result;
-            var data = JsonConvert.DeserializeObject<List<GeoResponse>>(response);
-
-            if (data == null || data.Count == 0)
-                throw new ArgumentException("Invalid address");
-
-            return (data[0].Lat, data[0].Lon);
-        }
     }
 
     // Method to calculate aerial distance between two addresses
@@ -95,5 +78,37 @@ internal static class CallManager
             }
         }
     }
-}
+    internal static void ValidateInputFormat(BO.Call call)
+    {
+        if (call == null)
+            throw new BO.NotFoundException("Volunteer object cannot be null.");
+        if (call.Id < 1000)
+            throw new BO.InvalidFormatException("Invalid ID format. ID must be a valid number with a correct checksum.");
+        if ((call.Type!=BO.CallType.None)&& (call.Type != BO.CallType.Regular)&& (call.Type != BO.CallType.Emergency)&& (call.Type != BO.CallType.HighPriority))
+            throw new BO.InvalidFormatException(@"Invalid CallType format. PCallType must be None\\Regular\\Emergency\\HighPriority.");
+        if (call.Description.Length < 2)
+            throw new BO.InvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
+    }
+    internal static (double? Latitude, double? Longitude) logicalChecking(BO.Call call)
+    {
+        if(call.MaxEndTime<call.OpeningTime)
+            throw new BO.InvalidFormatException(".");
 
+        return Tools.GetCoordinatesFromAddress(call.Address);
+
+
+    }
+    internal static DO.Call CreateDoCall(BO.Call newCall)
+    {
+        return new DO.Call(
+                    Id: 0,
+                    TypeOfReading: (TypeOfReading)newCall.Type,
+                    Description: newCall.Description,
+                    Adress: newCall.Address,
+                    Latitude: newCall.Latitude,
+                    Longitude: newCall.Longitude,
+                    TimeOfOpen: newCall.OpeningTime,
+                    MaxTimeToFinish: newCall?.MaxEndTime ?? DateTime.Now.AddHours(1)
+        );
+    }
+}

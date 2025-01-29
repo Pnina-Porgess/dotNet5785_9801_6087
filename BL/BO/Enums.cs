@@ -89,8 +89,3 @@ public enum DistanceType
 /// <summary>
 /// 
 /// </summary>
-//public enum Role
-//{
-//    Volunteer,
-//    Manager
-//}
