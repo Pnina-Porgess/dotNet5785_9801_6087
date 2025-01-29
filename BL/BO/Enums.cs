@@ -81,3 +81,20 @@ public enum TimeUnit
     Month,
     Year
 }
+/// <summary>
+/// 
+/// </summary>
+public enum DistanceType
+{
+    AerialDistance,
+    walkingDistance,
+    drivingDistance
+}
+/// <summary>
+/// 
+/// </summary>
+//public enum Role
+//{
+//    Volunteer,
+//    Manager
+//}

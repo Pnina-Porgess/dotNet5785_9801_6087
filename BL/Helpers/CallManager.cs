@@ -1,13 +1,6 @@
 ﻿using BO;
 using DalApi;
-using DOA;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-
+using DO;
 namespace Helpers;
 
 internal static class CallManager

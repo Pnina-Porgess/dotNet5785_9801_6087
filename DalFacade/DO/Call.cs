@@ -20,10 +20,10 @@ public record Call
    double Longitude,
    double Latitude,
    DateTime TimeOfOpen,
-   DateTime MaxTimeToFinish
+   DateTime? MaxTimeToFinish
 )
 {
-    public Call() : this(0, TypeOfReading.FlatTire, "", "", 0, 0, DateTime.Now, DateTime.Now) { }
+    public Call() : this(0, TypeOfReading.FlatTire, "", "", 0, 0, DateTime.Now, null) { }
 }
 ;
 
