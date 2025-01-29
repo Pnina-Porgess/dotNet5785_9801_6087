@@ -143,7 +143,7 @@ namespace BlImplementation
                     // Throw an exception if the call does not exist
                     throw new ArgumentException($"Call with ID={callId} does not exist.");
                 }
-
+                CalculateStatus(DO.Assignment currentAssignment,call, int timeMarginMinutes)
                 // Check if the call can be deleted
                 if (call.Status != CallStatus.Open || call.HasAssignments)
                 {
