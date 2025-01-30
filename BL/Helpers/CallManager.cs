@@ -1,84 +1,12 @@
 ﻿using BO;
 using DalApi;
 using DO;
-namespace Helpers;
+using Helpers;
 
 internal static class CallManager
     
 {
     private static IDal _dal = Factory.Get; //stage 4
-    // Method to get call status based on the system clock and database
-    internal static CallStatus GetCallStatus(int callId)
-    {
-        var call = _dal.Call.Read(callId);
-        if (call == null)
-            throw new ArgumentException($"Call with ID={callId} does not exist.");
-
-        if (DateTime.Now > call.MaxTimeToFinish)
-            return CallStatus.Expired;
-
-        return CallStatus.Open; // Adjust logic as needed
-    }
-
-    // Method to calculate aerial distance between two addresses
-    internal static double CalculateDistance(string address1, string address2)
-    {
-        var (lat1, lon1) = GetCoordinates(address1);
-        var (lat2, lon2) = GetCoordinates(address2);
-
-        return HaversineDistance(lat1, lon1, lat2, lon2);
-    }
-
-    // Haversine formula to calculate distance between two lat/lon points
-    private static double HaversineDistance(double lat1, double lon1, double lat2, double lon2)
-    {
-        const double R = 6371; // Earth's radius in km
-        double dLat = ToRadians(lat2 - lat1);
-        double dLon = ToRadians(lon2 - lon1);
-
-        double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                   Math.Cos(ToRadians(lat1)) * Math.Cos(ToRadians(lat2)) *
-                   Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
-
-        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-        return R * c;
-    }
-
-    private static double ToRadians(double degrees) => degrees * Math.PI / 180;
-
-    // Method to update expired calls
-    internal static void UpdateExpiredCalls()
-    {
-        var calls = _dal.Call.GetAll()
-            .Where(call => DateTime.Now > call.MaxTimeToFinish && call.Status == CallStatus.Open)
-            .ToList();
-
-        foreach (var call in calls)
-        {
-            var assignments = _dal.Assignment.GetByCallId(call.Id);
-
-            if (assignments.Count == 0)
-            {
-                var newAssignment = new DO.Assignment
-                {
-                    CallId = call.Id,
-                    VolunteerId = 0,
-                    AssignmentEndTime = DateTime.Now,
-                    CompletionType = CompletionType.Expired
-                };
-                _dal.Assignment.Create(newAssignment);
-            }
-            else
-            {
-                foreach (var assignment in assignments.Where(a => a.AssignmentEndTime == null))
-                {
-                    assignment.AssignmentEndTime = DateTime.Now;
-                    assignment.CompletionType = CompletionType.Expired;
-                    _dal.Assignment.Update(assignment);
-                }
-            }
-        }
-    }
     internal static void ValidateInputFormat(BO.Call call)
     {
         if (call == null)
@@ -182,4 +110,75 @@ internal static class CallManager
             throw new InvalidOperationException($"Error checking call assignment status: {ex.Message}", ex);
         }
     }
+    internal static BO.CallInList CreateCallInList(DO.Call call, IEnumerable<DO.Assignment> assignments, Dictionary<int, string> volunteers)
+    {
+        var callAssignments = assignments.Where(a => a.CallId == call.Id).OrderByDescending(a => a.EntryTime).ToList();
+        var latestAssignment = callAssignments.FirstOrDefault();
+
+        return new BO.CallInList
+        {
+            CallId = call.Id,
+            CallType = (BO.CallType)call.TypeOfReading,
+            OpeningTime = call.TimeOfOpen,
+            CallStatus = CalculateCallStatus(call.Id),
+            AssignmentId = latestAssignment?.Id,
+            LastVolunteerName = latestAssignment?.VolunteerId != 0 && volunteers.TryGetValue(latestAssignment.VolunteerId, out var name) ? name : null,
+            TotalAssignments = callAssignments.Count,
+            RemainingTime = call.MaxTimeToFinish.HasValue
+            ? call.MaxTimeToFinish.Value - DateTime.Now
+            : null,
+            CompletionTime = latestAssignment?.EndTime.HasValue == true ? latestAssignment.EndTime - latestAssignment.EntryTime : null
+        };
+    }
+
+    internal static IEnumerable<BO.CallInList> FilterCall(IEnumerable<BO.CallInList> calls, CallField filterField, object filterValue)
+    {
+        return filterField switch
+        {
+            CallField.Id => calls.Where(call => call.CallId.ToString() == filterValue.ToString()),
+            CallField.Type => calls.Where(call => call.CallType == (BO.CallType)filterValue),
+            CallField.Status => calls.Where(call => call.CallStatus == (BO.CallStatus)filterValue),
+            CallField.OpeningTime => calls.Where(call => call.OpeningTime.Date == ((DateTime)filterValue).Date),
+            CallField.AssignmentId => calls.Where(call => call.AssignmentId.ToString() == filterValue.ToString()),
+            _ => throw new BO.InvalidOperationException($"Filtering by {filterField} is not supported")
+        };
+    }
+
+
+    internal static IEnumerable<BO.CallInList> SortCalls(IEnumerable<BO.CallInList> calls, CallField? sortField)
+    {
+        if (!sortField.HasValue)
+            return calls.OrderBy(c => c.CallId);
+
+        return sortField switch
+        {
+            CallField.Id => calls.OrderBy(c => c.CallId),
+            CallField.Type => calls.OrderBy(c => c.CallType),
+            CallField.Status => calls.OrderBy(c => c.CallStatus),
+            CallField.OpeningTime => calls.OrderBy(c => c.OpeningTime),
+            CallField.AssignmentId => calls.OrderBy(c => c.AssignmentId),
+            _ => throw new BO.InvalidOperationException($"Sorting by {sortField} is not supported")
+        };
+    }
+    /// <summary>
+    /// Validates whether the assignment can be completed.
+    /// </summary>
+    internal static void ValidateAssignmentForCompletion(DO.Assignment assignment, int volunteerId)
+    {
+        if (assignment == null)
+        {
+            throw new ArgumentException($"Assignment with ID={assignmentId} does not exist.");
+        }
+        if (assignment.VolunteerId != volunteerId)
+        {
+            throw new BO.UnauthorizedActionException("The volunteer does not have permission to complete this treatment.");
+        }
+
+        if (assignment.EndTime != null)
+        {
+            throw new BO.InvalidOperationException("This treatment has already been completed or cancelled.");
+        }
+    }
 }
+
+

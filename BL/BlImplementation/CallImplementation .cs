@@ -54,10 +54,13 @@ namespace BlImplementation
                 // Attempt to delete the call
                 _dal.Call.Delete(callId);
             }
+            catch (DO.DalAlreadyExistsException ex)
+            {
+                throw new BO.BLDoesNotExist($"There is no call with ID={callId} number.", ex);
+            }
             catch (Exception ex)
             {
-                // Catch and rethrow exceptions with appropriate messages
-                throw new InvalidOperationException($"An error occurred while attempting to delete the call: {ex.Message}", ex);
+                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
 
@@ -106,6 +109,98 @@ namespace BlImplementation
             };
         }
 
+        public IEnumerable<BO.CallInList> GetCalls(CallField? filterField = null, object? filterValue = null, CallField? sortField = null)
+        {
+            try
+            {
+                var calls = _dal.Call.ReadAll();
+                var assignments = _dal.Assignment.ReadAll();
+                var volunteers = _dal.Volunteer.ReadAll().ToDictionary(v => v.Id, v => v.Name);
+                var callList = calls.Select(call => CallManager.CreateCallInList(call, assignments, volunteers));
+
+                if (filterField.HasValue && filterValue != null)
+                {
+                    callList = CallManager.FilterCall(callList, filterField.Value, filterValue);
+                }
+
+                return CallManager.SortCalls(callList, sortField).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new BO.InternalErrorException("Error retrieving calls list", ex);
+            }
+        }
+
+        public int[] GetCallCountsByStatus()
+        {
+            try
+            {
+                // קבלת כל הקריאות והקצאות מה-DAL
+                var calls = _dal.Call.ReadAll();
+                var assignments = _dal.Assignment.ReadAll();
+
+                // שימוש ב-LINQ query syntax עם let ו-group by
+                var statusGroups =
+                    from call in calls
+                    let currentStatus = CallManager.CalculateCallStatus(call.Id)
+                    group call by currentStatus into statusGroup
+                    orderby statusGroup.Key
+                    select new
+                    {
+                        Status = statusGroup.Key,
+                        Count = statusGroup.Count()
+                    };
+
+                // יצירת מערך בגודל מספר הערכים באינום CallStatus
+                int statusCount = Enum.GetValues<CallStatus>().Length;
+                int[] quantities = new int[statusCount];
+
+                // מילוי המערך בעזרת method syntax של LINQ
+                statusGroups.ToList()
+                           .ForEach(group => quantities[(int)group.Status] = group.Count);
+
+                return quantities;
+         
+            catch (DO.DalDoesNotExistException ex)
+            {
+                throw new BO.NotFoundException("Required data was not found in the database", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new BO.GeneralDatabaseException("An unexpected error occurred while calculating call quantities", ex);
+            }
+        }
+
+        public void CompleteCallTreatment(int volunteerId, int assignmentId)
+        {
+            try
+            {
+                // Retrieve the assignment by ID
+                var assignment = _dal.Assignment.Read(assignmentId)
+
+                // Validate authorization and status
+                CallManager.ValidateAssignmentForCompletion(assignment, volunteerId);
+
+                // Update the assignment to reflect the completion of treatment
+                var updatedAssignment = assignment with
+                {
+                    EndTime = ClockManager.Now, // Set the end time to the current time
+                    TypeOfEndTime = DO.TypeOfEndTime.treated // Set the end type as "Treated"
+                };
+
+                // Update the assignment in the data layer
+                _dal.Assignment.Update(updatedAssignment);
+            }
+            catch (DO.DalAlreadyExistsException ex)
+            {
+                throw new BO.BLDoesNotExist($"There is no assignment with ID={assignmentId} .", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
+            }
+        }
+
         public void CancelCallTreatment(int requesterId, int assignmentId)
         {
             try
@@ -116,7 +211,7 @@ namespace BlImplementation
                     throw new ArgumentException($"Assignment with ID={assignmentId} does not exist.");
                 }
 
-                if (assignment.VolunteerId != requesterId && _dal.Volunteer.Read(requesterId) is null )
+                if (assignment.VolunteerId != requesterId && _dal.Volunteer.Read(requesterId) is null)
                 {
                     throw new InvalidOperationException("Requester does not have permission to cancel this treatment.");
                 }
@@ -162,121 +257,7 @@ namespace BlImplementation
             catch (Exception ex)
             {
                 // טיפול בחריגות כלליות
-                throw new InvalidOperationException($"An unexpected error occurred: {ex.Message}", ex);
-            }
-        }
-
-
-        public void CompleteCallTreatment(int volunteerId, int assignmentId)
-        {
-            try
-            {
-                // Retrieve the assignment by ID
-                var assignment = _dal.Assignment.Read(assignmentId);
-                if (assignment == null)
-                {
-                    throw new ArgumentException($"Assignment with ID={assignmentId} does not exist.");
-                }
-
-                // Check if the volunteer is the one assigned to this call
-                if (assignment.VolunteerId != volunteerId)
-                {
-                    throw new InvalidOperationException("The volunteer does not have permission to complete this treatment.");
-                }
-
-                // Check if the assignment is still open (i.e., treatment has not been completed or cancelled)
-                if (assignment.EndTime != null)
-                {
-                    throw new InvalidOperationException("This treatment has already been completed or cancelled.");
-                }
-
-                // Retrieve the associated call
-                var call = _dal.Call.Read(assignment.CallId);
-                if (call == null)
-                {
-                    throw new ArgumentException($"Call with ID={assignment.CallId} does not exist.");
-                }
-
-                // Update the assignment to reflect the completion of treatment
-                var updatedAssignment = assignment with
-                {
-                    EndTime = DateTime.Now, // Set the end time to the current time
-                    TypeOfEndTime = TypeOfEndTime.treated // Set the end type as "Treated"
-                };
-
-                // Update the assignment in the data layer
-                _dal.Assignment.Update(updatedAssignment);
-            }
-            catch (Exception ex)
-            {
-                // Catch any general exceptions and throw a new exception to the UI layer
-                throw new InvalidOperationException($"An unexpected error occurred: {ex.Message}", ex);
-            }
-        }
-
-        public IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, CallType? filterType, CallField? sortField)
-        {
-            try
-            {
-                // Retrieve all assignments for the given volunteer
-                var assignments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.EndTime == null);
-
-                // Retrieve all open calls (either "open" or "at-risk")
-                var openCalls = _dal.Call.ReadAll(c => c.Status == CallStatus.Open || c.Status == CallStatus.OpenRisk);
-
-                // Filter open calls by the specified call type, if provided
-                if (filterType.HasValue)
-                {
-                    openCalls = openCalls.Where(c => c.TypeOfReading == (TypeOfReading)filterType);
-                }
-
-                // Create the result list which includes the distance to the volunteer (just an example distance calculation)
-                var openCallsWithDistance = openCalls.Select(call =>
-                {
-                    // Calculate the distance from the volunteer to the call (assuming you have latitude and longitude for both)
-                    var distance = CalculateDistance(call.Latitude, call.Longitude, volunteerId); // A method to calculate the distance
-
-                    return new OpenCallInList
-                    {
-                        CallId = call.Id,
-                        Type = (CallType)call.TypeOfReading,
-                        Description = call.Description,
-                        Address = call.Adress,
-                        Latitude = call.Latitude,
-                        Longitude = call.Longitude,
-                        Distance = distance
-                    };
-                });
-
-                // Sort the list by the specified field, if provided
-                if (sortField.HasValue)
-                {
-                    switch (sortField.Value)
-                    {
-                        case CallField.Id:
-                            openCallsWithDistance = openCallsWithDistance.OrderBy(call => call.CallId);
-                            break;
-                        case CallField.Description:
-                            openCallsWithDistance = openCallsWithDistance.OrderBy(call => call.Description);
-                            break;
-                        case CallField.Distance:
-                            openCallsWithDistance = openCallsWithDistance.OrderBy(call => call.Distance);
-                            break;
-                            // Add more sorting options as needed
-                    }
-                }
-                else
-                {
-                    // Default sorting by call ID
-                    openCallsWithDistance = openCallsWithDistance.OrderBy(call => call.CallId);
-                }
-
-                return openCallsWithDistance;
-            }
-            catch (Exception ex)
-            {
-                // General exception handling
-                throw new InvalidOperationException($"An unexpected error occurred: {ex.Message}", ex);
+                throw new BO.InvalidOperationException($"An unexpected error occurred: {ex.Message}", ex);
             }
         }
 
@@ -319,25 +300,16 @@ namespace BlImplementation
             }
             catch (Exception ex)
             {
-                // טיפול בחריגות כלליות
-                throw new InvalidOperationException($"An unexpected error occurred: {ex.Message}", ex);
+                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
-
-        public int[] GetCallCountsByStatus()
-        {
-            throw new NotImplementedException();
-        }
+  
         public IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField)
         {
             throw new NotImplementedException();
         }
 
         public IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField)
-        {
-            throw new NotImplementedException();
-        }
-        public IEnumerable<CallInList> GetCalls(CallField? filterField, object? filterValue, CallField? sortField)
         {
             throw new NotImplementedException();
         }
