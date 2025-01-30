@@ -12,7 +12,7 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-            var existingVolunteer = _dal.Volunteer.Read(v => v.Id == volunteer.Id) ?? throw new DalAlreadyExistsException($"Volunteer with ID={volunteer.Id} already exists.");
+            var existingVolunteer = _dal.Volunteer.Read(v => v.Id == volunteer.Id) ?? throw new DO.DalDoesNotExistException($"Volunteer with ID={volunteer.Id} already exists.");
             Helpers.VolunteerManager.ValidateInputFormat(volunteer);
             var (latitude, longitude) = VolunteerManager.logicalChecking(volunteer);
             if (latitude != null && longitude != null)
@@ -23,7 +23,7 @@ internal class VolunteerImplementation : IVolunteer
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteer);
             _dal.Volunteer.Create(doVolunteer);
         }
-        catch (DO.DalAlreadyExistsException ex)
+        catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BLDoesNotExist($"Volunteer with ID={volunteer.Id} already exists", ex);
         }
@@ -83,7 +83,7 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
             var volunteerDO = _dal.Volunteer.Read(volunteerId) ??
-              throw new BO.BoDoesNotExistException($"Volunteer with ID={volunteerId} does not exist");
+              throw new DO.DalDoesNotExistException($"Volunteer with ID={volunteerId} does not exist");
 
             var currentAssignment = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.EndTime == null).FirstOrDefault();
             BO.CallInProgress? callInProgress = null;
@@ -129,7 +129,7 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BoDoesNotExistException("Volunteer not found in data layer.", ex);
+            throw new BO.BLDoesNotExist("Volunteer not found in data layer.", ex);
         }
         catch (Exception ex)
         {

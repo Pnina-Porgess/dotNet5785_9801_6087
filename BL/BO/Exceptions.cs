@@ -1,21 +1,16 @@
 ﻿namespace BO;
 
-/// <summary>
-/// Exception for unexpected database errors.
-/// </summary>
-[Serializable]
-public class DbException : Exception
+
+
+public class BlLogicalException : Exception
 {
-    public DbException() { }
+    public BlLogicalException(string message) : base(message) { }
 
-    public DbException(string message) : base(message) { }
+    public BlLogicalException(string message, Exception innerException) : base(message, innerException) { }
 
-    public DbException(string message, Exception innerException) : base(message, innerException) { }
-
-    protected DbException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+    protected BlLogicalException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
         : base(info, context) { }
 }
-
 /// <summary>
 /// Exception for cases where an object is not found.
 /// </summary>
@@ -41,19 +36,6 @@ public class InvalidFormatException : Exception
     public InvalidFormatException(string message, Exception innerException) : base(message, innerException) { }
 
     protected InvalidFormatException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-        : base(info, context) { }
-}
-/// <summary>
-/// Exception for timeout during the API request.
-/// </summary>
-[Serializable]
-public class TimeoutException : Exception
-{
-    public TimeoutException(string message) : base(message) { }
-
-    public TimeoutException(string message, Exception innerException) : base(message, innerException) { }
-
-    protected TimeoutException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
         : base(info, context) { }
 }
 /// <summary>
@@ -95,13 +77,5 @@ public class BoDoesNotExistException : Exception
     protected BoDoesNotExistException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
         : base(info, context) { }
 }
-public class LogicalException : Exception
-{
-    public LogicalException(string message) : base(message) { }
 
-    public LogicalException(string message, Exception innerException) : base(message, innerException) { }
-
-    protected LogicalException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-        : base(info, context) { }
-}
 
