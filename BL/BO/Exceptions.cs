@@ -105,3 +105,14 @@ public class LogicalException : Exception
         : base(info, context) { }
 }
 
+public class InvalidOperationException : Exception
+{
+    public InvalidOperationException(string message) : base(message) { }
+
+    public InvalidOperationException(string message, Exception innerException) : base(message, innerException) { }
+
+    protected InvalidOperationException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+        : base(info, context) { }
+}
+
+

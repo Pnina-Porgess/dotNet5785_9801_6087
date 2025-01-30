@@ -56,7 +56,7 @@ internal static class VolunteerManager
        return volunteerInList;
 
     }
-    //ססמא חזקב
+    //ססמא חזקה
     internal static bool IsPasswordStrong(string password)
     {
         if (password.Length < 8)

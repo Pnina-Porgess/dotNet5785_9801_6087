@@ -98,7 +98,8 @@ public enum CallField
     Longitude,      // Sort by the longitude coordinate
     OpeningTime,    // Sort by the opening time of the call
     MaxEndTime,     // Sort by the maximum end time
-    Status          // Sort by the current status of the call
+    Status,
+    AssignmentId// Sort by the current status of the call
 }
 
 /// <summary>
