@@ -1,6 +1,7 @@
 ﻿namespace BlApi;
-using BO;
 using Helpers;
+
+
 
 
 internal class VolunteerImplementation : IVolunteer
@@ -103,7 +104,7 @@ internal class VolunteerImplementation : IVolunteer
                         OpenTime = callDetails.TimeOfOpen,
                         MaxEndTime = callDetails.MaxTimeToFinish,
                         StartTime = currentAssignment.EntryTime,
-                        DistanceFromVolunteer = Tools.CalculateDistance(volunteerDO.Latitude, volunteerDO.Longitude, callDetails.Latitude, callDetails.Longitude),
+                        DistanceFromVolunteer = Tools.CalculateDistance(volunteerDO.Latitude!, volunteerDO.Longitude!, callDetails.Latitude, callDetails.Longitude),
                         Status = Tools.CalculateStatus(callDetails, 30)
                     };
                 }
@@ -173,14 +174,15 @@ internal class VolunteerImplementation : IVolunteer
                 !isActive.HasValue || v.IsActive == isActive.Value);
 
             var volunteerList = VolunteerManager.GetVolunteerList(volunteers);
-
+           
+         
             volunteerList = sortBy.HasValue ? sortBy.Value switch
             {
 
-               VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
-               VolunteerSortBy.TotalHandledCalls => volunteerList.OrderByDescending(v => v.TotalHandledCalls).ToList(),
-              VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderByDescending(v => v.TotalCancelledCalls).ToList(),
-               VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderByDescending(v => v.TotalExpiredCalls).ToList(),
+              BO.VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
+              BO.VolunteerSortBy.TotalHandledCalls => volunteerList.OrderByDescending(v => v.TotalHandledCalls).ToList(),
+              BO.VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderByDescending(v => v.TotalCancelledCalls).ToList(),
+              BO.VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderByDescending(v => v.TotalExpiredCalls).ToList(),
                 _ => volunteerList.OrderBy(v => v.Id).ToList()
             } : volunteerList.OrderBy(v => v.Id).ToList();
 

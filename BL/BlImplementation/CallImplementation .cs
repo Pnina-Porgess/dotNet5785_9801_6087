@@ -3,11 +3,13 @@ using BlApi;
 using DO;
 using Helpers;
 using DalApi;
-using System;
+using System.Collections.Generic;
+using System.Collections;
+
 
 namespace BlImplementation
 {
-    public class CallImplementation : BlApi.ICall
+    public class CallImplementation : ICall
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
         public void AddCall(BO.Call newCall)
@@ -160,7 +162,8 @@ namespace BlImplementation
                            .ForEach(group => quantities[(int)group.Status] = group.Count);
 
                 return quantities;
-         
+            }
+
             catch (DO.DalDoesNotExistException ex)
             {
                 throw new BO.NotFoundException("Required data was not found in the database", ex);
@@ -303,15 +306,74 @@ namespace BlImplementation
                 throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
-  
-        public IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField)
-        {
-            throw new NotImplementedException();
-        }
 
+        public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, ClosedCallInList closedCallInList, BO.TypeOfReading? filterType = null, BO.CallField? sortField = null)
+        {
+           try
+            {
+                // Get all assignments for this volunteer
+                var assignments = _dal.Assignment.ReadAll(a =>a.VolunteerId == volunteerId &&a.EndTime != null);  // Only closed calls
+
+                // Get all calls associated with these assignments
+                var callIds = assignments.Select(a => a.CallId).Distinct();
+                var calls = _dal.Call.ReadAll(c => callIds.Contains(c.Id));
+
+                // Create ClosedCallInList objects using CallManager
+                var closedCalls = CallManager.CreateClosedCallList(calls, assignments);
+                if (filterType.HasValue)
+                {
+                    closedCalls= closedCalls.Where(c => c.CallType == filterType.Value);
+                }
+
+                return CallManager.SortCalls( closedCalls, sortField ?? BO.CallField.Id);
+            }
+            catch (DO.DalDoesNotExistException ex)
+            {
+                throw new BO.NotFoundException($"Could not find data for volunteer {volunteerId}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new BO.GeneralDatabaseException("An error occurred while retrieving closed calls", ex);
+            }
+        }
+       
         public IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
+                var openCalls = _dal.Call.ReadAll()
+                    .Where(c =>
+                    // מחשבים סטטוס של כל קריאה
+                    (CallManager.CalculateCallStatus(c.Id) == BO.CallStatus.Open || CallManager.CalculateCallStatus(c.Id) == BO.CallStatus.OpenAtRisk)) // הפשטת הבדיקה
+                    .Select(c => new BO.OpenCallInList
+                    {
+                        Id = volunteerId, // ת.ז של המתנדב
+                       Type = (BO.TypeOfReading)c.TypeOfReading, // סוג הקריאה
+                        Description = c.Description, // תיאור מילולי
+                        FullAddress = c.Adress, // כתובת הקריאה
+                        OpenTime = c.TimeOfOpen, // זמן פתיחת הקריאה
+                        MaxEndTime = c.MaxTimeToFinish, // זמן סיום משוער
+                        DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude, volunteer.Longitude, c.Latitude, c.Longitude)
+                    });
+
+                return CallManager.SortCalls(openCalls, sortField ?? BO.CallField.Id);
+
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlGeneralDatabaseException("An error occurred while retrieving the open calls list.", ex);
+            }
+        
+            catch (DO.DalDoesNotExistException ex)
+            {
+                throw new BO.NotFoundException($"Could not find data for volunteer {volunteerId}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new BO.GeneralDatabaseException("An error occurred while retrieving closed calls", ex);
+            }
+
         }
 
     }

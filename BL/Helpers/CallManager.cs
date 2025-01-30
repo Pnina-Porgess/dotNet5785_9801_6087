@@ -1,4 +1,4 @@
-﻿using BO;
+using BO;
 using DalApi;
 using DO;
 using Helpers;
@@ -133,6 +133,7 @@ internal static class CallManager
 
     internal static IEnumerable<BO.CallInList> FilterCall(IEnumerable<BO.CallInList> calls, CallField filterField, object filterValue)
     {
+
         return filterField switch
         {
             CallField.Id => calls.Where(call => call.CallId.ToString() == filterValue.ToString()),
@@ -145,21 +146,27 @@ internal static class CallManager
     }
 
 
-    internal static IEnumerable<BO.CallInList> SortCalls(IEnumerable<BO.CallInList> calls, CallField? sortField)
+    internal static IEnumerable<T> SortCallsGeneric<T>(IEnumerable<T> calls, CallField? sortField) where T : class
     {
         if (!sortField.HasValue)
-            return calls.OrderBy(c => c.CallId);
+            return calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId"));
 
         return sortField switch
         {
-            CallField.Id => calls.OrderBy(c => c.CallId),
-            CallField.Type => calls.OrderBy(c => c.CallType),
-            CallField.Status => calls.OrderBy(c => c.CallStatus),
-            CallField.OpeningTime => calls.OrderBy(c => c.OpeningTime),
-            CallField.AssignmentId => calls.OrderBy(c => c.AssignmentId),
+            CallField.Id => calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId")),
+            CallField.Type => calls.OrderBy(c => GetPropertyValue(c, "CallType") ?? GetPropertyValue(c, "Type")),
+            CallField.Status => calls.OrderBy(c => GetPropertyValue(c, "CallStatus") ?? GetPropertyValue(c, "Status")),
+            CallField.OpeningTime => calls.OrderBy(c => GetPropertyValue(c, "OpeningTime") ?? GetPropertyValue(c, "OpenTime")),
+            CallField.AssignmentId => calls.OrderBy(c => GetPropertyValue(c, "AssignmentId")),
             _ => throw new BO.InvalidOperationException($"Sorting by {sortField} is not supported")
         };
     }
+
+    private static object GetPropertyValue(object obj, string propertyName)
+    {
+        return obj?.GetType().GetProperty(propertyName)?.GetValue(obj);
+    }
+
     /// <summary>
     /// Validates whether the assignment can be completed.
     /// </summary>
@@ -179,6 +186,33 @@ internal static class CallManager
             throw new BO.InvalidOperationException("This treatment has already been completed or cancelled.");
         }
     }
+    public static IEnumerable<BO.ClosedCallInList> CreateClosedCallList(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments)
+    {
+        return calls.Select(call =>
+        {
+            var assignment = assignments.First(a => a.CallId == call.Id);
+            return new BO.ClosedCallInList
+            {
+                Id = call.Id,
+                CallType = (BO.TypeOfReading)call.TypeOfReading,
+                OpenTime = call.TimeOfOpen,
+                FullAddress = call.Adress,
+                ActualEndTime = assignment.EndTime,
+                AssignmentEntryTime = assignment.EntryTime,
+                EndType = (BO.TypeOfEndTime)assignment.TypeOfEndTime
+            };
+        });
+    
+
+    internal static IEnumerable<T> SortCalls<T>(IEnumerable<T> calls, BO.CallField sortField) 
+    {
+        return sortField switch
+        {
+            BO.CallField.Status => calls.OrderBy(c => ((dynamic)c).Status),
+            BO.CallField.Latitude => calls.OrderBy(c => ((dynamic)c).Latitude),
+            BO.CallField.Status => calls.OrderBy(c => ((dynamic)c).Status),
+            BO.CallField.Distance => calls.OrderBy(c => ((dynamic)c).Distance),
+            _ => calls.OrderBy(c => ((dynamic)c).CallNumber)
+        };
+    }
 }
-
-
