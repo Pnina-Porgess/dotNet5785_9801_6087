@@ -1,9 +1,8 @@
 ﻿namespace BlImplementation;
 using BlApi;
-using BO;
 using DalApi;
 using Helpers;
-
+using TimeUnit = BO.TimeUnit;
 internal class AdminImplementation : IAdmin
 {
     private readonly IDal _dal = DalApi.Factory.Get;
@@ -13,15 +12,15 @@ internal class AdminImplementation : IAdmin
         return ClockManager.Now;
     }
 
-    public void ForwardClock(TimeUnit unit)
+    public void ForwardClock(BO.TimeUnit unit)
     {
         DateTime newTime = unit switch
         {
-            BO.TimeUnit.Minute => ClockManager.Now.AddMinutes(1),
-            BO.TimeUnit.Hour => ClockManager.Now.AddHours(1),
-            BO.TimeUnit.Day => ClockManager.Now.AddDays(1),
-            BO.TimeUnit.Month => ClockManager.Now.AddMonths(1),
-            BO.TimeUnit.Year => ClockManager.Now.AddYears(1),
+            TimeUnit.Minute => ClockManager.Now.AddMinutes(1),
+            TimeUnit.Hour => ClockManager.Now.AddHours(1),
+            TimeUnit.Day => ClockManager.Now.AddDays(1),
+            TimeUnit.Month => ClockManager.Now.AddMonths(1),
+            TimeUnit.Year => ClockManager.Now.AddYears(1),
             _ => throw new NotImplementedException("Invalid time unit")
         };
 
@@ -49,6 +48,7 @@ internal class AdminImplementation : IAdmin
     {
         try
         {
+      
             _dal.ResetDB();
             ClockManager.UpdateClock(ClockManager.Now);
         }
