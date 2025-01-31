@@ -1,6 +1,5 @@
-﻿using BO;
+﻿
 using BlApi;
-using DO;
 using Helpers;
 using DalApi;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Collections;
 
 namespace BlImplementation
 {
-    public class CallImplementation : ICall
+    public class CallImplementation : BlApi.ICall
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
         public void AddCall(BO.Call newCall)
@@ -47,11 +46,11 @@ namespace BlImplementation
         {
             try
             {
-                if (CallManager.CalculateCallStatus(callId) != CallStatus.Open || CallManager.WasNeverAssigned(callId))
+                if (CallManager.CalculateCallStatus(callId) != BO.CallStatus.Open || CallManager.WasNeverAssigned(callId))
                 {
                     //?
                     // If the call is not open or has assignments, throw an exception
-                    throw new InvalidOperationException("Cannot delete a call that is not in 'Open' status or has been assigned.");
+                    throw new BO.InvalidOperationException("Cannot delete a call that is not in 'Open' status or has been assigned.");
                 }
                 // Attempt to delete the call
                 _dal.Call.Delete(callId);
@@ -111,7 +110,7 @@ namespace BlImplementation
             };
         }
 
-        public IEnumerable<BO.CallInList> GetCalls(CallField? filterField = null, object? filterValue = null, CallField? sortField = null)
+        public IEnumerable<BO.CallInList> GetCalls(BO.CallField? filterField = null, object? filterValue = null, BO.CallField? sortField = null)
         {
             try
             {
@@ -125,11 +124,11 @@ namespace BlImplementation
                     callList = CallManager.FilterCall(callList, filterField.Value, filterValue);
                 }
 
-                return CallManager.SortCalls(callList, sortField).ToList();
+                return CallManager.SortCalls(callList, sortField ?? BO.CallField.Id).ToList();
             }
             catch (Exception ex)
             {
-                throw new BO.InternalErrorException("Error retrieving calls list", ex);
+                throw new BO.NotFoundException("Error retrieving calls list", ex);
             }
         }
 
@@ -154,7 +153,7 @@ namespace BlImplementation
                     };
 
                 // יצירת מערך בגודל מספר הערכים באינום CallStatus
-                int statusCount = Enum.GetValues<CallStatus>().Length;
+                int statusCount = Enum.GetValues<BO.CallStatus>().Length;
                 int[] quantities = new int[statusCount];
 
                 // מילוי המערך בעזרת method syntax של LINQ
@@ -179,13 +178,13 @@ namespace BlImplementation
             try
             {
                 // Retrieve the assignment by ID
-                var assignment = _dal.Assignment.Read(assignmentId)
+                var assignment = _dal.Assignment.Read(assignmentId);
 
                 // Validate authorization and status
-                CallManager.ValidateAssignmentForCompletion(assignment, volunteerId);
+                CallManager.ValidateAssignmentForCompletion(assignment!, volunteerId);
 
                 // Update the assignment to reflect the completion of treatment
-                var updatedAssignment = assignment with
+                var updatedAssignment = assignment! with
                 {
                     EndTime = ClockManager.Now, // Set the end time to the current time
                     TypeOfEndTime = DO.TypeOfEndTime.treated // Set the end type as "Treated"
@@ -216,7 +215,7 @@ namespace BlImplementation
 
                 if (assignment.VolunteerId != requesterId && _dal.Volunteer.Read(requesterId) is null)
                 {
-                    throw new InvalidOperationException("Requester does not have permission to cancel this treatment.");
+                    throw new BO.InvalidOperationException("Requester does not have permission to cancel this treatment.");
                 }
 
                 if (assignment.EndTime != null)
@@ -249,8 +248,8 @@ namespace BlImplementation
                 {
                     EndTime = DateTime.Now,
                     TypeOfEndTime = assignment.VolunteerId == requesterId
-                    ? TypeOfEndTime.CancelingAnAdministrator
-                    : TypeOfEndTime.SelfCancellation
+                    ? DO.TypeOfEndTime.CancelingAnAdministrator
+                    : DO.TypeOfEndTime.SelfCancellation
                 };
                 _dal.Assignment.Update(updatedAssignment);
 
@@ -294,7 +293,7 @@ namespace BlImplementation
                     Id: 0, // מזהה ההקצאה יתעדכן אוטומטית
                     CallId: callId,
                     VolunteerId: volunteerId,
-                    TypeOfEndTime: TypeOfEndTime.treated, // סוג הטיפול נשאר כ-Treated עד לסיום
+                    TypeOfEndTime: DO.TypeOfEndTime.treated, // סוג הטיפול נשאר כ-Treated עד לסיום
                     EntryTime: DateTime.Now // זמן כניסת המתנדב לטיפול
                 );
 
@@ -307,7 +306,7 @@ namespace BlImplementation
             }
         }
 
-        public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, ClosedCallInList closedCallInList, BO.TypeOfReading? filterType = null, BO.CallField? sortField = null)
+        public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId,  BO.TypeOfReading? filterType = null, BO.CallField? sortField = null)
         {
            try
             {
@@ -337,11 +336,11 @@ namespace BlImplementation
             }
         }
        
-        public IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField)
+        public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallStatus? filterStatus, BO.CallField? sortField)
         {
             try
             {
-                var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
+                var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BLDoesNotExist($"Volunteer with ID={volunteerId} does not exist.");
                 var openCalls = _dal.Call.ReadAll()
                     .Where(c =>
                     // מחשבים סטטוס של כל קריאה
@@ -350,24 +349,21 @@ namespace BlImplementation
                     {
                         Id = volunteerId, // ת.ז של המתנדב
                        Type = (BO.TypeOfReading)c.TypeOfReading, // סוג הקריאה
-                        Description = c.Description, // תיאור מילולי
+                        Description = c.Description!, // תיאור מילולי
                         FullAddress = c.Adress, // כתובת הקריאה
                         OpenTime = c.TimeOfOpen, // זמן פתיחת הקריאה
                         MaxEndTime = c.MaxTimeToFinish, // זמן סיום משוער
-                        DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude, volunteer.Longitude, c.Latitude, c.Longitude)
+                        DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!,volunteer.Longitude!, c.Latitude, c.Longitude)
                     });
 
                 return CallManager.SortCalls(openCalls, sortField ?? BO.CallField.Id);
 
             }
-            catch (Exception ex)
-            {
-                throw new BO.BlGeneralDatabaseException("An error occurred while retrieving the open calls list.", ex);
-            }
+         
         
             catch (DO.DalDoesNotExistException ex)
             {
-                throw new BO.NotFoundException($"Could not find data for volunteer {volunteerId}", ex);
+                throw new BO.BLDoesNotExist($"Could not find data for volunteer {volunteerId}", ex);
             }
             catch (Exception ex)
             {
@@ -376,5 +372,6 @@ namespace BlImplementation
 
         }
 
+      
     }
 }

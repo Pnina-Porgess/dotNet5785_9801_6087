@@ -1,6 +1,5 @@
-using BO;
+
 using DalApi;
-using DO;
 using Helpers;
 
 internal static class CallManager
@@ -15,7 +14,7 @@ internal static class CallManager
             throw new BO.InvalidFormatException("Invalid ID format. ID must be a valid number with a correct checksum.");
         if ((call.Type!=BO.CallType.None)&& (call.Type != BO.CallType.Regular)&& (call.Type != BO.CallType.Emergency)&& (call.Type != BO.CallType.HighPriority))
             throw new BO.InvalidFormatException(@"Invalid CallType format. PCallType must be None\\Regular\\Emergency\\HighPriority.");
-        if (call.Description.Length < 2)
+        if (call.Description?.Length < 2)
             throw new BO.InvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
     }
     internal static (double Latitude, double Longitude) logicalChecking(BO.Call call)
@@ -31,7 +30,7 @@ internal static class CallManager
     {
         return new DO.Call(
                     Id: 0,
-                    TypeOfReading: (TypeOfReading)newCall.Type,
+                    TypeOfReading: (DO.TypeOfReading)newCall.Type,
                     Description: newCall.Description,
                     Adress: newCall.Address,
                     Latitude: newCall.Latitude,
@@ -40,7 +39,7 @@ internal static class CallManager
                     MaxTimeToFinish: newCall?.MaxEndTime ?? DateTime.Now.AddHours(1)
         );
     }
-    internal static CallStatus CalculateCallStatus(int callId)
+    internal static BO.CallStatus CalculateCallStatus(int callId)
     {
         try
         {
@@ -57,14 +56,14 @@ internal static class CallManager
             {
                 // Check if call has expired
                 if (ClockManager.Now > call.MaxTimeToFinish)
-                    return CallStatus.Expired;
+                    return BO.CallStatus.Expired;
 
                 // Check if call is at risk (less than 30 minutes to expiration)
                 var timeToExpiration = call.MaxTimeToFinish - ClockManager.Now;
                 if (timeToExpiration?.TotalMinutes <= 30)
-                    return CallStatus.OpenAtRisk;
+                    return BO.CallStatus.OpenAtRisk;
 
-                return CallStatus.Open;
+                return BO.CallStatus.Open;
             }
 
             // Get the latest active assignment (no EndTime)
@@ -73,15 +72,15 @@ internal static class CallManager
             if (activeAssignment == null)
             {
                 // Check if any assignment was completed successfully
-                var successfulAssignment = assignments.Any(a => a.TypeOfEndTime == TypeOfEndTime.treated);
-                return successfulAssignment ? CallStatus.Closed : CallStatus.Open;
+                var successfulAssignment = assignments.Any(a => a.TypeOfEndTime == DO.TypeOfEndTime.treated);
+                return successfulAssignment ? BO.CallStatus.Closed : BO.CallStatus.Open;
             }
             // There is an active assignment - check if it's at risk
             var remainingTime = call.MaxTimeToFinish - ClockManager.Now;
             if (remainingTime?.TotalMinutes <= 30)
-                return CallStatus.InProgressAtRisk;
+                return BO.CallStatus.InProgressAtRisk;
 
-            return CallStatus.InProgress;
+            return BO.CallStatus.InProgress;
         }
         catch (Exception ex)
         {
@@ -131,40 +130,40 @@ internal static class CallManager
         };
     }
 
-    internal static IEnumerable<BO.CallInList> FilterCall(IEnumerable<BO.CallInList> calls, CallField filterField, object filterValue)
+    internal static IEnumerable<BO.CallInList> FilterCall(IEnumerable<BO.CallInList> calls, BO.CallField filterField, object filterValue)
     {
 
         return filterField switch
         {
-            CallField.Id => calls.Where(call => call.CallId.ToString() == filterValue.ToString()),
-            CallField.Type => calls.Where(call => call.CallType == (BO.CallType)filterValue),
-            CallField.Status => calls.Where(call => call.CallStatus == (BO.CallStatus)filterValue),
-            CallField.OpeningTime => calls.Where(call => call.OpeningTime.Date == ((DateTime)filterValue).Date),
-            CallField.AssignmentId => calls.Where(call => call.AssignmentId.ToString() == filterValue.ToString()),
+            BO.CallField.Id => calls.Where(call => call.CallId.ToString() == filterValue.ToString()),
+            BO.CallField.Type => calls.Where(call => call.CallType == (BO.CallType)filterValue),
+           BO.CallField.Status => calls.Where(call => call.CallStatus == (BO.CallStatus)filterValue),
+           BO.CallField.OpeningTime => calls.Where(call => call.OpeningTime.Date == ((DateTime)filterValue).Date),
+            BO.CallField.AssignmentId => calls.Where(call => call.AssignmentId.ToString() == filterValue.ToString()),
             _ => throw new BO.InvalidOperationException($"Filtering by {filterField} is not supported")
         };
     }
 
 
-    internal static IEnumerable<T> SortCallsGeneric<T>(IEnumerable<T> calls, CallField? sortField) where T : class
+    internal static IEnumerable<T> SortCallsGeneric<T>(IEnumerable<T> calls, BO.CallField? sortField) where T : class
     {
         if (!sortField.HasValue)
             return calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId"));
 
         return sortField switch
         {
-            CallField.Id => calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId")),
-            CallField.Type => calls.OrderBy(c => GetPropertyValue(c, "CallType") ?? GetPropertyValue(c, "Type")),
-            CallField.Status => calls.OrderBy(c => GetPropertyValue(c, "CallStatus") ?? GetPropertyValue(c, "Status")),
-            CallField.OpeningTime => calls.OrderBy(c => GetPropertyValue(c, "OpeningTime") ?? GetPropertyValue(c, "OpenTime")),
-            CallField.AssignmentId => calls.OrderBy(c => GetPropertyValue(c, "AssignmentId")),
+            BO.CallField.Id => calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId")),
+           BO.CallField.Type => calls.OrderBy(c => GetPropertyValue(c, "CallType") ?? GetPropertyValue(c, "Type")),
+            BO.CallField.Status => calls.OrderBy(c => GetPropertyValue(c, "CallStatus") ?? GetPropertyValue(c, "Status")),
+            BO.CallField.OpeningTime => calls.OrderBy(c => GetPropertyValue(c, "OpeningTime") ?? GetPropertyValue(c, "OpenTime")),
+            BO.CallField.AssignmentId => calls.OrderBy(c => GetPropertyValue(c, "AssignmentId")),
             _ => throw new BO.InvalidOperationException($"Sorting by {sortField} is not supported")
         };
     }
 
     private static object GetPropertyValue(object obj, string propertyName)
     {
-        return obj?.GetType().GetProperty(propertyName)?.GetValue(obj);
+        return obj?.GetType().GetProperty(propertyName)?.GetValue(obj)!;
     }
 
     /// <summary>
@@ -174,11 +173,11 @@ internal static class CallManager
     {
         if (assignment == null)
         {
-            throw new ArgumentException($"Assignment with ID={assignmentId} does not exist.");
+            throw new ArgumentException($"Assignment with ID={assignment?.Id} does not exist.");
         }
         if (assignment.VolunteerId != volunteerId)
         {
-            throw new BO.UnauthorizedActionException("The volunteer does not have permission to complete this treatment.");
+            throw new Exception("The volunteer does not have permission to complete this treatment.");
         }
 
         if (assignment.EndTime != null)
@@ -202,17 +201,19 @@ internal static class CallManager
                 EndType = (BO.TypeOfEndTime)assignment.TypeOfEndTime
             };
         });
+    }
     
 
     internal static IEnumerable<T> SortCalls<T>(IEnumerable<T> calls, BO.CallField sortField) 
     {
         return sortField switch
         {
-            BO.CallField.Status => calls.OrderBy(c => ((dynamic)c).Status),
-            BO.CallField.Latitude => calls.OrderBy(c => ((dynamic)c).Latitude),
-            BO.CallField.Status => calls.OrderBy(c => ((dynamic)c).Status),
-            BO.CallField.Distance => calls.OrderBy(c => ((dynamic)c).Distance),
-            _ => calls.OrderBy(c => ((dynamic)c).CallNumber)
+            BO.CallField.Status => calls.OrderBy(c => ((dynamic)c!).Status),
+            BO.CallField.Latitude => calls.OrderBy(c => ((dynamic)c!).Latitude),
+            BO.CallField.OpeningTime => calls.OrderBy(c => ((dynamic)c!).OpeningTime),
+            BO.CallField.MaxEndTime => calls.OrderBy(c => ((dynamic)c!).MaxEndTime),
+            BO.CallField.Address => calls.OrderBy(c => ((dynamic)c!).Address),
+            _ => calls.OrderBy(c => ((dynamic)c!).CallNumber)
         };
     }
 }

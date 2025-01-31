@@ -1,6 +1,5 @@
-﻿using BO;
+﻿
 using DalApi;
-using DO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -18,7 +17,7 @@ internal static class VolunteerManager
             Phone = volunteer.Phone,
             Email = volunteer.Email,
             IsActive = volunteer.IsActive,
-           Role = volunteer.Role,
+           Role = (BO.Role)volunteer.Role,
 
         };
     }
@@ -37,7 +36,7 @@ internal static class VolunteerManager
         var volunteerInList = volunteers.Select(static v =>
           {
               var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
-              var currentAssignment = volunteerAssignments.FirstOrDefault(a => a.EntryTime == null);
+              var currentAssignment = volunteerAssignments.FirstOrDefault(a => a?.EntryTime == null);
               var assignedResponseId = currentAssignment?.CallId;
               return new BO.VolunteerInList
               {
@@ -48,7 +47,7 @@ internal static class VolunteerManager
                   TotalCancelledCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.SelfCancellation),  // חישוב מספר השיחות שבוטלו
                   TotalExpiredCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.CancellationHasExpired),  // חישוב מספר השיחות שזמן ההגשה שלהן פג
                   CurrentCallId = assignedResponseId,  // אם יש קריאה בשטח, נרצה להחזיר את מזהה הקריאה
-                  CurrentCallType = (TypeOfReading)(assignedResponseId.HasValue
+                  CurrentCallType = (BO.TypeOfReading)(assignedResponseId.HasValue
                         ? (BO.CallType)(s_dal.Call.Read(assignedResponseId.Value)?.TypeOfReading ?? DO.TypeOfReading.None)
                         : BO.CallType.None) // אם אין קריאה, נחזיר None
               };
@@ -130,7 +129,7 @@ internal static class VolunteerManager
             boVolunteer.FullName,
             boVolunteer.Phone,
             boVolunteer.Email,
-            boVolunteer.Role,
+            (DO.Role)boVolunteer.Role,
             boVolunteer.IsActive,
             (DO.DistanceType)boVolunteer.DistanceType,
             boVolunteer.MaxDistance,
@@ -145,25 +144,25 @@ internal static class VolunteerManager
     //בודק שבססמא חזקה ומחזיר כתובת בקווי אורך ורוחב
     internal static (double? Latitude, double? Longitude) logicalChecking(BO.Volunteer boVolunteer)
     {
-        IsPasswordStrong(boVolunteer.Password);
-        return Tools.GetCoordinatesFromAddress(boVolunteer.CurrentAddress);
+        IsPasswordStrong(boVolunteer.Password!);
+        return Tools.GetCoordinatesFromAddress(boVolunteer.CurrentAddress!);
     }
 
     //הרשאות למי שמוסמך
     internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
     {
-        if (!(requesterId == boVolunteer.Id) && !(boVolunteer.Role == Role.Manager))
+        if (!(requesterId == boVolunteer.Id) && !(boVolunteer.Role == BO.Role.Manager))
             throw new UnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
 
-        if (boVolunteer.Role != Role.Manager && boVolunteer.Role !=Role.Volunteer)
+        if (boVolunteer.Role != BO.Role.Manager && boVolunteer.Role !=BO.Role.Volunteer)
             throw new UnauthorizedAccessException("Only an admin can update the volunteer's role.");
     }
     internal static bool CanUpdateFields(int requesterId, DO.Volunteer original, BO.Volunteer boVolunteer)
     {
     
-        if (original.Role != boVolunteer.Role)
+        if ((BO.Role)original.Role != boVolunteer.Role)
         {
-            if (boVolunteer.Role != Role.Manager|| requesterId!= original.Id)
+            if (boVolunteer.Role != BO.Role.Manager|| requesterId!= original.Id)
                 return false;
         }
         return true;
