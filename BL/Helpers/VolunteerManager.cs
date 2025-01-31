@@ -74,22 +74,22 @@ internal static class VolunteerManager
     internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
     {
        if (boVolunteer == null)
-    throw new BO.NotFoundException("Volunteer object cannot be null.");
+    throw new BO.BlNotFoundException("Volunteer object cannot be null.");
 
      if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-      throw new BO.InvalidFormatException("Invalid email format.");
+      throw new BO.BlInvalidInputException("Invalid email format.");
 
         if (boVolunteer.Id < 0 || !IsValidId(boVolunteer.Id))
-            throw new BO.InvalidFormatException("Invalid ID format. ID must be a valid number with a correct checksum.");
+            throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
 
         if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Phone, @"^\d{10}$"))
-            throw new BO.InvalidFormatException("Invalid phone number format. Phone number must have 10 digits.");
+            throw new BO.BlInvalidInputException("Invalid phone number format. Phone number must have 10 digits.");
 
         if (boVolunteer.FullName.Length < 2)
-            throw new BO.InvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
+            throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
 
-        if (boVolunteer.Password.Length < 6 || !VolunteerManager.IsPasswordStrong(boVolunteer.Password))
-            throw new BO.InvalidFormatException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
+        if (boVolunteer?.Password?.Length < 6 || !VolunteerManager.IsPasswordStrong(boVolunteer?.Password!))
+            throw new BO.BlInvalidInputException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
     }
 //תז תקינה
     internal static bool IsValidId(int id)
@@ -133,7 +133,7 @@ internal static class VolunteerManager
             boVolunteer.IsActive,
             (DO.DistanceType)boVolunteer.DistanceType,
             boVolunteer.MaxDistance,
-            EncryptPassword(boVolunteer.Password),
+            EncryptPassword(boVolunteer.Password!),
             boVolunteer.CurrentAddress,
             boVolunteer.Latitude,
             boVolunteer.Longitude

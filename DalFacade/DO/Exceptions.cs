@@ -20,9 +20,9 @@ public class DalAlreadyExistsException : Exception
 /// The exception will be thrown when attempting to fill in a field that does not conform to the required format.
 /// </summary>
 [Serializable]
-public class InvalidFormatException : Exception
+public class DalInvalidFormatException : Exception
 {
-    public InvalidFormatException(string? message) : base(message) { }
+    public DalInvalidFormatException(string? message) : base(message) { }
 }
 /// <summary>
 /// Exception thrown when loading a DalXML file
@@ -32,4 +32,12 @@ public class DalXMLFileLoadCreateException : Exception
 {
     public DalXMLFileLoadCreateException(string? message) : base(message) { }
 }
-
+/// <summary>
+/// Exception for configuration-related errors
+/// </summary>
+[Serializable]
+public class DalConfigException : Exception
+{
+    public DalConfigException(string message) : base(message) { }
+    public DalConfigException(string message, Exception innerException) : base(message, innerException) { }
+}

@@ -9,18 +9,18 @@ internal static class CallManager
     internal static void ValidateInputFormat(BO.Call call)
     {
         if (call == null)
-            throw new BO.NotFoundException("Volunteer object cannot be null.");
+            throw new BO.BlNotFoundException("Volunteer object cannot be null.");
         if (call.Id < 1000)
-            throw new BO.InvalidFormatException("Invalid ID format. ID must be a valid number with a correct checksum.");
+            throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
         if ((call.Type!=BO.CallType.None)&& (call.Type != BO.CallType.Regular)&& (call.Type != BO.CallType.Emergency)&& (call.Type != BO.CallType.HighPriority))
-            throw new BO.InvalidFormatException(@"Invalid CallType format. PCallType must be None\\Regular\\Emergency\\HighPriority.");
+            throw new BO.BlInvalidInputException(@"Invalid CallType format. PCallType must be None\\Regular\\Emergency\\HighPriority.");
         if (call.Description?.Length < 2)
-            throw new BO.InvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
+            throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
     }
     internal static (double Latitude, double Longitude) logicalChecking(BO.Call call)
     {
         if(call.MaxEndTime<call.OpeningTime)
-            throw new BO.InvalidFormatException(".");
+            throw new BO.BlInvalidInputException(".");
 
         return Tools.GetCoordinatesFromAddress(call.Address);
 
@@ -121,7 +121,7 @@ internal static class CallManager
             OpeningTime = call.TimeOfOpen,
             CallStatus = CalculateCallStatus(call.Id),
             AssignmentId = latestAssignment?.Id,
-            LastVolunteerName = latestAssignment?.VolunteerId != 0 && volunteers.TryGetValue(latestAssignment.VolunteerId, out var name) ? name : null,
+            LastVolunteerName = latestAssignment?.VolunteerId != 0 && volunteers.TryGetValue(latestAssignment!.VolunteerId, out var name) ? name : null,
             TotalAssignments = callAssignments.Count,
             RemainingTime = call.MaxTimeToFinish.HasValue
             ? call.MaxTimeToFinish.Value - DateTime.Now
@@ -140,7 +140,7 @@ internal static class CallManager
            BO.CallField.Status => calls.Where(call => call.CallStatus == (BO.CallStatus)filterValue),
            BO.CallField.OpeningTime => calls.Where(call => call.OpeningTime.Date == ((DateTime)filterValue).Date),
             BO.CallField.AssignmentId => calls.Where(call => call.AssignmentId.ToString() == filterValue.ToString()),
-            _ => throw new BO.InvalidOperationException($"Filtering by {filterField} is not supported")
+            _ => throw new BO.BlInvalidInputException($"Filtering by {filterField} is not supported")
         };
     }
 
@@ -157,7 +157,7 @@ internal static class CallManager
             BO.CallField.Status => calls.OrderBy(c => GetPropertyValue(c, "CallStatus") ?? GetPropertyValue(c, "Status")),
             BO.CallField.OpeningTime => calls.OrderBy(c => GetPropertyValue(c, "OpeningTime") ?? GetPropertyValue(c, "OpenTime")),
             BO.CallField.AssignmentId => calls.OrderBy(c => GetPropertyValue(c, "AssignmentId")),
-            _ => throw new BO.InvalidOperationException($"Sorting by {sortField} is not supported")
+            _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
         };
     }
 
@@ -182,7 +182,7 @@ internal static class CallManager
 
         if (assignment.EndTime != null)
         {
-            throw new BO.InvalidOperationException("This treatment has already been completed or cancelled.");
+            throw new BO.BlInvalidInputException("This treatment has already been completed or cancelled.");
         }
     }
     public static IEnumerable<BO.ClosedCallInList> CreateClosedCallList(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments)

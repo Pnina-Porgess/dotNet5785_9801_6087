@@ -164,7 +164,7 @@ public static class Initialization
         for (int i = 0; i < 50; i++)
         {
             DateTime minTime = callsList[i].TimeOfOpen;
-            DateTime maxTime = (DateTime)callsList[i].MaxTimeToFinish;
+            DateTime maxTime = (DateTime)callsList[i].MaxTimeToFinish!;
             TimeSpan diff = maxTime - minTime - TimeSpan.FromHours(2);
             DateTime randomTime = minTime.AddMinutes(s_rand.Next((int)diff.TotalMinutes));
             TypeOfEndTime typeOfEndTime;

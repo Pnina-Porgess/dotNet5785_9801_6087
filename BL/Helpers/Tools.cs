@@ -50,7 +50,7 @@ namespace Helpers;
     { 
 
             var timeToEnd = call.MaxTimeToFinish - ClockManager.Now;
-            if (timeToEnd.TotalMinutes <= riskThreshold)
+            if (timeToEnd?.TotalMinutes <= riskThreshold)
             {
                 return CallStatusInProgress.AtRisk;
             }
@@ -86,30 +86,30 @@ namespace Helpers;
                     if (jsonArray.Count > 0)
                     {
                         var firstResult = jsonArray[0];
-                        double latitude = (double)firstResult["lat"];
-                        double longitude = (double)firstResult["lon"];
+                        double latitude = (double)firstResult["lat"]!;
+                        double longitude = (double)firstResult["lon"]!;
                         return (latitude, longitude);
                     }
                     else
                     {
-                        throw new GeolocationNotFoundException(address); // חריגה אם לא נמצאה גיאוקולציה
+                        throw new BlGeolocationNotFoundException(address); // חריגה אם לא נמצאה גיאוקולציה
                     }
                 }
                 else
                 {
-                    throw new ApiRequestException($"API request failed with status code: {response.StatusCode}"); // חריגה אם הבקשה נכשלה
+                    throw new BlApiRequestException($"API request failed with status code: {response.StatusCode}"); // חריגה אם הבקשה נכשלה
                 }
             }
         }
         catch (Exception ex)
         {
             // אם קרתה שגיאה כלשהי, זורקים חריגה עם פרטי השגיאה
-            throw new ApiRequestException($"Error occurred while fetching coordinates for the address. {ex.Message}");
+            throw new BlApiRequestException($"Error occurred while fetching coordinates for the address. {ex.Message}");
         }
     }
 }
    
-}
+
 
 
 

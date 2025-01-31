@@ -11,7 +11,7 @@ namespace DO;
 /// <param name="Phone">Phone number of the Volunteer</param>
 /// <param name="Email">Email number of the Volunteer</param>
 /// <param name="Password">Password of the Volunteer</param>
-/// <param name="Adress">A complete and true address in the correct format of the volunteer.</param>
+/// <param name="Address">A complete and true address in the correct format of the volunteer.</param>
 ///  <param name="Latitude">Geographic latitude of the volunteer (nullable)</param>
 ///  <param name="Longitude">Geographic longitude of the volunteer (nullable)</param>
 /// <param name="Role">Manager or volunteer</param>
@@ -29,7 +29,7 @@ public record Volunteer
     DistanceType DistanceType,
     double? MaximumDistance = null,
     string? Password = null,
-    string? Adress = null,
+    string? Address = null,
     double? Latitude = null,
     double? Longitude = null,
     double? MaxEndTime = null

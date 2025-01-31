@@ -34,11 +34,11 @@ namespace BlImplementation
             }
             catch (DO.DalAlreadyExistsException ex)
             {
-                throw new BO.BLDoesNotExist($"There is no call with ID={call.Id} number.", ex);
+                throw new BO.BlNotFoundException($"There is no call with ID={call.Id} number.", ex);
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
+                throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
 
@@ -50,18 +50,18 @@ namespace BlImplementation
                 {
                     //?
                     // If the call is not open or has assignments, throw an exception
-                    throw new BO.InvalidOperationException("Cannot delete a call that is not in 'Open' status or has been assigned.");
+                    throw new BO.BlInvalidInputException("Cannot delete a call that is not in 'Open' status or has been assigned.");
                 }
                 // Attempt to delete the call
                 _dal.Call.Delete(callId);
             }
             catch (DO.DalAlreadyExistsException ex)
             {
-                throw new BO.BLDoesNotExist($"There is no call with ID={callId} number.", ex);
+                throw new BO.BlNotFoundException($"There is no call with ID={callId} number.", ex);
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
+                throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
 
@@ -69,7 +69,7 @@ namespace BlImplementation
         {
             // Get call from DAL
             var dalCall = _dal.Call.Read(callId) ??
-                throw new BO.NotFoundException($"Call with ID={callId} was not found in the system.");
+                throw new BO.BlNotFoundException($"Call with ID={callId} was not found in the system.");
 
             // Get all assignments for this call
             var assignments = _dal.Assignment.ReadAll(a => a.CallId == callId).ToList();
@@ -128,7 +128,7 @@ namespace BlImplementation
             }
             catch (Exception ex)
             {
-                throw new BO.NotFoundException("Error retrieving calls list", ex);
+                throw new BO.BlNotFoundException("Error retrieving calls list", ex);
             }
         }
 
@@ -165,11 +165,11 @@ namespace BlImplementation
 
             catch (DO.DalDoesNotExistException ex)
             {
-                throw new BO.NotFoundException("Required data was not found in the database", ex);
+                throw new BO.BlNotFoundException("Required data was not found in the database", ex);
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An unexpected error occurred while calculating call quantities", ex);
+                throw new BO.BlDatabaseException("An unexpected error occurred while calculating call quantities", ex);
             }
         }
 
@@ -195,11 +195,11 @@ namespace BlImplementation
             }
             catch (DO.DalAlreadyExistsException ex)
             {
-                throw new BO.BLDoesNotExist($"There is no assignment with ID={assignmentId} .", ex);
+                throw new BO.BlNotFoundException($"There is no assignment with ID={assignmentId} .", ex);
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
+                throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
 
@@ -215,7 +215,7 @@ namespace BlImplementation
 
                 if (assignment.VolunteerId != requesterId && _dal.Volunteer.Read(requesterId) is null)
                 {
-                    throw new BO.InvalidOperationException("Requester does not have permission to cancel this treatment.");
+                    throw new BO.BlInvalidInputException("Requester does not have permission to cancel this treatment.");
                 }
 
                 if (assignment.EndTime != null)
@@ -259,7 +259,7 @@ namespace BlImplementation
             catch (Exception ex)
             {
                 // טיפול בחריגות כלליות
-                throw new BO.InvalidOperationException($"An unexpected error occurred: {ex.Message}", ex);
+                throw new BO.BlInvalidInputException($"An unexpected error occurred: {ex.Message}", ex);
             }
         }
 
@@ -302,7 +302,7 @@ namespace BlImplementation
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
+                throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
 
@@ -328,11 +328,11 @@ namespace BlImplementation
             }
             catch (DO.DalDoesNotExistException ex)
             {
-                throw new BO.NotFoundException($"Could not find data for volunteer {volunteerId}", ex);
+                throw new BO.BlNotFoundException($"Could not find data for volunteer {volunteerId}", ex);
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An error occurred while retrieving closed calls", ex);
+                throw new BO.BlDatabaseException("An error occurred while retrieving closed calls", ex);
             }
         }
        
@@ -340,7 +340,7 @@ namespace BlImplementation
         {
             try
             {
-                var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BLDoesNotExist($"Volunteer with ID={volunteerId} does not exist.");
+                var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BlNotFoundException($"Volunteer with ID={volunteerId} does not exist.");
                 var openCalls = _dal.Call.ReadAll()
                     .Where(c =>
                     // מחשבים סטטוס של כל קריאה
@@ -363,11 +363,11 @@ namespace BlImplementation
         
             catch (DO.DalDoesNotExistException ex)
             {
-                throw new BO.BLDoesNotExist($"Could not find data for volunteer {volunteerId}", ex);
+                throw new BO.BlNotFoundException($"Could not find data for volunteer {volunteerId}", ex);
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An error occurred while retrieving closed calls", ex);
+                throw new BO.BlDatabaseException("An error occurred while retrieving closed calls", ex);
             }
 
         }
