@@ -1,14 +1,10 @@
 ﻿
 using BlApi;
 using Helpers;
-using DalApi;
-using System.Collections.Generic;
-using System.Collections;
-
 
 namespace BlImplementation
 {
-    public class CallImplementation : BlApi.ICall
+    public class CallImplementation : ICall
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
         public void AddCall(BO.Call newCall)

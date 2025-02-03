@@ -46,16 +46,7 @@ namespace Helpers;
         return degrees * Math.PI / 180;
     }
 
-    public static CallStatusInProgress CalculateStatus( DO.Call call, int riskThreshold = 30)
-    { 
 
-            var timeToEnd = call.MaxTimeToFinish - ClockManager.Now;
-            if (timeToEnd?.TotalMinutes <= riskThreshold)
-            {
-                return CallStatusInProgress.AtRisk;
-            }
-        return CallStatusInProgress.InProgress;
-    }
 
     public static (double Latitude, double Longitude) GetCoordinatesFromAddress(string address)
     {

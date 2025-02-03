@@ -209,11 +209,35 @@ internal static class CallManager
         return sortField switch
         {
             BO.CallField.Status => calls.OrderBy(c => ((dynamic)c!).Status),
-            BO.CallField.Latitude => calls.OrderBy(c => ((dynamic)c!).Latitude),
             BO.CallField.OpeningTime => calls.OrderBy(c => ((dynamic)c!).OpeningTime),
             BO.CallField.MaxEndTime => calls.OrderBy(c => ((dynamic)c!).MaxEndTime),
             BO.CallField.Address => calls.OrderBy(c => ((dynamic)c!).Address),
             _ => calls.OrderBy(c => ((dynamic)c!).CallNumber)
         };
+    }
+    public static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)
+    {
+        try
+        {
+            _dal.Call.ReadAll(c => c.MaxTimeToFinish > ClockManager.Now).ToList().ForEach(call =>
+            {
+                List<DO.Assignment> allAssignmentsCall = _dal.Assignment.ReadAll(a => a.CallId == call.Id && a.EndTime == null).ToList();
+
+                if (!allAssignmentsCall.Any())
+                {
+                    DO.Assignment newAssignment = new DO.Assignment(0, call.Id, 0, DO.TypeOfEndTime.CancellationHasExpired, ClockManager.Now);
+                    _dal.Assignment.Create(newAssignment);
+                }
+                else
+                {
+                    DO.Assignment updatedAssignment = allAssignmentsCall.FirstOrDefault(a => a.EndTime == null);
+                    _dal.Assignment.Update(updatedAssignment with { EndTime = ClockManager.Now, TypeOfEndTime = DO.TypeOfEndTime.CancellationHasExpired });
+                }
+            });
+        }
+    
+        catch (BO.BlInvalidInputException e)
+        {
+        }
     }
 }

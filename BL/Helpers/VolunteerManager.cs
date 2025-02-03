@@ -28,16 +28,11 @@ internal static class VolunteerManager
     }
     internal static IEnumerable<BO.VolunteerInList> GetVolunteerList(IEnumerable<DO.Volunteer> volunteers)
     {
-        if (volunteers is null)
-        {
-            throw new ArgumentNullException(nameof(volunteers));
-        }
-
+  
         var volunteerInList = volunteers.Select(static v =>
           {
               var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
-              var currentAssignment = volunteerAssignments.FirstOrDefault(a => a?.EntryTime == null);
-              var assignedResponseId = currentAssignment?.CallId;
+              var assignedResponseId = volunteerAssignments.FirstOrDefault(a => a?.EntryTime == null)?.CallId;
               return new BO.VolunteerInList
               {
                   Id = v.Id,
@@ -48,7 +43,7 @@ internal static class VolunteerManager
                   TotalExpiredCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.CancellationHasExpired),  // חישוב מספר השיחות שזמן ההגשה שלהן פג
                   CurrentCallId = assignedResponseId,  // אם יש קריאה בשטח, נרצה להחזיר את מזהה הקריאה
                   CurrentCallType = (BO.TypeOfReading)(assignedResponseId.HasValue
-                        ? (BO.CallType)(s_dal.Call.Read(assignedResponseId.Value)?.TypeOfReading ?? DO.TypeOfReading.None)
+                        ? (BO.CallType)(s_dal.Call.Read(assignedResponseId.Value)?.TypeOfReading)
                         : BO.CallType.None) // אם אין קריאה, נחזיר None
               };
           }).ToList();
@@ -144,7 +139,8 @@ internal static class VolunteerManager
     //בודק שבססמא חזקה ומחזיר כתובת בקווי אורך ורוחב
     internal static (double? Latitude, double? Longitude) logicalChecking(BO.Volunteer boVolunteer)
     {
-        IsPasswordStrong(boVolunteer.Password!);
+        if (!IsValidId(boVolunteer.Id))
+            throw new BO.BlLogicalException("The ID is not correct");
         return Tools.GetCoordinatesFromAddress(boVolunteer.CurrentAddress!);
     }
 
@@ -152,20 +148,26 @@ internal static class VolunteerManager
     internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
     {
         if (!(requesterId == boVolunteer.Id) && !(boVolunteer.Role == BO.Role.Manager))
-            throw new UnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
-
-        if (boVolunteer.Role != BO.Role.Manager && boVolunteer.Role !=BO.Role.Volunteer)
-            throw new UnauthorizedAccessException("Only an admin can update the volunteer's role.");
+            throw new BO.BlUnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
     }
-    internal static bool CanUpdateFields(int requesterId, DO.Volunteer original, BO.Volunteer boVolunteer)
+    internal static bool CanUpdateFields(DO.Volunteer original, BO.Volunteer boVolunteer)
     {
-    
         if ((BO.Role)original.Role != boVolunteer.Role)
         {
-            if (boVolunteer.Role != BO.Role.Manager|| requesterId!= original.Id)
+            if (boVolunteer.Role != BO.Role.Manager)
                 return false;
         }
         return true;
+    }
+    public static BO.CallStatusInProgress CalculateStatus(DO.Call call, int riskThreshold = 30)
+    {
+
+        var timeToEnd = call.MaxTimeToFinish - ClockManager.Now;
+        if (timeToEnd?.TotalMinutes <= riskThreshold)
+        {
+            return BO.CallStatusInProgress.AtRisk;
+        }
+        return BO.CallStatusInProgress.InProgress;
     }
 }
 

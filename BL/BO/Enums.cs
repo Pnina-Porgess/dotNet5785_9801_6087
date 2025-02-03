@@ -18,10 +18,11 @@ public enum DistanceType
 /// </summary>
 public enum TypeOfReading
 {
+    None,
     FlatTire,
     DeadBattery,
-    EngineFailure,
-    None
+    EngineFailure
+   
 }
 /// <summary>
 /// 
@@ -94,8 +95,6 @@ public enum CallField
     Type,           // Sort by the type of the call
     Description,    // Sort by the description of the call
     Address,        // Sort by the address of the call
-    Latitude,       // Sort by the latitude coordinate
-    Longitude,      // Sort by the longitude coordinate
     OpeningTime,    // Sort by the opening time of the call
     MaxEndTime,     // Sort by the maximum end time
     Status,

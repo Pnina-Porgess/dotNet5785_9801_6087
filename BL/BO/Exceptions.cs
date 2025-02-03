@@ -10,6 +10,13 @@ public class BlLogicalException : Exception
 
 }
 
+    public class InvalidOperationException : Exception
+{
+    public InvalidOperationException(string message) : base(message) { }
+
+    public InvalidOperationException(string message, Exception innerException) : base(message, innerException) { }
+
+}
 /// <summary>
 /// Exception for invalid data formats.
 /// </summary>
