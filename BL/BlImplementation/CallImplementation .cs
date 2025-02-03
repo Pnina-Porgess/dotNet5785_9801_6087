@@ -1,9 +1,6 @@
 ﻿using BO;
-using BlApi;
 using DO;
 using Helpers;
-using DalApi;
-using System;
 
 namespace BlImplementation
 {
@@ -47,10 +44,9 @@ namespace BlImplementation
             {
                 if (CallManager.CalculateCallStatus(callId) != CallStatus.Open || CallManager.WasNeverAssigned(callId))
                 {
-                    //?
                     // If the call is not open or has assignments, throw an exception
-                    throw new InvalidOperationException("Cannot delete a call that is not in 'Open' status or has been assigned.");
-                }
+                    throw new BO.InvalidOperationException("Cannot delete a call that is not in 'Open' status or has been assigned.");
+                };
                 // Attempt to delete the call
                 _dal.Call.Delete(callId);
             }
@@ -127,7 +123,7 @@ namespace BlImplementation
             }
             catch (Exception ex)
             {
-                throw new BO.InternalErrorException("Error retrieving calls list", ex);
+                throw new BO.InvalidOperationException("Error retrieving calls list", ex);
             }
         }
 
@@ -135,11 +131,9 @@ namespace BlImplementation
         {
             try
             {
-                // קבלת כל הקריאות והקצאות מה-DAL
                 var calls = _dal.Call.ReadAll();
                 var assignments = _dal.Assignment.ReadAll();
 
-                // שימוש ב-LINQ query syntax עם let ו-group by
                 var statusGroups =
                     from call in calls
                     let currentStatus = CallManager.CalculateCallStatus(call.Id)
@@ -151,16 +145,15 @@ namespace BlImplementation
                         Count = statusGroup.Count()
                     };
 
-                // יצירת מערך בגודל מספר הערכים באינום CallStatus
                 int statusCount = Enum.GetValues<CallStatus>().Length;
                 int[] quantities = new int[statusCount];
 
-                // מילוי המערך בעזרת method syntax של LINQ
                 statusGroups.ToList()
                            .ForEach(group => quantities[(int)group.Status] = group.Count);
 
                 return quantities;
-         
+            }
+
             catch (DO.DalDoesNotExistException ex)
             {
                 throw new BO.NotFoundException("Required data was not found in the database", ex);
@@ -175,20 +168,16 @@ namespace BlImplementation
         {
             try
             {
-                // Retrieve the assignment by ID
-                var assignment = _dal.Assignment.Read(assignmentId)
+                var assignment = _dal.Assignment.Read(assignmentId);
 
-                // Validate authorization and status
                 CallManager.ValidateAssignmentForCompletion(assignment, volunteerId);
 
-                // Update the assignment to reflect the completion of treatment
                 var updatedAssignment = assignment with
                 {
                     EndTime = ClockManager.Now, // Set the end time to the current time
                     TypeOfEndTime = DO.TypeOfEndTime.treated // Set the end type as "Treated"
                 };
 
-                // Update the assignment in the data layer
                 _dal.Assignment.Update(updatedAssignment);
             }
             catch (DO.DalAlreadyExistsException ex)
@@ -206,29 +195,20 @@ namespace BlImplementation
             try
             {
                 var assignment = _dal.Assignment.Read(assignmentId);
-                if (assignment == null)
-                {
-                    throw new ArgumentException($"Assignment with ID={assignmentId} does not exist.");
-                }
 
-                if (assignment.VolunteerId != requesterId && _dal.Volunteer.Read(requesterId) is null)
-                {
-                    throw new InvalidOperationException("Requester does not have permission to cancel this treatment.");
-                }
+                // Validate authorization and status
+                CallManager.ValidateAssignmentForCompletion(assignment, requesterId);
 
-                if (assignment.EndTime != null)
-                {
-                    throw new InvalidOperationException("Cannot cancel an assignment that has already been completed.");
-                }
+                //if (!=) // בדיקה אם המשתמש הוא מנהל
+                //    throw new BO.UnauthorizedActionException("The volunteer does not have permission to complete this treatment.");
 
                 var call = _dal.Call.Read(assignment.CallId);
                 if (call == null)
-                {
                     throw new ArgumentException($"Call with ID={assignment.CallId} does not exist.");
-                }
 
                 var updatedCall = call with
                 {
+                    // לוודא שאין תקלות בשדות
                     TypeOfReading = call.TypeOfReading,
                     Description = call.Description,
                     Adress = call.Adress,
@@ -238,25 +218,20 @@ namespace BlImplementation
                     MaxTimeToFinish = call.MaxTimeToFinish
                 };
 
-                // עדכון הקריאה בחזרה למצב פתוח
                 _dal.Call.Update(updatedCall);
 
-                // עדכון ההקצאה
                 var updatedAssignment = assignment with
                 {
                     EndTime = DateTime.Now,
                     TypeOfEndTime = assignment.VolunteerId == requesterId
-                    ? TypeOfEndTime.CancelingAnAdministrator
-                    : TypeOfEndTime.SelfCancellation
+                        ? DO.TypeOfEndTime.CancelingAnAdministrator
+                        : DO.TypeOfEndTime.SelfCancellation
                 };
-                _dal.Assignment.Update(updatedAssignment);
 
-                // עדכון ההקצאה בשכבת הנתונים
-                _dal.Assignment.Update(assignment);
+                _dal.Assignment.Update(updatedAssignment);
             }
             catch (Exception ex)
             {
-                // טיפול בחריגות כלליות
                 throw new BO.InvalidOperationException($"An unexpected error occurred: {ex.Message}", ex);
             }
         }
@@ -276,13 +251,13 @@ namespace BlImplementation
                 var existingAssignments = _dal.Assignment.ReadAll(a => a.CallId == callId && a.EndTime == null);
                 if (existingAssignments.Any())
                 {
-                    throw new InvalidOperationException("Call is already being handled or has an open assignment.");
+                    throw new BO.InvalidOperationException("Call is already being handled or has an open assignment.");
                 }
 
                 // 3. בדיקת אם הקריאה לא פג תוקפה
                 if (call.MaxTimeToFinish < DateTime.Now)
                 {
-                    throw new InvalidOperationException("Call has expired and can no longer be assigned.");
+                    throw new BO.InvalidOperationException("Call has expired and can no longer be assigned.");
                 }
 
                 // 4. יצירת הקצאה חדשה
@@ -291,7 +266,7 @@ namespace BlImplementation
                     Id: 0, // מזהה ההקצאה יתעדכן אוטומטית
                     CallId: callId,
                     VolunteerId: volunteerId,
-                    TypeOfEndTime: TypeOfEndTime.treated, // סוג הטיפול נשאר כ-Treated עד לסיום
+                    TypeOfEndTime: DO.TypeOfEndTime.treated, // סוג הטיפול נשאר כ-Treated עד לסיום
                     EntryTime: DateTime.Now // זמן כניסת המתנדב לטיפול
                 );
 

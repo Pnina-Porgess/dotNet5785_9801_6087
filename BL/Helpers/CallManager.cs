@@ -13,7 +13,7 @@ internal static class CallManager
             throw new BO.NotFoundException("Volunteer object cannot be null.");
         if (call.Id < 1000)
             throw new BO.InvalidFormatException("Invalid ID format. ID must be a valid number with a correct checksum.");
-        if ((call.Type!=BO.CallType.None)&& (call.Type != BO.CallType.Regular)&& (call.Type != BO.CallType.Emergency)&& (call.Type != BO.CallType.HighPriority))
+        if ((call.Type!=CallType.None)&& (call.Type !=CallType.Regular)&& (call.Type != CallType.Emergency)&& (call.Type != CallType.HighPriority))
             throw new BO.InvalidFormatException(@"Invalid CallType format. PCallType must be None\\Regular\\Emergency\\HighPriority.");
         if (call.Description.Length < 2)
             throw new BO.InvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
@@ -31,7 +31,7 @@ internal static class CallManager
     {
         return new DO.Call(
                     Id: 0,
-                    TypeOfReading: (TypeOfReading)newCall.Type,
+                    TypeOfReading: (DO.TypeOfReading)newCall.Type,
                     Description: newCall.Description,
                     Adress: newCall.Address,
                     Latitude: newCall.Latitude,
@@ -40,6 +40,7 @@ internal static class CallManager
                     MaxTimeToFinish: newCall?.MaxEndTime ?? DateTime.Now.AddHours(1)
         );
     }
+  
     internal static CallStatus CalculateCallStatus(int callId)
     {
         try
@@ -73,7 +74,7 @@ internal static class CallManager
             if (activeAssignment == null)
             {
                 // Check if any assignment was completed successfully
-                var successfulAssignment = assignments.Any(a => a.TypeOfEndTime == TypeOfEndTime.treated);
+                var successfulAssignment = assignments.Any(a => a.TypeOfEndTime == DO.TypeOfEndTime.treated);
                 return successfulAssignment ? CallStatus.Closed : CallStatus.Open;
             }
             // There is an active assignment - check if it's at risk
@@ -85,7 +86,7 @@ internal static class CallManager
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException($"Error calculating call status: {ex.Message}", ex);
+            throw new BO.InvalidOperationException($"Error calculating call status: {ex.Message}", ex);
         }
     }
     internal static bool WasNeverAssigned(int callId)
@@ -107,7 +108,7 @@ internal static class CallManager
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException($"Error checking call assignment status: {ex.Message}", ex);
+            throw new BO.InvalidOperationException($"Error checking call assignment status: {ex.Message}", ex);
         }
     }
     internal static BO.CallInList CreateCallInList(DO.Call call, IEnumerable<DO.Assignment> assignments, Dictionary<int, string> volunteers)
@@ -130,7 +131,6 @@ internal static class CallManager
             CompletionTime = latestAssignment?.EndTime.HasValue == true ? latestAssignment.EndTime - latestAssignment.EntryTime : null
         };
     }
-
     internal static IEnumerable<BO.CallInList> FilterCall(IEnumerable<BO.CallInList> calls, CallField filterField, object filterValue)
     {
         return filterField switch
@@ -143,8 +143,6 @@ internal static class CallManager
             _ => throw new BO.InvalidOperationException($"Filtering by {filterField} is not supported")
         };
     }
-
-
     internal static IEnumerable<BO.CallInList> SortCalls(IEnumerable<BO.CallInList> calls, CallField? sortField)
     {
         if (!sortField.HasValue)
@@ -167,11 +165,11 @@ internal static class CallManager
     {
         if (assignment == null)
         {
-            throw new ArgumentException($"Assignment with ID={assignmentId} does not exist.");
+            throw new ArgumentException($"Assignment with ID={assignment.Id} does not exist.");
         }
         if (assignment.VolunteerId != volunteerId)
         {
-            throw new BO.UnauthorizedActionException("The volunteer does not have permission to complete this treatment.");
+            throw new BO.InvalidOperationException("The volunteer does not have permission to complete this treatment.");
         }
 
         if (assignment.EndTime != null)
@@ -179,6 +177,8 @@ internal static class CallManager
             throw new BO.InvalidOperationException("This treatment has already been completed or cancelled.");
         }
     }
+
+
 }
 
 
