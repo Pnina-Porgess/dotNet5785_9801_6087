@@ -1,6 +1,7 @@
 ﻿namespace BlApi;
-using BO;
 using Helpers;
+
+
 
 
 internal class VolunteerImplementation : IVolunteer
@@ -12,25 +13,21 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-            var existingVolunteer = _dal.Volunteer.Read(v => v.Id == volunteer.Id) ?? throw new DO.DalDoesNotExistException($"Volunteer with ID={volunteer.Id} already exists.");
-            Helpers.VolunteerManager.ValidateInputFormat(volunteer);
-            var (latitude, longitude) = VolunteerManager.logicalChecking(volunteer);
-            if (latitude != null && longitude != null)
-            {
-                volunteer.Latitude = latitude;
-                volunteer.Longitude = longitude;
-            }
+            var existingVolunteer = _dal.Volunteer.Read(v => v.Id == volunteer.Id) ??
+                throw new BO.BlNotFoundException($"Volunteer with ID={volunteer.Id} already exists.");
+            VolunteerManager.ValidateInputFormat(volunteer);
+             (volunteer.Latitude, volunteer.Longitude) = VolunteerManager.logicalChecking(volunteer);
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteer);
             _dal.Volunteer.Create(doVolunteer);
         }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.BLDoesNotExist($"Volunteer with ID={volunteer.Id} already exists", ex);
-        }
         catch (Exception ex)
         {
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while adding the volunteer.", ex);
+            throw new BO.BlDatabaseException($"Volunteer with ID={volunteer.Id} already exists", ex);
         }
+        //catch (Exception ex)
+        //{
+        //    throw new BO.BlDatabaseException("An unexpected error occurred while adding the volunteer.", ex);
+        //}
 
     }
 
@@ -38,44 +35,31 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-            var volunteer = _dal.Volunteer.Read(id) ?? throw new DO.DalDoesNotExistException($"Volunteer with ID={id} does not exist.");
+            var volunteer = _dal.Volunteer.Read(id) ?? throw new BO.BlNotFoundException($"Volunteer with ID={id} does not exist.");
             var currentAssignment = _dal.Assignment.ReadAll(a => a.VolunteerId == id && a.EndTime == null).FirstOrDefault();
             if (currentAssignment != null)
             {
-                throw new InvalidOperationException("Cannot delete volunteer while they are handling a call.");
+                throw new BO.InvalidOperationException("Cannot delete volunteer while they are handling a call.");
             }
             _dal.Volunteer.Delete(id);
         }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.NotFoundException($"Volunteer with ID={id} was not found in the database.", ex);
-        }
-        catch (InvalidOperationException ex)
-        {
-            throw new BO.InvalidFormatException("The volunteer cannot be deleted as they are handling a call.", ex);
-        }
         catch (Exception ex)
         {
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while trying to delete the volunteer.", ex);
+            throw new BO.BlDatabaseException($"Volunteer with ID={id} was not found in the database.", ex);
         }
     }
 
-    public DO.Role Login(string username, string password)
+    public BO.Role Login(string username, string password)
     {
         try
         {
-            var volunteer = _dal.Volunteer.ReadAll().Select(v => VolunteerManager.MapVolunteer(v)).FirstOrDefault(v => v.FullName == username);
-            if (volunteer == null)
-                throw new ArgumentException($"User with username '{username}' does not exist.");
-
-            if (!VolunteerManager.VerifyPassword(password, volunteer.Password!))
-                throw new ArgumentException("The password provided is incorrect.");
-
-            return (DO.Role)volunteer.Role;
+            var volunteer = _dal.Volunteer.ReadAll().FirstOrDefault(v => v.Name == username)
+                ?? throw new BO.BlNotFoundException($"Username or password is not correct.");
+            return (BO.Role)volunteer.Role;
         }
-        catch (Exception ex)
+        catch (DO.DalDoesNotExistException ex)
         {
-            throw new InvalidOperationException("An error occurred during login.", ex);
+            throw new BO.BlNotFoundException($"Volunteer with ID={username} was not found in the database.", ex);
         }
     }
     public BO.Volunteer GetVolunteerDetails(int volunteerId)
@@ -83,17 +67,16 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
             var volunteerDO = _dal.Volunteer.Read(volunteerId) ??
-              throw new DO.DalDoesNotExistException($"Volunteer with ID={volunteerId} does not exist");
+              throw new BO.BlNotFoundException($"Volunteer with ID={volunteerId} does not exist");
 
             var currentAssignment = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.EndTime == null).FirstOrDefault();
             BO.CallInProgress? callInProgress = null;
-
             if (currentAssignment != null)
             {
                 var callDetails = _dal.Call.Read(currentAssignment.CallId);
                 if (callDetails != null)
                 {
-                    callInProgress = new BO.CallInProgress
+                  callInProgress = new BO.CallInProgress
                     {
                         Id = currentAssignment.Id,
                         CallId = currentAssignment.CallId,
@@ -103,13 +86,11 @@ internal class VolunteerImplementation : IVolunteer
                         OpenTime = callDetails.TimeOfOpen,
                         MaxEndTime = callDetails.MaxTimeToFinish,
                         StartTime = currentAssignment.EntryTime,
-                        DistanceFromVolunteer = Tools.CalculateDistance(volunteerDO.Latitude, volunteerDO.Longitude, callDetails.Latitude, callDetails.Longitude),
-                        Status = Tools.CalculateStatus(callDetails, 30)
+                        DistanceFromVolunteer = Tools.CalculateDistance(volunteerDO.Latitude!, volunteerDO.Longitude!, callDetails.Latitude, callDetails.Longitude),
+                        Status = VolunteerManager.CalculateStatus(callDetails, 30)
                     };
                 }
             }
-
-            // יצירת האובייקט והחזרה תמידית
             return new BO.Volunteer
             {
                 Id = volunteerDO.Id,
@@ -117,7 +98,7 @@ internal class VolunteerImplementation : IVolunteer
                 Phone = volunteerDO.Phone,
                 Email = volunteerDO.Email,
                 Password = volunteerDO.Password,
-                CurrentAddress = volunteerDO.Adress,
+                CurrentAddress = volunteerDO.Address,
                 Latitude = volunteerDO.Latitude,
                 Longitude = volunteerDO.Longitude,
                 Role = (BO.Role)volunteerDO.Role,
@@ -129,39 +110,38 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BLDoesNotExist("Volunteer not found in data layer.", ex);
-        }
-        catch (Exception ex)
-        {
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while getting Volunteer details.", ex);
+            throw new BO.BlNotFoundException("Volunteer not found in data layer.", ex);
         }
     }
     public void UpdateVolunteerDetails(int requesterId, BO.Volunteer volunteerToUpdate)
     {
         try
         {
-            Helpers.VolunteerManager.ValidateInputFormat(volunteerToUpdate);
-            Helpers.VolunteerManager.ValidatePermissions(requesterId, volunteerToUpdate);
-            var (latitude, longitude) = Tools.GetCoordinatesFromAddress(volunteerToUpdate.CurrentAddress!);
-            volunteerToUpdate.Latitude = latitude;
-            volunteerToUpdate.Longitude = longitude;
-            var existingVolunteer = _dal.Volunteer.Read(volunteerToUpdate.Id);
-            if (!Helpers.VolunteerManager.CanUpdateFields(requesterId, existingVolunteer!, volunteerToUpdate))
-                throw new UnauthorizedAccessException("You do not have permission to update the Role field.");
-            DO.Volunteer doVolunteer = Helpers.VolunteerManager.CreateDoVolunteer(volunteerToUpdate);
+            VolunteerManager.ValidatePermissions(requesterId, volunteerToUpdate);
+            VolunteerManager.ValidateInputFormat(volunteerToUpdate);
+            (volunteerToUpdate.Latitude, volunteerToUpdate.Longitude) = VolunteerManager.logicalChecking(volunteerToUpdate);
+            var existingVolunteer = _dal.Volunteer.Read(volunteerToUpdate.Id)
+                ??throw new BO.BlNotFoundException($"Volunteer with ID={volunteerToUpdate.Id} does not exist.");
+            if (!VolunteerManager.CanUpdateFields( existingVolunteer!, volunteerToUpdate))
+                throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
+            DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteerToUpdate);
             _dal.Volunteer.Update(doVolunteer);
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.NotFoundException($"The volunteer with ID={volunteerToUpdate.Id} was not found.", ex);
+            throw new BO.BlNotFoundException($"The volunteer with ID={volunteerToUpdate.Id} was not found.", ex);
         }
-        catch (BO.InvalidFormatException ex)
+        catch (BO.BlInvalidInputException ex)
         {
-            throw new BO.InvalidFormatException($"Invalid data for volunteer update: {ex.Message}", ex);
+            throw new BO.BlInvalidInputException($"Invalid data for volunteer update: {ex.Message}", ex);
+        }
+        catch (BO.BlUnauthorizedAccessException ex)
+        {
+            throw new BO.BlInvalidInputException($"Invalid data for volunteer update: {ex.Message}", ex);
         }
         catch (Exception ex)
         {
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
+            throw new BO.BlDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
         }
     }
     public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null)
@@ -170,17 +150,16 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
             IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v =>
-                !isActive.HasValue || v.IsActive == isActive.Value);
+                !isActive.HasValue || v.IsActive == isActive);
 
             var volunteerList = VolunteerManager.GetVolunteerList(volunteers);
-
+           
             volunteerList = sortBy.HasValue ? sortBy.Value switch
             {
-
-               VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
-               VolunteerSortBy.TotalHandledCalls => volunteerList.OrderByDescending(v => v.TotalHandledCalls).ToList(),
-              VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderByDescending(v => v.TotalCancelledCalls).ToList(),
-               VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderByDescending(v => v.TotalExpiredCalls).ToList(),
+              BO.VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
+              BO.VolunteerSortBy.TotalHandledCalls => volunteerList.OrderByDescending(v => v.TotalHandledCalls).ToList(),
+              BO.VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderByDescending(v => v.TotalCancelledCalls).ToList(),
+              BO.VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderByDescending(v => v.TotalExpiredCalls).ToList(),
                 _ => volunteerList.OrderBy(v => v.Id).ToList()
             } : volunteerList.OrderBy(v => v.Id).ToList();
 
@@ -188,16 +167,7 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.GeneralDatabaseException("Error accessing data.", ex);
-        }
-        catch (Exception ex)
-        {
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
+            throw new BO.BlDatabaseException("Error accessing data.", ex);
         }
     }
-
-  
-   
- 
-
 }

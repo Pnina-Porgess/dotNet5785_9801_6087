@@ -1,10 +1,10 @@
-﻿using BO;
-using DO;
+﻿
+using BlApi;
 using Helpers;
 
 namespace BlImplementation
 {
-    public class CallImplementation : BlApi.ICall
+    public class CallImplementation : ICall
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
         public void AddCall(BO.Call newCall)
@@ -30,11 +30,11 @@ namespace BlImplementation
             }
             catch (DO.DalAlreadyExistsException ex)
             {
-                throw new BO.BLDoesNotExist($"There is no call with ID={call.Id} number.", ex);
+                throw new BO.BlNotFoundException($"There is no call with ID={call.Id} number.", ex);
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
+                throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
 
@@ -42,21 +42,21 @@ namespace BlImplementation
         {
             try
             {
-                if (CallManager.CalculateCallStatus(callId) != CallStatus.Open || CallManager.WasNeverAssigned(callId))
+                if (CallManager.CalculateCallStatus(callId) != BO.CallStatus.Open || CallManager.WasNeverAssigned(callId))
                 {
                     // If the call is not open or has assignments, throw an exception
-                    throw new BO.InvalidOperationException("Cannot delete a call that is not in 'Open' status or has been assigned.");
-                };
+                    throw new BO.BlInvalidInputException("Cannot delete a call that is not in 'Open' status or has been assigned.");
+                }
                 // Attempt to delete the call
                 _dal.Call.Delete(callId);
             }
             catch (DO.DalAlreadyExistsException ex)
             {
-                throw new BO.BLDoesNotExist($"There is no call with ID={callId} number.", ex);
+                throw new BO.BlNotFoundException($"There is no call with ID={callId} number.", ex);
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
+                throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
 
@@ -64,7 +64,7 @@ namespace BlImplementation
         {
             // Get call from DAL
             var dalCall = _dal.Call.Read(callId) ??
-                throw new BO.NotFoundException($"Call with ID={callId} was not found in the system.");
+                throw new BO.BlNotFoundException($"Call with ID={callId} was not found in the system.");
 
             // Get all assignments for this call
             var assignments = _dal.Assignment.ReadAll(a => a.CallId == callId).ToList();
@@ -105,7 +105,7 @@ namespace BlImplementation
             };
         }
 
-        public IEnumerable<BO.CallInList> GetCalls(CallField? filterField = null, object? filterValue = null, CallField? sortField = null)
+        public IEnumerable<BO.CallInList> GetCalls(BO.CallField? filterField = null, object? filterValue = null, BO.CallField? sortField = null)
         {
             try
             {
@@ -119,11 +119,11 @@ namespace BlImplementation
                     callList = CallManager.FilterCall(callList, filterField.Value, filterValue);
                 }
 
-                return CallManager.SortCalls(callList, sortField).ToList();
+                return CallManager.SortCalls(callList, sortField ?? BO.CallField.Id).ToList();
             }
             catch (Exception ex)
             {
-                throw new BO.InvalidOperationException("Error retrieving calls list", ex);
+                throw new BO.BlNotFoundException("Error retrieving calls list", ex);
             }
         }
 
@@ -145,7 +145,8 @@ namespace BlImplementation
                         Count = statusGroup.Count()
                     };
 
-                int statusCount = Enum.GetValues<CallStatus>().Length;
+                // יצירת מערך בגודל מספר הערכים באינום CallStatus
+                int statusCount = Enum.GetValues<BO.CallStatus>().Length;
                 int[] quantities = new int[statusCount];
 
                 statusGroups.ToList()
@@ -156,11 +157,11 @@ namespace BlImplementation
 
             catch (DO.DalDoesNotExistException ex)
             {
-                throw new BO.NotFoundException("Required data was not found in the database", ex);
+                throw new BO.BlNotFoundException("Required data was not found in the database", ex);
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An unexpected error occurred while calculating call quantities", ex);
+                throw new BO.BlDatabaseException("An unexpected error occurred while calculating call quantities", ex);
             }
         }
 
@@ -168,11 +169,14 @@ namespace BlImplementation
         {
             try
             {
+                // Retrieve the assignment by ID
                 var assignment = _dal.Assignment.Read(assignmentId);
 
-                CallManager.ValidateAssignmentForCompletion(assignment, volunteerId);
+                // Validate authorization and status
+                CallManager.ValidateAssignmentForCompletion(assignment!, volunteerId);
 
-                var updatedAssignment = assignment with
+                // Update the assignment to reflect the completion of treatment
+                var updatedAssignment = assignment! with
                 {
                     EndTime = ClockManager.Now, // Set the end time to the current time
                     TypeOfEndTime = DO.TypeOfEndTime.treated // Set the end type as "Treated"
@@ -182,11 +186,11 @@ namespace BlImplementation
             }
             catch (DO.DalAlreadyExistsException ex)
             {
-                throw new BO.BLDoesNotExist($"There is no assignment with ID={assignmentId} .", ex);
+                throw new BO.BlNotFoundException($"There is no assignment with ID={assignmentId} .", ex);
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
+                throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
 
@@ -196,8 +200,10 @@ namespace BlImplementation
             {
                 var assignment = _dal.Assignment.Read(assignmentId);
 
-                // Validate authorization and status
-                CallManager.ValidateAssignmentForCompletion(assignment, requesterId);
+                if (assignment.VolunteerId != requesterId && _dal.Volunteer.Read(requesterId) is null)
+                {
+                    throw new BO.BlInvalidInputException("Requester does not have permission to cancel this treatment.");
+                }
 
                 //if (!=) // בדיקה אם המשתמש הוא מנהל
                 //    throw new BO.UnauthorizedActionException("The volunteer does not have permission to complete this treatment.");
@@ -224,15 +230,16 @@ namespace BlImplementation
                 {
                     EndTime = DateTime.Now,
                     TypeOfEndTime = assignment.VolunteerId == requesterId
-                        ? DO.TypeOfEndTime.CancelingAnAdministrator
-                        : DO.TypeOfEndTime.SelfCancellation
+                    ? DO.TypeOfEndTime.CancelingAnAdministrator
+                    : DO.TypeOfEndTime.SelfCancellation
                 };
 
                 _dal.Assignment.Update(updatedAssignment);
             }
             catch (Exception ex)
             {
-                throw new BO.InvalidOperationException($"An unexpected error occurred: {ex.Message}", ex);
+                // טיפול בחריגות כלליות
+                throw new BO.BlInvalidInputException($"An unexpected error occurred: {ex.Message}", ex);
             }
         }
 
@@ -275,19 +282,76 @@ namespace BlImplementation
             }
             catch (Exception ex)
             {
-                throw new BO.GeneralDatabaseException("An unexpected error occurred while update call.", ex);
+                throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
-  
-        public IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField)
+
+        public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId,  BO.TypeOfReading? filterType = null, BO.CallField? sortField = null)
         {
-            throw new NotImplementedException();
+           try
+            {
+                // Get all assignments for this volunteer
+                var assignments = _dal.Assignment.ReadAll(a =>a.VolunteerId == volunteerId &&a.EndTime != null);  // Only closed calls
+
+                // Get all calls associated with these assignments
+                var callIds = assignments.Select(a => a.CallId).Distinct();
+                var calls = _dal.Call.ReadAll(c => callIds.Contains(c.Id));
+
+                // Create ClosedCallInList objects using CallManager
+                var closedCalls = CallManager.CreateClosedCallList(calls, assignments);
+                if (filterType.HasValue)
+                {
+                    closedCalls= closedCalls.Where(c => c.CallType == filterType.Value);
+                }
+
+                return CallManager.SortCalls( closedCalls, sortField ?? BO.CallField.Id);
+            }
+            catch (DO.DalDoesNotExistException ex)
+            {
+                throw new BO.BlNotFoundException($"Could not find data for volunteer {volunteerId}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlDatabaseException("An error occurred while retrieving closed calls", ex);
+            }
+        }
+       
+        public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallStatus? filterStatus, BO.CallField? sortField)
+        {
+            try
+            {
+                var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BlNotFoundException($"Volunteer with ID={volunteerId} does not exist.");
+                var openCalls = _dal.Call.ReadAll()
+                    .Where(c =>
+                    // מחשבים סטטוס של כל קריאה
+                    (CallManager.CalculateCallStatus(c.Id) == BO.CallStatus.Open || CallManager.CalculateCallStatus(c.Id) == BO.CallStatus.OpenAtRisk)) // הפשטת הבדיקה
+                    .Select(c => new BO.OpenCallInList
+                    {
+                        Id = volunteerId, // ת.ז של המתנדב
+                       Type = (BO.TypeOfReading)c.TypeOfReading, // סוג הקריאה
+                        Description = c.Description!, // תיאור מילולי
+                        FullAddress = c.Adress, // כתובת הקריאה
+                        OpenTime = c.TimeOfOpen, // זמן פתיחת הקריאה
+                        MaxEndTime = c.MaxTimeToFinish, // זמן סיום משוער
+                        DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!,volunteer.Longitude!, c.Latitude, c.Longitude)
+                    });
+
+                return CallManager.SortCalls(openCalls, sortField ?? BO.CallField.Id);
+
+            }
+         
+        
+            catch (DO.DalDoesNotExistException ex)
+            {
+                throw new BO.BlNotFoundException($"Could not find data for volunteer {volunteerId}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlDatabaseException("An error occurred while retrieving closed calls", ex);
+            }
+
         }
 
-        public IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField)
-        {
-            throw new NotImplementedException();
-        }
-
+      
     }
 }

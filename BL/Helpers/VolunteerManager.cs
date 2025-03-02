@@ -1,6 +1,5 @@
-﻿using BO;
+﻿
 using DalApi;
-using DO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -18,7 +17,7 @@ internal static class VolunteerManager
             Phone = volunteer.Phone,
             Email = volunteer.Email,
             IsActive = volunteer.IsActive,
-           Role = volunteer.Role,
+           Role = (BO.Role)volunteer.Role,
 
         };
     }
@@ -29,16 +28,11 @@ internal static class VolunteerManager
     }
     internal static IEnumerable<BO.VolunteerInList> GetVolunteerList(IEnumerable<DO.Volunteer> volunteers)
     {
-        if (volunteers is null)
-        {
-            throw new ArgumentNullException(nameof(volunteers));
-        }
-
+  
         var volunteerInList = volunteers.Select(static v =>
           {
               var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
-              var currentAssignment = volunteerAssignments.FirstOrDefault(a => a.EntryTime == null);
-              var assignedResponseId = currentAssignment?.CallId;
+              var assignedResponseId = volunteerAssignments.FirstOrDefault(a => a?.EntryTime == null)?.CallId;
               return new BO.VolunteerInList
               {
                   Id = v.Id,
@@ -48,8 +42,8 @@ internal static class VolunteerManager
                   TotalCancelledCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.SelfCancellation),  // חישוב מספר השיחות שבוטלו
                   TotalExpiredCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.CancellationHasExpired),  // חישוב מספר השיחות שזמן ההגשה שלהן פג
                   CurrentCallId = assignedResponseId,  // אם יש קריאה בשטח, נרצה להחזיר את מזהה הקריאה
-                  CurrentCallType = (TypeOfReading)(assignedResponseId.HasValue
-                        ? (BO.CallType)(s_dal.Call.Read(assignedResponseId.Value)?.TypeOfReading ?? DO.TypeOfReading.None)
+                  CurrentCallType = (BO.TypeOfReading)(assignedResponseId.HasValue
+                        ? (BO.CallType)(s_dal.Call.Read(assignedResponseId.Value)?.TypeOfReading)
                         : BO.CallType.None) // אם אין קריאה, נחזיר None
               };
           }).ToList();
@@ -75,22 +69,22 @@ internal static class VolunteerManager
     internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
     {
        if (boVolunteer == null)
-    throw new BO.NotFoundException("Volunteer object cannot be null.");
+    throw new BO.BlNotFoundException("Volunteer object cannot be null.");
 
      if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-      throw new BO.InvalidFormatException("Invalid email format.");
+      throw new BO.BlInvalidInputException("Invalid email format.");
 
         if (boVolunteer.Id < 0 || !IsValidId(boVolunteer.Id))
-            throw new BO.InvalidFormatException("Invalid ID format. ID must be a valid number with a correct checksum.");
+            throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
 
         if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Phone, @"^\d{10}$"))
-            throw new BO.InvalidFormatException("Invalid phone number format. Phone number must have 10 digits.");
+            throw new BO.BlInvalidInputException("Invalid phone number format. Phone number must have 10 digits.");
 
         if (boVolunteer.FullName.Length < 2)
-            throw new BO.InvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
+            throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
 
-        if (boVolunteer.Password.Length < 6 || !VolunteerManager.IsPasswordStrong(boVolunteer.Password))
-            throw new BO.InvalidFormatException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
+        if (boVolunteer?.Password?.Length < 6 || !VolunteerManager.IsPasswordStrong(boVolunteer?.Password!))
+            throw new BO.BlInvalidInputException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
     }
 //תז תקינה
     internal static bool IsValidId(int id)
@@ -130,11 +124,11 @@ internal static class VolunteerManager
             boVolunteer.FullName,
             boVolunteer.Phone,
             boVolunteer.Email,
-            boVolunteer.Role,
+            (DO.Role)boVolunteer.Role,
             boVolunteer.IsActive,
             (DO.DistanceType)boVolunteer.DistanceType,
             boVolunteer.MaxDistance,
-            EncryptPassword(boVolunteer.Password),
+            EncryptPassword(boVolunteer.Password!),
             boVolunteer.CurrentAddress,
             boVolunteer.Latitude,
             boVolunteer.Longitude
@@ -145,28 +139,35 @@ internal static class VolunteerManager
     //בודק שבססמא חזקה ומחזיר כתובת בקווי אורך ורוחב
     internal static (double? Latitude, double? Longitude) logicalChecking(BO.Volunteer boVolunteer)
     {
-        IsPasswordStrong(boVolunteer.Password);
-        return Tools.GetCoordinatesFromAddress(boVolunteer.CurrentAddress);
+        if (!IsValidId(boVolunteer.Id))
+            throw new BO.BlLogicalException("The ID is not correct");
+        return Tools.GetCoordinatesFromAddress(boVolunteer.CurrentAddress!);
     }
 
     //הרשאות למי שמוסמך
     internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
     {
-        if (!(requesterId == boVolunteer.Id) && !(boVolunteer.Role == Role.Manager))
-            throw new UnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
-
-        if (boVolunteer.Role != Role.Manager && boVolunteer.Role !=Role.Volunteer)
-            throw new UnauthorizedAccessException("Only an admin can update the volunteer's role.");
+        if (!(requesterId == boVolunteer.Id) && !(boVolunteer.Role == BO.Role.Manager))
+            throw new BO.BlUnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
     }
-    internal static bool CanUpdateFields(int requesterId, DO.Volunteer original, BO.Volunteer boVolunteer)
+    internal static bool CanUpdateFields(DO.Volunteer original, BO.Volunteer boVolunteer)
     {
-    
-        if (original.Role != boVolunteer.Role)
+        if ((BO.Role)original.Role != boVolunteer.Role)
         {
-            if (boVolunteer.Role != Role.Manager|| requesterId!= original.Id)
+            if (boVolunteer.Role != BO.Role.Manager)
                 return false;
         }
         return true;
+    }
+    public static BO.CallStatusInProgress CalculateStatus(DO.Call call, int riskThreshold = 30)
+    {
+
+        var timeToEnd = call.MaxTimeToFinish - ClockManager.Now;
+        if (timeToEnd?.TotalMinutes <= riskThreshold)
+        {
+            return BO.CallStatusInProgress.AtRisk;
+        }
+        return BO.CallStatusInProgress.InProgress;
     }
 }
 
