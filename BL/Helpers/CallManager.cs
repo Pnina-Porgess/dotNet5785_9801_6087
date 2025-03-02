@@ -84,7 +84,7 @@ internal static class CallManager
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException($"Error calculating call status: {ex.Message}", ex);
+            throw new BO.InvalidOperationException($"Error calculating call status: {ex.Message}", ex);
         }
     }
     internal static bool WasNeverAssigned(int callId)
@@ -106,7 +106,7 @@ internal static class CallManager
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException($"Error checking call assignment status: {ex.Message}", ex);
+            throw new BO.InvalidOperationException($"Error checking call assignment status: {ex.Message}", ex);
         }
     }
     internal static BO.CallInList CreateCallInList(DO.Call call, IEnumerable<DO.Assignment> assignments, Dictionary<int, string> volunteers)
