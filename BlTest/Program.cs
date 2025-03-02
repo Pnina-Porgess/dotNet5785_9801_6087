@@ -245,27 +245,33 @@ internal class Program
 
             choice = (VolunteerManagementAction)GetEnumValue(typeof(VolunteerManagementAction));
 
-            //    switch (choice)
-            //    {
-            //        case VolunteerManagementAction.Back:
-            //            break;
-            //        case VolunteerManagementAction.ViewAll:
-            //            ViewAllVolunteers();
-            //            break;
-            //        case VolunteerManagementAction.Add:
-            //            AddVolunteer();
-            //            break;
-            //        case VolunteerManagementAction.Update:
-            //            UpdateVolunteer();
-            //            break;
-            //        case VolunteerManagementAction.Delete:
-            //            DeleteVolunteer();
-            //            break;
-            //        default:
-            //            Console.WriteLine("Invalid choice");
-            //            break;
-            //    }
-            //}
+            switch (choice)
+            {
+                case VolunteerManagementAction.Back:
+                    break;
+                case VolunteerManagementAction.ViewAll:
+                    s_bl.Volunteer.GetVolunteerDetails();
+                    break;
+                case VolunteerManagementAction.Add:
+                    s_bl.Volunteer.AddVolunteer(updateId, existingVolunteer);
+                    break;
+                case VolunteerManagementAction.Update:
+                    Console.Write("Enter volunteer ID to update: ");
+                    int updateId = int.TryParse(Console.ReadLine() ?? "", out int u) ? u : 0;
+                    var existingVolunteer = s_bl.Volunteer.GetVolunteerDetails(updateId);
+                    Console.Write($"Enter new FullName (current: {existingVolunteer.FullName}, press Enter to keep current): ");
+                    string updatedName = Console.ReadLine() ?? existingVolunteer.FullName;
+                    existingVolunteer.FullName = updatedName;
+                    s_bl.Volunteer.UpdateVolunteerDetails(updateId, existingVolunteer);
+                    break;
+                case VolunteerManagementAction.Delete:
+                    s_bl.Volunteer.DeleteVolunteer(updateId, existingVolunteer);
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice");
+                    break;
+            }
+        }
         } while (choice != VolunteerManagementAction.Back);
     }
 
