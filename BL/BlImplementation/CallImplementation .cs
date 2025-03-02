@@ -328,7 +328,7 @@ namespace BlImplementation
                     .Select(c => new BO.OpenCallInList
                     {
                         Id = volunteerId, // ת.ז של המתנדב
-                       Type = (BO.TypeOfReading)c.TypeOfReading, // סוג הקריאה
+                        Type = (BO.TypeOfReading)c.TypeOfReading, // סוג הקריאה
                         Description = c.Description!, // תיאור מילולי
                         FullAddress = c.Adress, // כתובת הקריאה
                         OpenTime = c.TimeOfOpen, // זמן פתיחת הקריאה

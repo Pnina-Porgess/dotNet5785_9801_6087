@@ -240,4 +240,19 @@
     <Longitude>4</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
+  <Volunteer>
+    <Id>328159801</Id>
+    <Name>sa</Name>
+    <Phone>1234567898</Phone>
+    <Email>sa@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>walkingDistance</DistanceType>
+    <MaximumDistance>12</MaximumDistance>
+    <Password>gBf4WPOSkkXnCYOJCgNtaRK8DiQywIcFagZSaTqH9qQ=</Password>
+    <Address>ben tzion</Address>
+    <Latitude>0</Latitude>
+    <Longitude>0</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
 </ArrayOfVolunteer>
