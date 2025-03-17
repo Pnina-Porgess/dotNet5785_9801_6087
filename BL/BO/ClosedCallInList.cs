@@ -19,5 +19,18 @@ public class ClosedCallInList
     public DateTime? ActualEndTime { get; set; } // The actual time the call was closed. Taken from DO.Assignment.
 
     public TypeOfEndTime? EndType { get; set; } // Type of the call closure (e.g., handled, cancelled, expired). Taken from DO.Assignment.
+
+    public override string ToString()
+    {
+        return $"Call ID: {Id}\n" +
+               $"Type: {CallType}\n" +
+               $"Address: {FullAddress}\n" +
+               $"Opened At: {OpenTime}\n" +
+               $"Assigned At: {AssignmentEntryTime}\n" +
+               $"Closed At: {(ActualEndTime.HasValue ? ActualEndTime.ToString() : "None")}\n" +
+               $"Closure Type: {(EndType.HasValue ? EndType.ToString() : "None")}";
+    }
+
+
 }
 

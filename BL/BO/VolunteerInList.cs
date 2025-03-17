@@ -28,15 +28,16 @@ public class VolunteerInList
 
     public override string ToString()
     {
-        return $"Volunteer ID: {Id}, " +
-               $"Full Name: {FullName}, " +
-               $"Active Status: {(IsActive ? "Active" : "Inactive")}, " +
-               $"Total Handled Calls: {TotalHandledCalls}, " +
-               $"Total Cancelled Calls: {TotalCancelledCalls}, " +
-               $"Total Expired Calls: {TotalExpiredCalls}, " +
-               $"Current Call ID: {(CurrentCallId.HasValue ? CurrentCallId.ToString() : "None")}, " +
+        return $"Volunteer ID: {Id}\n" +
+               $"Full Name: {FullName}\n" +
+               $"Active Status: {(IsActive ? "Active" : "Inactive")}\n" +
+               $"Total Handled Calls: {TotalHandledCalls}\n" +
+               $"Total Cancelled Calls: {TotalCancelledCalls}\n" +
+               $"Total Expired Calls: {TotalExpiredCalls}\n" +
+               $"Current Call ID: {(CurrentCallId.HasValue ? CurrentCallId.ToString() : "None")}\n" +
                $"Current Call Type: {CurrentCallType}";
     }
+
 
 
 }

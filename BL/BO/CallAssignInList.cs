@@ -11,5 +11,14 @@ namespace BO
         public DateTime AssignmentStartTime { get; set; } // Time the assignment started, cannot be null.
         public DateTime? AssignmentEndTime { get; set; } // Actual end time of the assignment, nullable if not ended.
         public CallCompletionType? CompletionType { get; set; } // Type of assignment completion, nullable for open assignments.
+        public override string ToString()
+        {
+            return $"Volunteer ID: {(VolunteerId.HasValue ? VolunteerId.ToString() : "None")},\n " +
+                   $"Volunteer Name: {(string.IsNullOrEmpty(VolunteerName) ? "None" : VolunteerName)},\n " +
+                   $"Assignment Start Time: {AssignmentStartTime},\n " +
+                   $"Assignment End Time: {(AssignmentEndTime.HasValue ? AssignmentEndTime.ToString() : "Not Ended")},\n " +
+                   $"Completion Type: {(CompletionType.HasValue ? CompletionType.ToString() : "Not Completed")}\n";
+        }
+
     }
 }
