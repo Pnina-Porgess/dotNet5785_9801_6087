@@ -91,7 +91,7 @@ internal class Program
                 if (ex.InnerException != null)
                     Console.WriteLine($"Additional Info: {ex.InnerException.Message}");
             }
-           
+
 
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
@@ -156,13 +156,13 @@ internal class Program
                     break;
                 case VolunteerAction.ViewProfile:
                     Console.Write("Enter volunteer ID number: ");
-                    int number = int.TryParse(Console.ReadLine()??"", out int n) ? n : 0;
+                    int number = int.TryParse(Console.ReadLine() ?? "", out int n) ? n : 0;
                     var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(number);
                     Console.WriteLine(volunteerDetails);
                     break;
                 case VolunteerAction.UpdateVolunteerDetails:
                     Console.Write("Enter volunteer ID to update: ");
-                    int updateId = int.TryParse(Console.ReadLine() ?? "", out int u) ? u: 0;
+                    int updateId = int.TryParse(Console.ReadLine() ?? "", out int u) ? u : 0;
                     var existingVolunteer = s_bl.Volunteer.GetVolunteerDetails(updateId);
                     Console.Write($"Enter new FullName (current: {existingVolunteer.FullName}, press Enter to keep current): ");
                     string updatedName = Console.ReadLine() ?? existingVolunteer.FullName;
@@ -213,17 +213,17 @@ internal class Program
                             Console.WriteLine(closedCall);
                     }
                     break;
-                //case VolunteerAction.GetOpenCallsForVolunteer:
-                //    Console.Write("Enter volunteer ID: ");
-                //    if (int.TryParse(Console.ReadLine(), out int volunteerId))
-                //    {
-                //        Console.WriteLine("Filter by call type? (1: Urgent, 2: Medium_Urgency, 3: General_Assistance, 4: Non_Urgent, 0: None):");
-                //        var closedCalls = s_bl.Call.GetOpenCallsForVolunteer(volId, filterType, CallFieldType);
-                //        foreach (var closedCall in closedCalls)
-                //            Console.WriteLine(closedCall);
-                //    }
+                    //case VolunteerAction.GetOpenCallsForVolunteer:
+                    //    Console.Write("Enter volunteer ID: ");
+                    //    if (int.TryParse(Console.ReadLine(), out int volunteerId))
+                    //    {
+                    //        Console.WriteLine("Filter by call type? (1: Urgent, 2: Medium_Urgency, 3: General_Assistance, 4: Non_Urgent, 0: None):");
+                    //        var closedCalls = s_bl.Call.GetOpenCallsForVolunteer(volId, filterType, CallFieldType);
+                    //        foreach (var closedCall in closedCalls)
+                    //            Console.WriteLine(closedCall);
+                    //    }
 
-                //        break;
+                    //        break;
             }
         } while (choice != VolunteerAction.Logout);
     }
@@ -393,5 +393,5 @@ internal class Program
         }
     }
 
- 
+
 }

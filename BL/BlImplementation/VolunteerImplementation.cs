@@ -21,8 +21,8 @@ internal class VolunteerImplementation : IVolunteer
                 throw new BO.BlAlreadyExistsException($"Volunteer with ID={volunteer.Id} already exists.");
             }
             VolunteerManager.ValidateInputFormat(volunteer);
-             (volunteer.Latitude, volunteer.Longitude) = VolunteerManager.logicalChecking(volunteer);
-            DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteer);
+             (volunteer.Latitude, volunteer.Longitude) = (0,0);
+            DO.Volunteer doVolunteer =( VolunteerManager.CreateDoVolunteer(volunteer));
             _dal.Volunteer.Create(doVolunteer);
         }
         catch (Exception ex)
