@@ -30,23 +30,24 @@ namespace BO
         public CallInProgress? CurrentCall { get; set; }/// The call currently being handled by the volunteer (optional).
         public override string ToString()
         {
-            return $"Volunteer ID: {Id}, " +
-                   $"Full Name: {FullName}, " +
-                   $"Phone Number: {Phone}, " +
-                   $"Email Address: {Email}, " +
-                   $"Password: {(string.IsNullOrEmpty(Password) ? "N/A" : "******")}, " +
-                   $"Current Address: {CurrentAddress ?? "N/A"}, " +
-                   $"Location Latitude: {Latitude?.ToString() ?? "N/A"}, " +
-                   $"Location Longitude: {Longitude?.ToString() ?? "N/A"}, " +
-                   $"Role: {Role}, " +
-                   $"Active Status: {(IsActive ? "Active" : "Inactive")}, " +
-                   $"Maximum Acceptable Distance: {MaxDistance?.ToString() ?? "N/A"}, " +
-                   $"Distance Calculation Type: {DistanceType}, " +
-                   $"Total Calls Handled: {TotalHandledCalls}, " +
-                   $"Total Calls Cancelled: {TotalCanceledCalls}, " +
-                   $"Total Calls Expired: {TotalExpiredCalls}, " +
+            return $"Volunteer ID: {Id}\n" +
+                   $"Full Name: {FullName}\n" +
+                   $"Phone Number: {Phone}\n" +
+                   $"Email Address: {Email}\n" +
+                   $"Password: {(string.IsNullOrEmpty(Password) ? "N/A" : "******")}\n" +
+                   $"Current Address: {CurrentAddress ?? "N/A"}\n" +
+                   $"Location Latitude: {Latitude?.ToString() ?? "N/A"}\n" +
+                   $"Location Longitude: {Longitude?.ToString() ?? "N/A"}\n" +
+                   $"Role: {Role}\n" +
+                   $"Active Status: {(IsActive ? "Active" : "Inactive")}\n" +
+                   $"Maximum Acceptable Distance: {MaxDistance?.ToString() ?? "N/A"}\n" +
+                   $"Distance Calculation Type: {DistanceType}\n" +
+                   $"Total Calls Handled: {TotalHandledCalls}\n" +
+                   $"Total Calls Cancelled: {TotalCanceledCalls}\n" +
+                   $"Total Calls Expired: {TotalExpiredCalls}\n" +
                    $"Current Call: {(CurrentCall != null ? CurrentCall.ToString() : "None")}";
         }
+
 
 
     }

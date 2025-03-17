@@ -11,6 +11,18 @@
         public TimeSpan? CompletionTime { get; set; } // Total time to complete the call, nullable if the call is not completed.
         public CallStatus CallStatus { get; set; } // Status of the call (e.g., open, in progress, closed), cannot be null.
         public int TotalAssignments { get; set; } // Total number of assignments for the call, cannot be null.
+        public override string ToString()
+        {
+            return $"Assignment ID: {(AssignmentId.HasValue ? AssignmentId.ToString() : "None")}\n" +
+                   $"Call ID: {CallId}\n" +
+                   $"Call Type: {CallType}\n" +
+                   $"Opened At: {OpeningTime}\n" +
+                   $"Remaining Time: {(RemainingTime.HasValue ? RemainingTime.ToString() : "None")}\n" +
+                   $"Last Volunteer: {(string.IsNullOrEmpty(LastVolunteerName) ? "None" : LastVolunteerName)}\n" +
+                   $"Completion Time: {(CompletionTime.HasValue ? CompletionTime.ToString() : "None")}\n" +
+                   $"Call Status: {CallStatus}\n" +
+                   $"Total Assignments: {TotalAssignments}";
+        }
     }
 }
 

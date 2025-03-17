@@ -31,19 +31,20 @@ namespace BO
         public CallStatusInProgress Status { get; set; } // The current status of the call. Possible values: "In Progress" or "At Risk".
         public override string ToString()
         {
-            return $"Assignment ID: {Id}, " +
-                   $"Call ID: {CallId}, " +
-                   $"Call Type: {CallType}, " +
-                   $"Description: {(!string.IsNullOrEmpty(Description) ? Description : "None")}, " +
-                   $"Call Address: {Address}, " +
-                   $"Opening Time: {OpenTime}, " +
-                   $"Maximum Resolution Time: {(MaxEndTime.HasValue ? MaxEndTime.ToString() : "None")}, " +
-                   $"Start Handling Time: {StartTime}, " +
-                   $"Distance from Volunteer: {DistanceFromVolunteer} km, " +
+            return $"Assignment ID: {Id}\n" +
+                   $"Call ID: {CallId}\n" +
+                   $"Call Type: {CallType}\n" +
+                   $"Description: {(!string.IsNullOrEmpty(Description) ? Description : "None")}\n" +
+                   $"Call Address: {Address}\n" +
+                   $"Opening Time: {OpenTime}\n" +
+                   $"Maximum Resolution Time: {(MaxEndTime.HasValue ? MaxEndTime.ToString() : "None")}\n" +
+                   $"Start Handling Time: {StartTime}\n" +
+                   $"Distance from Volunteer: {DistanceFromVolunteer} km\n" +
                    $"Current Status: {Status}";
         }
-    }
 
     }
+
+}
 
 
