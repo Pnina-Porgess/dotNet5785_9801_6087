@@ -212,8 +212,8 @@ internal static class CallManager
             BO.CallField.Status => calls.OrderBy(c => ((dynamic)c!).Status),
             BO.CallField.OpeningTime => calls.OrderBy(c => ((dynamic)c!).OpeningTime),
             BO.CallField.MaxEndTime => calls.OrderBy(c => ((dynamic)c!).MaxEndTime),
-            BO.CallField.Address => calls.OrderBy(c => ((dynamic)c!).Address),
-            _ => calls.OrderBy(c => ((dynamic)c!).CallNumber)
+            BO.CallField.Address => calls.OrderBy(c => ((dynamic)c!).FullAddress),
+            _ => calls.OrderBy(c => ((dynamic)c!).Id)
         };
     }
     public static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)
