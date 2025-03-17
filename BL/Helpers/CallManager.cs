@@ -50,7 +50,8 @@ internal static class CallManager
 
             // Get all assignments for this call
             var assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
-
+            if (assignments == null)
+                throw new ArgumentException($"Call with ID={callId} does not has assignment.");
             // If there are no assignments at all
             if (!assignments.Any())
             {

@@ -8,17 +8,7 @@
     <Longitude>34.8697</Longitude>
     <Latitude>32.3488</Latitude>
     <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
-    <MaxTimeToFinish>2025-01-10T00:00:00</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1001</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
-    <Description />
-    <Adress>Highway 6, Central Israel</Adress>
-    <Longitude>34.8951</Longitude>
-    <Latitude>31.9575</Latitude>
-    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
-    <MaxTimeToFinish>2025-01-27T00:00:00</MaxTimeToFinish>
+    <MaxTimeToFinish>2028-01-10T00:00:00</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1002</Id>
@@ -508,6 +498,6 @@
     <Longitude>0</Longitude>
     <Latitude>0</Latitude>
     <TimeOfOpen>2011-11-11T11:11:00</TimeOfOpen>
-    <MaxTimeToFinish>2012-12-12T12:12:00</MaxTimeToFinish>
+    <MaxTimeToFinish>2030-12-12T12:12:00</MaxTimeToFinish>
   </Call>
 </ArrayOfCall>

@@ -19,5 +19,18 @@ namespace BO
         public DateTime? MaxEndTime { get; set; }// Maximum allowed time for completing the call.
         public CallStatus Status { get; set; }// Current status of the call (enumeration).
         public List<CallAssignInList>? Assignments { get; set; }// List of assignments related to the call.
+
+        public override string ToString()
+        {
+            return $"Call ID: {Id}\n" +
+                   $"Type: {Type}\n" +
+                   $"Description: {Description ?? "No description"}\n" +
+                   $"Address: {Address}\n" +
+                   $"Coordinates: ({Latitude}, {Longitude})\n" +
+                   $"Opening Time: {OpeningTime}\n" +
+                   $"Max End Time: {(MaxEndTime.HasValue ? MaxEndTime.Value.ToString() : "N/A")}\n" +
+                   $"Status: {Status}\n" +
+                   $"Assignments: {(Assignments != null && Assignments.Count > 0 ? string.Join(", ", Assignments) : "No assignments")}";
+        }
     }
 }

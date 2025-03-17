@@ -400,4 +400,12 @@
     <EntryTime>2025-01-11T07:05:00</EntryTime>
     <EndTime>2025-01-11T09:05:00</EndTime>
   </Assignment>
+  <Assignment>
+    <Id>2050</Id>
+    <CallId>1000</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>treated</TypeOfEndTime>
+    <EntryTime>2025-03-17T20:33:34.6379466+02:00</EntryTime>
+    <EndTime />
+  </Assignment>
 </Assignments>
