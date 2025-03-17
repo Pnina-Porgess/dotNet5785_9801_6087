@@ -500,4 +500,14 @@
     <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
     <MaxTimeToFinish>2025-01-16T00:00:00</MaxTimeToFinish>
   </Call>
+  <Call>
+    <Id>1050</Id>
+    <TypeOfReading>DeadBattery</TypeOfReading>
+    <Description>hygtfrde</Description>
+    <Adress>yhgtfrde</Adress>
+    <Longitude>0</Longitude>
+    <Latitude>0</Latitude>
+    <TimeOfOpen>2011-11-11T11:11:00</TimeOfOpen>
+    <MaxTimeToFinish>2012-12-12T12:12:00</MaxTimeToFinish>
+  </Call>
 </ArrayOfCall>

@@ -2,12 +2,13 @@
 
 using BO;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 namespace Helpers;
     internal static class Tools
     {
  private static readonly DalApi.IDal _dal = DalApi.Factory.Get; //stage 4
     private static readonly string apiUrl = "https://geocode.maps.co/search?q={0}&api_key={1}";
-    private static readonly string apiKey = "6797d46098d51743505867ysm058e34";
+    private static readonly string apiKey = "67d0c6072495d235561921arb8bd9a1";
 
     public static double CalculateDistance(object latitude1, object longitude1, double latitude2, double longitude2)
     {
@@ -45,9 +46,6 @@ namespace Helpers;
     {
         return degrees * Math.PI / 180;
     }
-
-
-
     public static (double Latitude, double Longitude) GetCoordinatesFromAddress(string address)
     {
         if (string.IsNullOrWhiteSpace(address))

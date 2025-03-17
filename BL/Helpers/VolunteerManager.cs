@@ -2,7 +2,6 @@
 using DalApi;
 using System.Security.Cryptography;
 using System.Text;
-
 namespace Helpers;
 internal static class VolunteerManager
 {
@@ -141,7 +140,8 @@ internal static class VolunteerManager
     {
         if (!IsValidId(boVolunteer.Id))
             throw new BO.BlLogicalException("The ID is not correct");
-        return Tools.GetCoordinatesFromAddress(boVolunteer.CurrentAddress!);
+        (double? r, double? w) = Tools.GetCoordinatesFromAddress(boVolunteer.CurrentAddress!);
+        return (r,w);
     }
 
     //הרשאות למי שמוסמך

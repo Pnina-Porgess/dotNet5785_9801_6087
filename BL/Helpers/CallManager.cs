@@ -10,8 +10,8 @@ internal static class CallManager
     {
         if (call == null)
             throw new BO.BlNotFoundException("Volunteer object cannot be null.");
-        if (call.Id < 1000)
-            throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
+        //if (call.Id < 1000)
+        //    throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
         if ((call.Type!=BO.CallType.None)&& (call.Type != BO.CallType.Regular)&& (call.Type != BO.CallType.Emergency)&& (call.Type != BO.CallType.HighPriority))
             throw new BO.BlInvalidInputException(@"Invalid CallType format. PCallType must be None\\Regular\\Emergency\\HighPriority.");
         if (call.Description?.Length < 2)

@@ -250,67 +250,132 @@ internal class Program
                 case VolunteerManagementAction.Back:
                     break;
                 case VolunteerManagementAction.ViewAll:
-                    s_bl.Volunteer.GetVolunteerDetails();
+                    Console.Write(s_bl.Volunteer.GetVolunteersList());
                     break;
                 case VolunteerManagementAction.Add:
-                    s_bl.Volunteer.AddVolunteer(updateId, existingVolunteer);
+                   
+                    Console.Write("Enter ID to add volunteer: ");
+                    int Id = int.TryParse(Console.ReadLine() ?? "", out int u) ? u : 0;
+                    Console.Write($"Enter new FullName: ");
+                    string Name = Console.ReadLine();
+                    Console.Write($"Enter new PhoneNumber: ");
+                    string Phone = Console.ReadLine();             
+                    Console.Write($"Enter new Email: ");
+                    string Email = Console.ReadLine();
+                    Console.Write($"Enter new password: ");
+                    string password = Console.ReadLine();
+                    Console.Write($"Enter new Address : ");
+                    string Address = Console.ReadLine();
+                    Console.Write($"Enter max Distance : ");
+                    int MaxDistance = int.TryParse(Console.ReadLine() ?? "", out int d) ? d : 0;
+                    Console.Write($"Enter Distance Type, 1 for Air/2 for Walking/ 3 for Driving : ");
+                    DistanceType DistanceType = (DistanceType)int.Parse(Console.ReadLine()!);
+                    Volunteer addVolunteer = new BO.Volunteer { Id = Id,FullName= Name,Phone= Phone,Email= Email,Password= password,CurrentAddress= Address,Role= BO.Role.Volunteer,IsActive= true,MaxDistance= MaxDistance,DistanceType= DistanceType,TotalCanceledCalls= 0,TotalHandledCalls= 0,TotalExpiredCalls= 0 };
+                    s_bl.Volunteer.AddVolunteer(addVolunteer);
+                    Console.WriteLine("Add Volunteer successfully");
                     break;
                 case VolunteerManagementAction.Update:
                     Console.Write("Enter volunteer ID to update: ");
-                    int updateId = int.TryParse(Console.ReadLine() ?? "", out int u) ? u : 0;
+                    int updateId = int.TryParse(Console.ReadLine() ?? "", out int o) ? o : 0;
                     var existingVolunteer = s_bl.Volunteer.GetVolunteerDetails(updateId);
                     Console.Write($"Enter new FullName (current: {existingVolunteer.FullName}, press Enter to keep current): ");
                     string updatedName = Console.ReadLine() ?? existingVolunteer.FullName;
                     existingVolunteer.FullName = updatedName;
+                    Console.Write($"Enter new PhoneNumber (current: {existingVolunteer.Phone}, press Enter to keep current): ");
+                    string updatedPhoneNumber = Console.ReadLine() ?? existingVolunteer.Phone;
+                    existingVolunteer.Phone = updatedPhoneNumber;
+
+                    Console.Write($"Enter new Email (current: {existingVolunteer.Email}, press Enter to keep current): ");
+                    string updatedEmail = Console.ReadLine() ?? existingVolunteer.Email;
+                    existingVolunteer.Email = updatedEmail;
+
+                    Console.Write($"Enter new Address (current: {existingVolunteer.CurrentAddress}, press Enter to keep current): ");
+                    string updatedAddress = Console.ReadLine() ?? existingVolunteer.CurrentAddress!;
+                    existingVolunteer.CurrentAddress = updatedAddress;
                     s_bl.Volunteer.UpdateVolunteerDetails(updateId, existingVolunteer);
+                    Console.WriteLine("Volunteer updated successfully");
                     break;
                 case VolunteerManagementAction.Delete:
-                    s_bl.Volunteer.DeleteVolunteer(updateId, existingVolunteer);
+                    Console.Write("Enter volunteer ID to delete: ");
+                    int VolunteerId = int.TryParse(Console.ReadLine() ?? "", out int v) ? v : 0;
+                    s_bl.Volunteer.DeleteVolunteer(VolunteerId);
                     break;
                 default:
                     Console.WriteLine("Invalid choice");
                     break;
             }
-        }
+      
         } while (choice != VolunteerManagementAction.Back);
     }
 
     private static void ManageCallsMenu()
     {
-        //CallManagementAction choice;
-        //do
-        //{
-        //    Console.WriteLine("\nManage Calls Menu");
-        //    Console.WriteLine("=================");
-        //    Console.WriteLine("0: Back to Main Menu");
-        //    Console.WriteLine("1: View All Calls");
-        //    Console.WriteLine("2: Add New Call");
-        //    Console.WriteLine("3: Update Call");
-        //    Console.WriteLine("4: Delete Call");
+        CallManagementAction choice;
+        do
+        {
+            Console.WriteLine("\nManage Calls Menu");
+            Console.WriteLine("=================");
+            Console.WriteLine("0: Back to Main Menu");
+            Console.WriteLine("1: View All Calls");
+            Console.WriteLine("2: Add New Call");
+            Console.WriteLine("3: Update Call");
 
-        //    choice = (CallManagementAction)GetEnumValue(typeof(CallManagementAction));
+            choice = (CallManagementAction)GetEnumValue(typeof(CallManagementAction));
 
-        //    switch (choice)
-        //    {
-        //        case CallManagementAction.Back:
-        //            break;
-        //        case CallManagementAction.ViewAll:
-        //            ViewAllCalls();
-        //            break;
-        //        case CallManagementAction.Add:
-        //            AddCall();
-        //            break;
-        //        case CallManagementAction.Update:
-        //            UpdateCall();
-        //            break;
-        //        case CallManagementAction.Delete:
-        //            DeleteCall();
-        //            break;
-        //        default:
-        //            Console.WriteLine("Invalid choice");
-        //            break;
-        //    }
-        //} while (choice != CallManagementAction.Back);
+            switch (choice)
+            {
+                case CallManagementAction.Back:
+                    break;
+                case CallManagementAction.ViewAll:
+                    //ViewAllCalls();
+                    break;
+                case CallManagementAction.Add:
+                    Console.Write($"Enter new type 1 for Regular, 2 for Emergency, 3 for HighPriority: ");
+                    CallType newType = (CallType)int.Parse(Console.ReadLine()!);
+                    Console.Write($"Enter new Description: ");
+                    string? Description = Console.ReadLine()??null;
+                    Console.Write($"Enter new Address: ");
+                    string Address = Console.ReadLine();
+                    Console.Write($"Enter new OpeningTime: ");
+                    DateTime OpeningTime = DateTime.Parse(Console.ReadLine()!);
+                    Console.Write($"Enter new MaxEndTime : ");
+                    DateTime? MaxEndTime = DateTime.Parse(Console.ReadLine()!);
+                    Console.Write($"Enter new   0 for Open,1 for InProgress,2 for Closed,3 for Expired,4 for OpenAtRisk,5 for InProgressAtRisk: ");
+                    CallStatus Status = (CallStatus)int.Parse(Console.ReadLine()!);
+                    Call addCall = new BO.Call { Type = newType, Description = Description, Address = Address, OpeningTime = OpeningTime, MaxEndTime = MaxEndTime, Status= Status };
+                    s_bl.Call.AddCall(addCall);
+                    Console.WriteLine("Add call successfully");
+                    break;
+                case CallManagementAction.Update:
+                    Console.Write("Enter call ID to update: ");
+                    int updateId = int.TryParse(Console.ReadLine() ?? "", out int o) ? o : 0;
+                    var existingCall = s_bl.Call.GetCallDetails(updateId);
+                    Console.Write($"Enter new type 1 for Regular, 2 for Emergency, 3 for HighPriority (current: {existingCall.Type}, press Enter to keep current): ");
+                    CallType updatedType=(CallType)int.Parse(Console.ReadLine()!);
+                    existingCall.Type = updatedType;
+                    Console.Write($"Enter new Description (current: {existingCall.Description}, press Enter to keep current): ");
+                    string updatedDescription = Console.ReadLine() ?? existingCall.Description;
+                    existingCall.Description = updatedDescription;
+
+                    Console.Write($"Enter new Address (current: {existingCall.Address}, press Enter to keep current): ");
+                    string updatedAddress = Console.ReadLine() ?? existingCall.Address;
+                    existingCall.Address = updatedAddress;
+
+                    Console.Write($"Enter new Address (current: {existingCall.MaxEndTime}, press Enter to keep current): ");
+                    DateTime updatedMaxEndTime = DateTime.TryParse(Console.ReadLine() ?? "", out DateTime end) ? end : existingCall.MaxEndTime??end;
+                    existingCall.MaxEndTime = updatedMaxEndTime;
+
+                    Console.Write($"Enter new   0 for Open,1 for InProgress,2 for Closed,3 for Expired,4 for OpenAtRisk,5 for InProgressAtRisk (current: {existingCall.Status}, press Enter to keep current): ");
+                    CallStatus updatedStatus = (CallStatus)int.Parse(Console.ReadLine()!);
+                    existingCall.Status = updatedStatus;
+                    s_bl.Call.UpdateCall(existingCall);
+                    Console.WriteLine("Volunteer updated successfully");        
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice");
+                    break;
+            }
+        } while (choice != CallManagementAction.Back);
     }
 
     // Helper method to get enum value with input validation

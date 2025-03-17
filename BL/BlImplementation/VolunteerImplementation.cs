@@ -13,8 +13,13 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-            var existingVolunteer = _dal.Volunteer.Read(v => v.Id == volunteer.Id) ??
-                throw new BO.BlNotFoundException($"Volunteer with ID={volunteer.Id} already exists.");
+            //var existingVolunteer = _dal.Volunteer.Read(v => v.Id == volunteer.Id) ??
+            //    throw new BO.BlNotFoundException($"Volunteer with ID={volunteer.Id} already exists.");
+            var existingVolunteer = _dal.Volunteer.Read(v => v.Id == volunteer.Id);
+            if (existingVolunteer != null)
+            {
+                throw new BO.BlAlreadyExistsException($"Volunteer with ID={volunteer.Id} already exists.");
+            }
             VolunteerManager.ValidateInputFormat(volunteer);
              (volunteer.Latitude, volunteer.Longitude) = VolunteerManager.logicalChecking(volunteer);
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteer);
@@ -22,7 +27,7 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (Exception ex)
         {
-            throw new BO.BlDatabaseException($"Volunteer with ID={volunteer.Id} already exists", ex);
+            throw new BO.BlDatabaseException($"Volunt", ex);
         }
         //catch (Exception ex)
         //{

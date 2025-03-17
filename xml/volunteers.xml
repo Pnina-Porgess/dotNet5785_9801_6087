@@ -240,4 +240,19 @@
     <Longitude>4</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
+  <Volunteer>
+    <Id>328159801</Id>
+    <Name>sdfg</Name>
+    <Phone>3456765432</Phone>
+    <Email>wefg@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>walkingDistance</DistanceType>
+    <MaximumDistance>123</MaximumDistance>
+    <Password>6zc0M4nVQhDWWXiTB8H8FRHobaNKP4JlPT/g+ciUSVw=</Password>
+    <Address>maavar hamitle</Address>
+    <Latitude>0</Latitude>
+    <Longitude>0</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
 </ArrayOfVolunteer>
