@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.VisualBasic;
 using System;
 
 namespace BO
@@ -28,7 +29,21 @@ namespace BO
         public double DistanceFromVolunteer { get; set; } // The distance of the call from the current location of the volunteer. Calculated in the logic layer.
 
         public CallStatusInProgress Status { get; set; } // The current status of the call. Possible values: "In Progress" or "At Risk".
+        public override string ToString()
+        {
+            return $"Assignment ID: {Id}, " +
+                   $"Call ID: {CallId}, " +
+                   $"Call Type: {CallType}, " +
+                   $"Description: {(!string.IsNullOrEmpty(Description) ? Description : "None")}, " +
+                   $"Call Address: {Address}, " +
+                   $"Opening Time: {OpenTime}, " +
+                   $"Maximum Resolution Time: {(MaxEndTime.HasValue ? MaxEndTime.ToString() : "None")}, " +
+                   $"Start Handling Time: {StartTime}, " +
+                   $"Distance from Volunteer: {DistanceFromVolunteer} km, " +
+                   $"Current Status: {Status}";
+        }
     }
-}
+
+    }
 
 

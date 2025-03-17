@@ -1,5 +1,8 @@
 ﻿
 
+using DO;
+using System.Xml.Linq;
+
 namespace BO;
 
 /// <summary>
@@ -22,6 +25,19 @@ public class VolunteerInList
     public int? CurrentCallId { get; set; } // The ID of the call currently being handled by the volunteer, if any. Found in DO.Assignment where actual end time is null.
 
     public TypeOfReading CurrentCallType { get; set; } // Type of the call currently being handled by the volunteer. If no call is being handled, the value is None.
+
+    public override string ToString()
+    {
+        return $"Volunteer ID: {Id}, " +
+               $"Full Name: {FullName}, " +
+               $"Active Status: {(IsActive ? "Active" : "Inactive")}, " +
+               $"Total Handled Calls: {TotalHandledCalls}, " +
+               $"Total Cancelled Calls: {TotalCancelledCalls}, " +
+               $"Total Expired Calls: {TotalExpiredCalls}, " +
+               $"Current Call ID: {(CurrentCallId.HasValue ? CurrentCallId.ToString() : "None")}, " +
+               $"Current Call Type: {CurrentCallType}";
+    }
+
 
 }
 

@@ -255,4 +255,19 @@
     <Longitude>0</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
+  <Volunteer>
+    <Id>331301036</Id>
+    <Name>tamar</Name>
+    <Phone>0548562009</Phone>
+    <Email>tamar@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>walkingDistance</DistanceType>
+    <MaximumDistance>12</MaximumDistance>
+    <Password>enV5h34n6y2F05+lnZIAwX4U5L4lxHQByNgTGyJnd/g=</Password>
+    <Address>ramote</Address>
+    <Latitude>0</Latitude>
+    <Longitude>0</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
 </ArrayOfVolunteer>

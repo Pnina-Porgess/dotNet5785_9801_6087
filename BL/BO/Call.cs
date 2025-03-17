@@ -32,5 +32,6 @@ namespace BO
                    $"Status: {Status}\n" +
                    $"Assignments: {(Assignments != null && Assignments.Count > 0 ? string.Join(", ", Assignments) : "No assignments")}";
         }
+
     }
 }
