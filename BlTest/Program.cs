@@ -63,7 +63,7 @@ internal class Program
             try
             {
                 // Initial login screen
-                Console.Clear();
+               
                 Console.WriteLine("Welcome to Volunteer Management System");
                 Console.WriteLine("====================================");
                 Console.WriteLine("Please press 0 to log out, 1 for the volunteer menu, 2 for the readings menu, 3 for the administrator menu.");
@@ -94,10 +94,6 @@ internal class Program
                     Console.WriteLine($"Additional Info: {ex.InnerException.Message}");
             }
 
-
-            Console.WriteLine("\nPress any key to continue...");
-            Console.ReadKey();
-            Console.Clear();
         }
     }
 
@@ -108,7 +104,6 @@ internal class Program
         VolunteerMenu choice;
         do
         {
-            Console.Clear();
             Console.WriteLine("\nVolunteer Main Menu");
             Console.WriteLine("===================");
             Console.WriteLine("0: Logout");
@@ -116,8 +111,8 @@ internal class Program
             Console.WriteLine("2: Delete Volunteer ");
             Console.WriteLine("3:Login");
             Console.WriteLine("4:Get Volunteer Details");
-            Console.WriteLine("5:Get Volunteers List");
-
+            Console.WriteLine("5:Update Volunteer");
+            Console.WriteLine("6:Get Volunteers List");
             choice = (VolunteerMenu)GetEnumValue(typeof(VolunteerMenu));
 
             switch (choice)
@@ -157,9 +152,9 @@ internal class Program
                         Console.Write("Username: ");
                         string? username = Console.ReadLine();
                         Console.Write("Password: ");
-                        string? Password = Console.ReadLine();
+                        string? Passwor = Console.ReadLine();
 
-                        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(Password))
+                        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(Passwor))
                         {
                             Console.WriteLine("Username and password cannot be empty!");
                             continue;
@@ -175,23 +170,47 @@ internal class Program
                     Console.WriteLine(volunteerDetails);
                     break;
                 case VolunteerMenu.UpdateVolunteerDetails:
-                    Console.Write("Enter volunteer ID to update: ");
-                    int updateId = int.TryParse(Console.ReadLine() ?? "", out int D) ? D : 0;
+                    int updateId;
+                    string? Password;
+                    while (true)
+                    {
+                        Console.Write("id: ");
+                        updateId = int.TryParse(Console.ReadLine() ?? "", out int na) ? na : 0;
+                        Console.Write("Username: ");
+                        string? username = Console.ReadLine();
+                        Console.Write("Password: ");
+                        Password = Console.ReadLine();
+                        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(Password))
+                        {
+                            Console.WriteLine("Username and password cannot be empty!");
+                            continue;
+                        }
+                        Console.Write(s_bl.Volunteer.Login(username, Password));
+                        break;
+                    }
                     var existingVolunteer = s_bl.Volunteer.GetVolunteerDetails(updateId);
                     Console.Write($"Enter new FullName (current: {existingVolunteer.FullName}, press Enter to keep current): ");
-                    string updatedName = Console.ReadLine() ?? existingVolunteer.FullName;
+                    string? input = Console.ReadLine();
+                    string updatedName = (input == "") ? existingVolunteer.FullName : input;
                     existingVolunteer.FullName = updatedName;
-
                     Console.Write($"Enter new PhoneNumber (current: {existingVolunteer.Phone}, press Enter to keep current): ");
-                    string updatedPhoneNumber = Console.ReadLine() ?? existingVolunteer.Phone;
+                      input = Console.ReadLine();
+                    string updatedPhoneNumber = (input == "") ? existingVolunteer.Phone: input ;
                     existingVolunteer.Phone = updatedPhoneNumber;
 
+                    Console.Write($"Enter new Password , press Enter to keep current): ");
+                    input = Console.ReadLine();
+                    string updatedPassword = (input == "") ? Password : input;
+                    existingVolunteer.Password = updatedPassword;
+
                     Console.Write($"Enter new Email (current: {existingVolunteer.Email}, press Enter to keep current): ");
-                    string updatedEmail = Console.ReadLine() ?? existingVolunteer.Email;
+                    input = Console.ReadLine();
+                    string updatedEmail = (input == "") ? existingVolunteer.Email : input;
                     existingVolunteer.Email = updatedEmail;
 
                     Console.Write($"Enter new Address (current: {existingVolunteer.CurrentAddress}, press Enter to keep current): ");
-                    string updatedAddress = Console.ReadLine() ?? existingVolunteer.CurrentAddress!;
+                    input = Console.ReadLine();
+                    string updatedAddress = (input == "") ? existingVolunteer.CurrentAddress : input;
                     existingVolunteer.CurrentAddress = updatedAddress;
                     s_bl.Volunteer.UpdateVolunteerDetails(updateId, existingVolunteer);
                     Console.WriteLine("Volunteer updated successfully");
@@ -358,15 +377,13 @@ internal class Program
                     Console.WriteLine("Choose a field to sort by:");
                     foreach (var field in Enum.GetValues(typeof(BO.CallField)))
                     {
-                        Console.WriteLine($"{(int)field}: {field}");
+                        Console.WriteLine($"{(int)field}:{field}");
                     }
-
                     BO.CallField? sortField = null;
                     if (int.TryParse(Console.ReadLine(), out int sortFieldInput) && Enum.IsDefined(typeof(BO.CallField), sortFieldInput))
                     {
                         sortField = (BO.CallField)sortFieldInput;
                     }
-
                     // Step 4: Perform filtering and sorting
                     try
                     {
@@ -377,7 +394,6 @@ internal class Program
                             Console.WriteLine("No calls to display."); // No results found
                             return;
                         }
-
                         // Step 5: Display results
                         Console.WriteLine("\nFiltered and Sorted Calls:");
                         foreach (var Call in calls)
@@ -484,10 +500,9 @@ internal class Program
 
         do
         {
-            Console.Clear();
             Console.WriteLine("\nAdmin Main Menu");
             Console.WriteLine("===============");
-            Console.WriteLine("0: Logout");
+            Console.WriteLine("0: Back to Main Menu");
             Console.WriteLine("1: Get Current Clock");
             Console.WriteLine("2: Forward Clock");
             Console.WriteLine("3: Get Risk Range");
@@ -551,8 +566,6 @@ internal class Program
                     break;
             }
 
-            Console.WriteLine("\nPress any key to continue...");
-            Console.ReadKey();
 
         } while (choice != AdminFunctions.Logout);
     }

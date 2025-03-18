@@ -32,8 +32,6 @@ namespace BO
                    $"Deadline: {(MaxEndTime.HasValue ? MaxEndTime.ToString() : "None")}\n" +
                    $"Distance from Volunteer: {DistanceFromVolunteer} km";
         }
-
-
     }
 
 }

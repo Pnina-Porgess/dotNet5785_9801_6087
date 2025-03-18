@@ -60,6 +60,10 @@ internal class VolunteerImplementation : IVolunteer
         {
             var volunteer = _dal.Volunteer.ReadAll().FirstOrDefault(v => v.Name == username)
                 ?? throw new BO.BlNotFoundException($"Username or password is not correct.");
+            if (!(VolunteerManager.EncryptPassword(password) == volunteer.Password))
+            {
+                throw new BO.BlNotFoundException($"Username or password is not correct.");
+            }
             return (BO.Role)volunteer.Role;
         }
         catch (DO.DalDoesNotExistException ex)
@@ -124,7 +128,7 @@ internal class VolunteerImplementation : IVolunteer
         {
             VolunteerManager.ValidatePermissions(requesterId, volunteerToUpdate);
             VolunteerManager.ValidateInputFormat(volunteerToUpdate);
-            (volunteerToUpdate.Latitude, volunteerToUpdate.Longitude) = VolunteerManager.logicalChecking(volunteerToUpdate);
+            (volunteerToUpdate.Latitude, volunteerToUpdate.Longitude) = (0,0);
             var existingVolunteer = _dal.Volunteer.Read(volunteerToUpdate.Id)
                 ??throw new BO.BlNotFoundException($"Volunteer with ID={volunteerToUpdate.Id} does not exist.");
             if (!VolunteerManager.CanUpdateFields( existingVolunteer!, volunteerToUpdate))
