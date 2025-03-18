@@ -119,7 +119,7 @@ namespace BlImplementation
                     callList = CallManager.FilterCall(callList, filterField.Value, filterValue);
                 }
 
-                return CallManager.SortCalls(callList, sortField ?? BO.CallField.Id).ToList();
+                return CallManager.SortCalls(callList, sortField ?? BO.CallField.CallId).ToList();
             }
             catch (Exception ex)
             {
@@ -304,7 +304,7 @@ namespace BlImplementation
                     closedCalls= closedCalls.Where(c => c.CallType == filterType.Value);
                 }
 
-                return CallManager.SortCalls( closedCalls, sortField ?? BO.CallField.Id);
+                return CallManager.SortCalls( closedCalls, sortField ?? BO.CallField.CallId);
             }
             catch (DO.DalDoesNotExistException ex)
             {
@@ -336,7 +336,7 @@ namespace BlImplementation
                         DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!,volunteer.Longitude!, c.Latitude, c.Longitude)
                     });
 
-                return CallManager.SortCalls(openCalls, sortField ?? BO.CallField.Id);
+                return CallManager.SortCalls(openCalls, sortField ?? BO.CallField.CallId);
 
             }
          

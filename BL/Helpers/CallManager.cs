@@ -122,7 +122,7 @@ internal static class CallManager
             OpeningTime = call.TimeOfOpen,
             CallStatus = CalculateCallStatus(call.Id),
             AssignmentId = latestAssignment?.Id,
-            LastVolunteerName = latestAssignment?.VolunteerId != 0 && volunteers.TryGetValue(latestAssignment!.VolunteerId, out var name) ? name : null,
+            LastVolunteerName = latestAssignment?.VolunteerId != null && volunteers.TryGetValue(latestAssignment!.VolunteerId, out var name) ? name : null,
             TotalAssignments = callAssignments.Count,
             RemainingTime = call.MaxTimeToFinish.HasValue
             ? call.MaxTimeToFinish.Value - DateTime.Now
@@ -136,7 +136,7 @@ internal static class CallManager
 
         return filterField switch
         {
-            BO.CallField.Id => calls.Where(call => call.CallId.ToString() == filterValue.ToString()),
+            BO.CallField.CallId => calls.Where(call => call.CallId.ToString() == filterValue.ToString()),
             BO.CallField.Type => calls.Where(call => call.CallType == (BO.CallType)filterValue),
            BO.CallField.Status => calls.Where(call => call.CallStatus == (BO.CallStatus)filterValue),
            BO.CallField.OpeningTime => calls.Where(call => call.OpeningTime.Date == ((DateTime)filterValue).Date),
@@ -153,7 +153,7 @@ internal static class CallManager
 
         return sortField switch
         {
-            BO.CallField.Id => calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId")),
+            BO.CallField.CallId => calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId")),
            BO.CallField.Type => calls.OrderBy(c => GetPropertyValue(c, "CallType") ?? GetPropertyValue(c, "Type")),
             BO.CallField.Status => calls.OrderBy(c => GetPropertyValue(c, "CallStatus") ?? GetPropertyValue(c, "Status")),
             BO.CallField.OpeningTime => calls.OrderBy(c => GetPropertyValue(c, "OpeningTime") ?? GetPropertyValue(c, "OpenTime")),
@@ -213,7 +213,7 @@ internal static class CallManager
             BO.CallField.OpeningTime => calls.OrderBy(c => ((dynamic)c!).OpeningTime),
             BO.CallField.MaxEndTime => calls.OrderBy(c => ((dynamic)c!).MaxEndTime),
             BO.CallField.Address => calls.OrderBy(c => ((dynamic)c!).FullAddress),
-            _ => calls.OrderBy(c => ((dynamic)c!).Id)
+            _ => calls.OrderBy(c => ((dynamic)c!).CallId)
         };
     }
     public static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)

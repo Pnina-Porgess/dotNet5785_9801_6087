@@ -278,6 +278,119 @@ internal class Program
                     Console.Write(s_bl.Call.GetCallDetails(CallIdToGetDetaails));
                     break;
                 case CallMenu.GetCalls:
+
+                    // Step 1: Ask for filter field
+                    Console.WriteLine("Choose a field to filter by:");
+                    foreach (var field in Enum.GetValues(typeof(BO.CallField)))
+                    {
+                        Console.WriteLine($"{(int)field}: {field}");
+                    }
+
+                    // קבלת הבחירה מהמשתמש
+                    BO.CallField? filterField = null;
+                    object? filterValue = null;
+                    if (int.TryParse(Console.ReadLine(), out int filterFieldInput) && Enum.IsDefined(typeof(BO.CallField), filterFieldInput))
+                    {
+                        filterField = (BO.CallField)filterFieldInput;
+
+                        // Step 2: Get the value based on selected filter field
+                        switch (filterField)
+                        {
+                            case BO.CallField.Type:
+                                Console.WriteLine("Choose call type:");
+                                foreach (var type in Enum.GetValues(typeof(BO.CallType)))
+                                {
+                                    Console.WriteLine($"{(int)type}: {type}");
+                                }
+                                if (int.TryParse(Console.ReadLine(), out int typeInput) && Enum.IsDefined(typeof(BO.CallType), typeInput))
+                                {
+                                    filterValue = (BO.CallType)typeInput;
+                                }
+                                break;
+
+                            case BO.CallField.Status:
+                                Console.WriteLine("Choose call status:");
+                                foreach (var status in Enum.GetValues(typeof(BO.CallStatus)))
+                                {
+                                    Console.WriteLine($"{(int)status}: {status}");
+                                }
+                                if (int.TryParse(Console.ReadLine(), out int statusInput) && Enum.IsDefined(typeof(BO.CallStatus), statusInput))
+                                {
+                                    filterValue = (BO.CallStatus)statusInput;
+                                }
+                                break;
+
+                            case BO.CallField.AssignmentId:
+                                Console.WriteLine("Enter assignment ID:");
+                                if (int.TryParse(Console.ReadLine(), out int assignmentId))
+                                {
+                                    filterValue = assignmentId;
+                                }
+                                break;
+
+                            case BO.CallField.CallId:
+                                Console.WriteLine("Enter call ID:");
+                                if (int.TryParse(Console.ReadLine(), out int callId))
+                                {
+                                    filterValue = callId;
+                                }
+                                break;
+
+                            case BO.CallField.OpeningTime:
+                                Console.WriteLine("Enter opening time (yyyy-MM-dd):");
+                                if (DateTime.TryParse(Console.ReadLine(), out DateTime openingTime))
+                                {
+                                    filterValue = openingTime;
+                                }
+                                break;
+
+                            case BO.CallField.MaxEndTime:
+                                Console.WriteLine("Enter max end time (in minutes):");
+                                if (int.TryParse(Console.ReadLine(), out int maxEndTimeMinutes))
+                                {
+                                    filterValue = TimeSpan.FromMinutes(maxEndTimeMinutes);
+                                }
+                                break;
+                        }
+                    }
+
+                    // Step 3: Ask for sorting field
+                    Console.WriteLine("Choose a field to sort by:");
+                    foreach (var field in Enum.GetValues(typeof(BO.CallField)))
+                    {
+                        Console.WriteLine($"{(int)field}: {field}");
+                    }
+
+                    BO.CallField? sortField = null;
+                    if (int.TryParse(Console.ReadLine(), out int sortFieldInput) && Enum.IsDefined(typeof(BO.CallField), sortFieldInput))
+                    {
+                        sortField = (BO.CallField)sortFieldInput;
+                    }
+
+                    // Step 4: Perform filtering and sorting
+                    try
+                    {
+                        var calls = s_bl.Call.GetCalls(filterField, filterValue, sortField);
+
+                        if (!calls.Any())
+                        {
+                            Console.WriteLine("No calls to display."); // No results found
+                            return;
+                        }
+
+                        // Step 5: Display results
+                        Console.WriteLine("\nFiltered and Sorted Calls:");
+                        foreach (var Call in calls)
+                        {
+                            Console.WriteLine("\n------------------------------");
+                            Console.WriteLine(Call.ToString());
+                            Console.WriteLine("------------------------------");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
                     break;
                 case CallMenu.GetCallCountsByStatus:
                     string[] statusNames = Enum.GetNames(typeof(CallStatus));

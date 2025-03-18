@@ -89,17 +89,19 @@ public enum CallCompletionType
 /// <summary>
 /// Enum for specifying the field by which calls can be sorted.
 /// </summary>
+
 public enum CallField
 {
-    Id,             // Sort by the unique identifier of the call
+    CallId,             // Sort by the unique identifier of the call
     Type,           // Sort by the type of the call
     Description,    // Sort by the description of the call
     Address,        // Sort by the address of the call
     OpeningTime,    // Sort by the opening time of the call
     MaxEndTime,     // Sort by the maximum end time
-    Status,
-    AssignmentId// Sort by the current status of the call
+    Status,         // Sort by the current status of the call
+    AssignmentId    // Sort by the assignment ID
 }
+
 
 /// <summary>
 /// Enumeration representing the time units for advancing the system clock.
