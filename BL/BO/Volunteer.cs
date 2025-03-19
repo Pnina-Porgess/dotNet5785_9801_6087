@@ -39,7 +39,7 @@ namespace BO
                    $"Location Latitude: {Latitude?.ToString() ?? "N/A"}\n" +
                    $"Location Longitude: {Longitude?.ToString() ?? "N/A"}\n" +
                    $"Role: {Role}\n" +
-                   $"Active Status: {(IsActive ? "Active" : "Inactive")}\n" +
+                   $"Active Status: {(IsActive ? "true" : "false")}\n" +
                    $"Maximum Acceptable Distance: {MaxDistance?.ToString() ?? "N/A"}\n" +
                    $"Distance Calculation Type: {DistanceType}\n" +
                    $"Total Calls Handled: {TotalHandledCalls}\n" +

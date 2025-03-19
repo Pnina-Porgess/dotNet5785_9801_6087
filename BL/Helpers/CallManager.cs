@@ -146,21 +146,21 @@ internal static class CallManager
     }
 
 
-    internal static IEnumerable<T> SortCallsGeneric<T>(IEnumerable<T> calls, BO.CallField? sortField) where T : class
-    {
-        if (!sortField.HasValue)
-            return calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId"));
+    //internal static IEnumerable<T> SortCallsGeneric<T>(IEnumerable<T> calls, BO.CallField? sortField) where T : class
+    //{
+    //    if (!sortField.HasValue)
+    //        return calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId"));
 
-        return sortField switch
-        {
-            BO.CallField.CallId => calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId")),
-           BO.CallField.Type => calls.OrderBy(c => GetPropertyValue(c, "CallType") ?? GetPropertyValue(c, "Type")),
-            BO.CallField.Status => calls.OrderBy(c => GetPropertyValue(c, "CallStatus") ?? GetPropertyValue(c, "Status")),
-            BO.CallField.OpeningTime => calls.OrderBy(c => GetPropertyValue(c, "OpeningTime") ?? GetPropertyValue(c, "OpenTime")),
-            BO.CallField.AssignmentId => calls.OrderBy(c => GetPropertyValue(c, "AssignmentId")),
-            _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
-        };
-    }
+    //    return sortField switch
+    //    {
+    //        BO.CallField.CallId => calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId")),
+    //       BO.CallField.Type => calls.OrderBy(c => GetPropertyValue(c, "CallType") ?? GetPropertyValue(c, "Type")),
+    //        BO.CallField.Status => calls.OrderBy(c => GetPropertyValue(c, "CallStatus") ?? GetPropertyValue(c, "Status")),
+    //        BO.CallField.OpeningTime => calls.OrderBy(c => GetPropertyValue(c, "OpeningTime") ?? GetPropertyValue(c, "OpenTime")),
+    //        BO.CallField.AssignmentId => calls.OrderBy(c => GetPropertyValue(c, "AssignmentId")),
+    //        _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
+    //    };
+    //}
 
     private static object GetPropertyValue(object obj, string propertyName)
     {

@@ -56,8 +56,6 @@ public enum CallType
 public enum VolunteerSortBy
 {
     FullName,
-    IsActive,
-    MaxDistance,
     TotalHandledCalls,
     TotalCanceledCalls,
     TotalExpiredCalls

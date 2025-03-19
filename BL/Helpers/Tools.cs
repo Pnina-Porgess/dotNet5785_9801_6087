@@ -46,56 +46,6 @@ namespace Helpers;
     {
         return degrees * Math.PI / 180;
     }
-    //public static (double Latitude, double Longitude) GetCoordinatesFromAddress(string address)
-    //{
-    //    if (string.IsNullOrWhiteSpace(address))
-    //    {
-    //        throw new InvalidAddressException(address); // חריגה אם הכתובת לא תקינה
-    //    }
-
-    //    try
-    //    {
-    //        // יצירת ה-URL לפנייה ל-API
-    //        string url = string.Format(apiUrl, Uri.EscapeDataString(address), apiKey);
-
-    //        using (HttpClient client = new HttpClient())
-    //        {
-    //            // בקשה סינכרונית ל-API
-    //            HttpResponseMessage response = client.GetAsync(url).Result;
-
-    //            // בדיקה אם הבקשה הצליחה
-    //            if (response.IsSuccessStatusCode)
-    //            {
-    //                string jsonResponse = response.Content.ReadAsStringAsync().Result;
-
-    //                // ניתוח התשובה כ-JSON
-    //                JArray jsonArray = JArray.Parse(jsonResponse);
-
-    //                // אם יש תוצאות, מחזירים את הקואורדינטות
-    //                if (jsonArray.Count > 0)
-    //                {
-    //                    var firstResult = jsonArray[0];
-    //                    double latitude = (double)firstResult["lat"]!;
-    //                    double longitude = (double)firstResult["lon"]!;
-    //                    return (latitude, longitude);
-    //                }
-    //                else
-    //                {
-    //                    throw new BlGeolocationNotFoundException(address); // חריגה אם לא נמצאה גיאוקולציה
-    //                }
-    //            }
-    //            else
-    //            {
-    //                throw new BlApiRequestException($"API request failed with status code: {response.StatusCode}"); // חריגה אם הבקשה נכשלה
-    //            }
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // אם קרתה שגיאה כלשהי, זורקים חריגה עם פרטי השגיאה
-    //        throw new BlApiRequestException($"Error occurred while fetching coordinates for the address. {ex.Message}");
-    //    }
-    //}
     public static (double, double) GetCoordinatesFromAddress(string address)
     {
         string apiKey = "PK.83B935C225DF7E2F9B1ee90A6B46AD86";

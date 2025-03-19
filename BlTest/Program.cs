@@ -137,7 +137,9 @@ internal class Program
                     int MaxDistance = int.TryParse(Console.ReadLine() ?? "", out int d) ? d : 0;
                     Console.Write($"Enter Distance Type, 1 for Air/2 for Walking/ 3 for Driving : ");
                     BO.DistanceType DistanceType = (BO.DistanceType)int.Parse(Console.ReadLine()!);
-                    BO.Volunteer addVolunteer = new BO.Volunteer { Id = Id, FullName = Name, Phone = Phone, Email = Email, Password = password, CurrentAddress = Address, Role = BO.Role.Volunteer, IsActive = true, MaxDistance = MaxDistance, DistanceType = DistanceType, TotalCanceledCalls = 0, TotalHandledCalls = 0, TotalExpiredCalls = 0 };
+                    Console.Write($"Enter nex role : 0 for manager, 1 for volunteer");
+                    BO.Role Role= (BO.Role)int.Parse(Console.ReadLine()!);
+                    BO.Volunteer addVolunteer = new BO.Volunteer { Id = Id, FullName = Name, Phone = Phone, Email = Email, Password = password, CurrentAddress = Address, Role = Role, IsActive = true, MaxDistance = MaxDistance, DistanceType = DistanceType, TotalCanceledCalls = 0, TotalHandledCalls = 0, TotalExpiredCalls = 0 };
                     s_bl.Volunteer.AddVolunteer(addVolunteer);
                     Console.WriteLine("Add Volunteer successfully");
                     break;
@@ -145,6 +147,7 @@ internal class Program
                     Console.Write("Enter volunteer ID to delete: ");
                     int VolunteerId = int.TryParse(Console.ReadLine() ?? "", out int v) ? v : 0;
                     s_bl.Volunteer.DeleteVolunteer(VolunteerId);
+                    Console.WriteLine("Delete Volunteer successfully");
                     break;
                 case VolunteerMenu.Login:
                     while (true)
@@ -215,7 +218,19 @@ internal class Program
                     s_bl.Volunteer.UpdateVolunteerDetails(updateId, existingVolunteer);
                     Console.WriteLine("Volunteer updated successfully");
                     break;
-               
+                case VolunteerMenu.GetVolunteersList:
+                    Console.Write("Enter false to bring in inactive volunteers, true to bring in active volunteers, any other value will not filter out volunteers.");
+                    bool? isActive= bool.TryParse(Console.ReadLine() ?? null, out bool g);
+          
+                    Console.Write("Enter 0 to sort by FullName, 1 by TotalHandledCalls, 2 by TotalCanceledCalls, 3 by TotalExpiredCalls.");
+                    BO.VolunteerSortBy sortBy = (BO.VolunteerSortBy)int.Parse(Console.ReadLine()!);
+                    var VolunteersList = s_bl.Volunteer.GetVolunteersList(isActive, sortBy);
+                    foreach(var volunteer in VolunteersList)
+                    Console.WriteLine(volunteer.ToString());
+                    break;
+
+
+
             }
         } while (choice != VolunteerMenu.Logout);
     }

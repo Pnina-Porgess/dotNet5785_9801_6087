@@ -166,9 +166,9 @@ internal class VolunteerImplementation : IVolunteer
             volunteerList = sortBy.HasValue ? sortBy.Value switch
             {
               BO.VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
-              BO.VolunteerSortBy.TotalHandledCalls => volunteerList.OrderByDescending(v => v.TotalHandledCalls).ToList(),
-              BO.VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderByDescending(v => v.TotalCancelledCalls).ToList(),
-              BO.VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderByDescending(v => v.TotalExpiredCalls).ToList(),
+              BO.VolunteerSortBy.TotalHandledCalls => volunteerList.OrderBy(v => v.TotalHandledCalls).ToList(),
+              BO.VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderBy(v => v.TotalCancelledCalls).ToList(),
+              BO.VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderBy(v => v.TotalExpiredCalls).ToList(),
                 _ => volunteerList.OrderBy(v => v.Id).ToList()
             } : volunteerList.OrderBy(v => v.Id).ToList();
 
