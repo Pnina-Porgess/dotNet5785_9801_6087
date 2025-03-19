@@ -159,7 +159,7 @@ internal class Program
                             Console.WriteLine("Username and password cannot be empty!");
                             continue;
                         }
-                        Console.Write(s_bl.Volunteer.Login(username, Password));
+                        Console.Write(s_bl.Volunteer.Login(username, Passwor));
                         break;
                     }
                     break;
@@ -268,27 +268,34 @@ internal class Program
                     break;
                 case CallMenu.UpdateCall:
                     Console.Write("Enter call ID to update: ");
-                    int updateId = int.TryParse(Console.ReadLine() ?? "", out int o) ? o : 0;
+                    int updateId = int.Parse(Console.ReadLine()!);
                     var existingCall = s_bl.Call.GetCallDetails(updateId);
+                   
                     Console.Write($"Enter new type 1 for Regular, 2 for Emergency, 3 for HighPriority (current: {existingCall.Type}, press Enter to keep current): ");
-                    CallType updatedType = (CallType)int.Parse(Console.ReadLine()!);
+                    string input= Console.ReadLine();
+                    CallType updatedType =(input=="")? existingCall.Type:(CallType)int.Parse(input);
                     existingCall.Type = updatedType;
                     Console.Write($"Enter new Description (current: {existingCall.Description}, press Enter to keep current): ");
-                    string updatedDescription = Console.ReadLine() ?? existingCall.Description;
+                    input= Console.ReadLine();
+                    string updatedDescription = (input=="") ? existingCall.Description:input;
                     existingCall.Description = updatedDescription;
 
                     Console.Write($"Enter new Address (current: {existingCall.Address}, press Enter to keep current): ");
-                    string updatedAddress = Console.ReadLine() ?? existingCall.Address;
+                    input= Console.ReadLine();
+                    string updatedAddress = (input=="") ? existingCall.Address:input;
                     existingCall.Address = updatedAddress;
 
-                    Console.Write($"Enter new Address (current: {existingCall.MaxEndTime}, press Enter to keep current): ");
+                    Console.Write($"Enter new max end time (current: {existingCall.MaxEndTime}, press Enter to keep current): ");
                     DateTime updatedMaxEndTime = DateTime.TryParse(Console.ReadLine() ?? "", out DateTime end) ? end : existingCall.MaxEndTime ?? end;
                     existingCall.MaxEndTime = updatedMaxEndTime;
 
                     Console.Write($"Enter new   0 for Open,1 for InProgress,2 for Closed,3 for Expired,4 for OpenAtRisk,5 for InProgressAtRisk (current: {existingCall.Status}, press Enter to keep current): ");
-                    CallStatus updatedStatus = (CallStatus)int.Parse(Console.ReadLine()!);
+                    input= Console.ReadLine();
+                    CallStatus updatedStatus =(input=="")? existingCall.Status : (CallStatus)int.Parse(input);
                     existingCall.Status = updatedStatus;
+              
                     s_bl.Call.UpdateCall(existingCall);
+                 
                     Console.WriteLine("Volunteer updated successfully");
                     break;
                 case CallMenu.GetCallDetails:

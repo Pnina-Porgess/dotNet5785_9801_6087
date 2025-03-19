@@ -21,7 +21,7 @@ internal class VolunteerImplementation : IVolunteer
                 throw new BO.BlAlreadyExistsException($"Volunteer with ID={volunteer.Id} already exists.");
             }
             VolunteerManager.ValidateInputFormat(volunteer);
-             (volunteer.Latitude, volunteer.Longitude) = (0,0);
+             (volunteer.Latitude, volunteer.Longitude) = Tools.GetCoordinatesFromAddress(volunteer.CurrentAddress);
             DO.Volunteer doVolunteer =( VolunteerManager.CreateDoVolunteer(volunteer));
             _dal.Volunteer.Create(doVolunteer);
         }
@@ -128,7 +128,7 @@ internal class VolunteerImplementation : IVolunteer
         {
             VolunteerManager.ValidatePermissions(requesterId, volunteerToUpdate);
             VolunteerManager.ValidateInputFormat(volunteerToUpdate);
-            (volunteerToUpdate.Latitude, volunteerToUpdate.Longitude) = (0,0);
+            (volunteerToUpdate.Latitude, volunteerToUpdate.Longitude) = VolunteerManager.logicalChecking(volunteerToUpdate);
             var existingVolunteer = _dal.Volunteer.Read(volunteerToUpdate.Id)
                 ??throw new BO.BlNotFoundException($"Volunteer with ID={volunteerToUpdate.Id} does not exist.");
             if (!VolunteerManager.CanUpdateFields( existingVolunteer!, volunteerToUpdate))
