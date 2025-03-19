@@ -14,8 +14,8 @@ internal static class CallManager
         //    throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
         if ((call.Type!=BO.CallType.None)&& (call.Type != BO.CallType.Regular)&& (call.Type != BO.CallType.Emergency)&& (call.Type != BO.CallType.HighPriority))
             throw new BO.BlInvalidInputException(@"Invalid CallType format. PCallType must be None\\Regular\\Emergency\\HighPriority.");
-        if (call.Description?.Length < 2)
-            throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
+        //if (call.Description?.Length < 2)
+        //    throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
     }
     internal static (double Latitude, double Longitude) logicalChecking(BO.Call call)
     {
@@ -29,7 +29,7 @@ internal static class CallManager
     internal static DO.Call CreateDoCall(BO.Call newCall)
     {
         return new DO.Call(
-                    Id: 0,
+                    Id: newCall.Id,
                     TypeOfReading: (DO.TypeOfReading)newCall.Type,
                     Description: newCall.Description,
                     Adress: newCall.Address,

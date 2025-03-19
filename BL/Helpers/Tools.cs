@@ -3,12 +3,12 @@
 using BO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Text.Json;
 namespace Helpers;
     internal static class Tools
     {
  private static readonly DalApi.IDal _dal = DalApi.Factory.Get; //stage 4
-    private static readonly string apiUrl = "https://geocode.maps.co/search?q={0}&api_key={1}";
-    private static readonly string apiKey = "67d0c6072495d235561921arb8bd9a1";
+ 
 
     public static double CalculateDistance(object latitude1, object longitude1, double latitude2, double longitude2)
     {
@@ -46,55 +46,79 @@ namespace Helpers;
     {
         return degrees * Math.PI / 180;
     }
-    public static (double Latitude, double Longitude) GetCoordinatesFromAddress(string address)
+    //public static (double Latitude, double Longitude) GetCoordinatesFromAddress(string address)
+    //{
+    //    if (string.IsNullOrWhiteSpace(address))
+    //    {
+    //        throw new InvalidAddressException(address); // חריגה אם הכתובת לא תקינה
+    //    }
+
+    //    try
+    //    {
+    //        // יצירת ה-URL לפנייה ל-API
+    //        string url = string.Format(apiUrl, Uri.EscapeDataString(address), apiKey);
+
+    //        using (HttpClient client = new HttpClient())
+    //        {
+    //            // בקשה סינכרונית ל-API
+    //            HttpResponseMessage response = client.GetAsync(url).Result;
+
+    //            // בדיקה אם הבקשה הצליחה
+    //            if (response.IsSuccessStatusCode)
+    //            {
+    //                string jsonResponse = response.Content.ReadAsStringAsync().Result;
+
+    //                // ניתוח התשובה כ-JSON
+    //                JArray jsonArray = JArray.Parse(jsonResponse);
+
+    //                // אם יש תוצאות, מחזירים את הקואורדינטות
+    //                if (jsonArray.Count > 0)
+    //                {
+    //                    var firstResult = jsonArray[0];
+    //                    double latitude = (double)firstResult["lat"]!;
+    //                    double longitude = (double)firstResult["lon"]!;
+    //                    return (latitude, longitude);
+    //                }
+    //                else
+    //                {
+    //                    throw new BlGeolocationNotFoundException(address); // חריגה אם לא נמצאה גיאוקולציה
+    //                }
+    //            }
+    //            else
+    //            {
+    //                throw new BlApiRequestException($"API request failed with status code: {response.StatusCode}"); // חריגה אם הבקשה נכשלה
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        // אם קרתה שגיאה כלשהי, זורקים חריגה עם פרטי השגיאה
+    //        throw new BlApiRequestException($"Error occurred while fetching coordinates for the address. {ex.Message}");
+    //    }
+    //}
+    public static (double, double) GetCoordinatesFromAddress(string address)
     {
-        if (string.IsNullOrWhiteSpace(address))
-        {
-            throw new InvalidAddressException(address); // חריגה אם הכתובת לא תקינה
-        }
+        string apiKey = "PK.83B935C225DF7E2F9B1ee90A6B46AD86";
+        using var client = new HttpClient();
+        string url = $"https://us1.locationiq.com/v1/search.php?key={apiKey}&q={Uri.EscapeDataString(address)}&format=json";
 
-        try
-        {
-            // יצירת ה-URL לפנייה ל-API
-            string url = string.Format(apiUrl, Uri.EscapeDataString(address), apiKey);
+        var response = client.GetAsync(url).GetAwaiter().GetResult();
+        if (!response.IsSuccessStatusCode)
+            throw new Exception("Invalid address or API error.");
 
-            using (HttpClient client = new HttpClient())
-            {
-                // בקשה סינכרונית ל-API
-                HttpResponseMessage response = client.GetAsync(url).Result;
+        var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+        using var doc = JsonDocument.Parse(json);
 
-                // בדיקה אם הבקשה הצליחה
-                if (response.IsSuccessStatusCode)
-                {
-                    string jsonResponse = response.Content.ReadAsStringAsync().Result;
+        if (doc.RootElement.ValueKind != JsonValueKind.Array || doc.RootElement.GetArrayLength() == 0)
+            throw new Exception("Address not found.");
 
-                    // ניתוח התשובה כ-JSON
-                    JArray jsonArray = JArray.Parse(jsonResponse);
+        var root = doc.RootElement[0];
 
-                    // אם יש תוצאות, מחזירים את הקואורדינטות
-                    if (jsonArray.Count > 0)
-                    {
-                        var firstResult = jsonArray[0];
-                        double latitude = (double)firstResult["lat"]!;
-                        double longitude = (double)firstResult["lon"]!;
-                        return (latitude, longitude);
-                    }
-                    else
-                    {
-                        throw new BlGeolocationNotFoundException(address); // חריגה אם לא נמצאה גיאוקולציה
-                    }
-                }
-                else
-                {
-                    throw new BlApiRequestException($"API request failed with status code: {response.StatusCode}"); // חריגה אם הבקשה נכשלה
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            // אם קרתה שגיאה כלשהי, זורקים חריגה עם פרטי השגיאה
-            throw new BlApiRequestException($"Error occurred while fetching coordinates for the address. {ex.Message}");
-        }
+        // המרת הערכים ל-double
+        double latitude = double.Parse(root.GetProperty("lat").GetString());
+        double longitude = double.Parse(root.GetProperty("lon").GetString());
+
+        return (latitude, longitude);
     }
 }
    
