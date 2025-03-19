@@ -152,14 +152,14 @@ internal class Program
                         Console.Write("Username: ");
                         string? username = Console.ReadLine();
                         Console.Write("Password: ");
-                        string? Passwor = Console.ReadLine();
+                        password = Console.ReadLine();
 
-                        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(Passwor))
+                        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                         {
                             Console.WriteLine("Username and password cannot be empty!");
                             continue;
                         }
-                        Console.Write(s_bl.Volunteer.Login(username, Password));
+                        Console.Write(s_bl.Volunteer.Login(username, password));
                         break;
                     }
                     break;
