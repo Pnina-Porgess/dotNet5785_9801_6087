@@ -10,9 +10,7 @@ using System.Net.Mail;
 internal static class Tools
     {
  private static readonly DalApi.IDal _dal = DalApi.Factory.Get; //stage 4
- 
-
-    public static double CalculateDistance(object latitude1, object longitude1, double latitude2, double longitude2)
+  public static double CalculateDistance(object latitude1, object longitude1, double latitude2, double longitude2)
     {
         // המרת פרמטרים מסוג object ל-double
         if (!double.TryParse(latitude1?.ToString(), out double lat1) ||
@@ -43,7 +41,6 @@ internal static class Tools
         double distance = EarthRadiusKm * c;
         return distance;
     }
-
     public static double DegreesToRadians(double degrees)
     {
         return degrees * Math.PI / 180;
@@ -74,13 +71,13 @@ internal static class Tools
     }
     public static void SendEmail(string toEmail, string subject, string body)
     {
-        var fromAddress = new MailAddress("p3225096@gmail.com", "Ydidim");
+        var fromAddress = new MailAddress("projectydidim@gmail.com", "Ydidim");
         var toAddress = new MailAddress(toEmail);
 
         var smtpClient = new SmtpClient("smtp.gmail.com")
         {
             Port = 587,
-            Credentials = new NetworkCredential("p3225096@gmail.com", "3W3EM48XDMT1ALPYSEVB5ZA5"),
+            Credentials = new NetworkCredential("yedidim.tzippi.mali@gmail.com", "zdjq kchm vqqi nure"),
             EnableSsl = true,
         };
 
