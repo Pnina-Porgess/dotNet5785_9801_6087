@@ -93,7 +93,6 @@ internal class Program
                 if (ex.InnerException != null)
                     Console.WriteLine($"Additional Info: {ex.InnerException.Message}");
             }
-
         }
     }
 
@@ -106,9 +105,9 @@ internal class Program
         {
             Console.WriteLine("\nVolunteer Main Menu");
             Console.WriteLine("===================");
-            Console.WriteLine("0: Logout");
-            Console.WriteLine("1: Add Volunteer");
-            Console.WriteLine("2: Delete Volunteer ");
+            Console.WriteLine("0:Logout");
+            Console.WriteLine("1:Add Volunteer");
+            Console.WriteLine("2:Delete Volunteer ");
             Console.WriteLine("3:Login");
             Console.WriteLine("4:Get Volunteer Details");
             Console.WriteLine("5:Update Volunteer");
@@ -499,7 +498,7 @@ internal class Program
             // Step 2: Get the value based on selected filter field
             switch (filterField)
             {
-                case BO.CallField.Type:
+                case BO.CallField.CallType:
                     Console.WriteLine("Choose call type:");
                     foreach (var type in Enum.GetValues(typeof(BO.CallType)))
                     {
@@ -511,7 +510,7 @@ internal class Program
                     }
                     break;
 
-                case BO.CallField.Status:
+                case BO.CallField.CallStatus:
                     Console.WriteLine("Choose call status:");
                     foreach (var status in Enum.GetValues(typeof(BO.CallStatus)))
                     {
@@ -547,12 +546,17 @@ internal class Program
                     }
                     break;
 
-                case BO.CallField.MaxEndTime:
-                    Console.WriteLine("Enter max end time (in minutes):");
-                    if (int.TryParse(Console.ReadLine(), out int maxEndTimeMinutes))
-                    {
-                        filterValue = TimeSpan.FromMinutes(maxEndTimeMinutes);
-                    }
+                case BO.CallField.TotalAssignments:
+
+                    break;
+                case BO.CallField.RemainingTime:
+
+                    break;
+                case BO.CallField.CompletionTime:
+
+                    break;
+                case BO.CallField.LastVolunteerName:
+
                     break;
             }
         }
@@ -636,9 +640,9 @@ internal class Program
             if (int.TryParse(Console.ReadLine(), out int typeFilter) && typeFilter > 0 && typeFilter <= 3)
                 filterType = (BO.TypeOfReading)typeFilter;
             Console.WriteLine("Sort by call type? (0: Status, 1: OpeningTime, 2: MaxEndTime , 3: Address):");
-            BO.CallField? CallFieldType = null;
+            BO.ClosedCallField? CallFieldType = null;
             if (int.TryParse(Console.ReadLine(), out int CallField) && CallField > 0 && CallField <= 3)
-                CallFieldType = (BO.CallField)CallField;
+                CallFieldType = (BO.ClosedCallField)CallField;
             var closedCalls = s_bl.Call.GetClosedCallsByVolunteer(volId, filterType, CallFieldType);
             foreach (var closedCall in closedCalls)
                 Console.WriteLine(closedCall);
@@ -655,9 +659,9 @@ internal class Program
             if (int.TryParse(Console.ReadLine(), out int CallField) && CallField > 0 && CallField <= 3)
                 CallFilter = (BO.CallStatus)CallField;
             Console.WriteLine("Sort by call type? (0: Status, 1: OpeningTime, 2: MaxEndTime , 3: Address):");
-            BO.CallField? CallFieldType = null;
+            BO.OpenCallField? CallFieldType = null;
             if (int.TryParse(Console.ReadLine(), out CallField) && CallField > 0 && CallField <= 3)
-                CallFieldType = (BO.CallField)CallField;
+                CallFieldType = (BO.OpenCallField)CallField;
             var closedCalls = s_bl.Call.GetOpenCallsForVolunteer(volunteerId, CallFilter, CallFieldType);
             foreach (var closedCall in closedCalls)
                 Console.WriteLine(closedCall);

@@ -289,7 +289,7 @@ namespace BlImplementation
             }
         }
 
-        public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId,  BO.TypeOfReading? filterType = null, BO.CallField? sortField = null)
+        public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId,  BO.TypeOfReading? filterType = null, BO.ClosedCallField? sortField = null)
         {
            try
             {
@@ -307,7 +307,7 @@ namespace BlImplementation
                     closedCalls= closedCalls.Where(c => c.CallType == filterType.Value);
                 }
 
-                return CallManager.SortCalls( closedCalls, sortField ?? BO.CallField.CallId);
+                return CallManager.SortClosedCalls( closedCalls, sortField ?? BO.ClosedCallField.Id);
             }
             catch (DO.DalDoesNotExistException ex)
             {
@@ -319,7 +319,7 @@ namespace BlImplementation
             }
         }
        
-        public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallStatus? filterStatus, BO.CallField? sortField)
+        public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallStatus? filterStatus, BO.OpenCallField? sortField)
         {
             try
             {
@@ -339,7 +339,7 @@ namespace BlImplementation
                         DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!,volunteer.Longitude!, c.Latitude, c.Longitude)
                     });
 
-                return CallManager.SortCalls(openCalls, sortField ?? BO.CallField.CallId);
+                return CallManager.SortOpenCalls(openCalls, sortField ?? BO.OpenCallField.Id);
 
             }
          

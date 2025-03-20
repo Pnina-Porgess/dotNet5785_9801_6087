@@ -1,9 +1,10 @@
 
+using BO;
 using DalApi;
 using Helpers;
 
 internal static class CallManager
-    
+
 {
     private static IDal _dal = Factory.Get; //stage 4
     internal static void ValidateInputFormat(BO.Call call)
@@ -12,14 +13,14 @@ internal static class CallManager
             throw new BO.BlNotFoundException("Volunteer object cannot be null.");
         //if (call.Id < 1000)
         //    throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
-        if ((call.Type!=BO.CallType.None)&& (call.Type != BO.CallType.Regular)&& (call.Type != BO.CallType.Emergency)&& (call.Type != BO.CallType.HighPriority))
+        if ((call.Type != BO.CallType.None) && (call.Type != BO.CallType.Regular) && (call.Type != BO.CallType.Emergency) && (call.Type != BO.CallType.HighPriority))
             throw new BO.BlInvalidInputException(@"Invalid CallType format. PCallType must be None\\Regular\\Emergency\\HighPriority.");
         //if (call.Description?.Length < 2)
         //    throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
     }
     internal static (double Latitude, double Longitude) logicalChecking(BO.Call call)
     {
-        if(call.MaxEndTime<call.OpeningTime)
+        if (call.MaxEndTime < call.OpeningTime)
             throw new BO.BlInvalidInputException(".");
 
         return Tools.GetCoordinatesFromAddress(call.Address);
@@ -131,20 +132,58 @@ internal static class CallManager
         };
     }
 
-    internal static IEnumerable<BO.CallInList> FilterCall(IEnumerable<BO.CallInList> calls, BO.CallField filterField, object filterValue)
-    {
+    //internal static IEnumerable<BO.CallInList> FilterCall(IEnumerable<BO.CallInList> calls, BO.CallField filterField, object filterValue)
+    //{
+    //    return filterField switch
+    //    {
+    //        BO.CallField.CallId => calls.Where(call => call.CallId.ToString() == filterValue.ToString()),
+    //        BO.CallField.Type => calls.Where(call => call.CallType == (BO.CallType)filterValue),
+    //        BO.CallField.Status => calls.Where(call => call.CallStatus == (BO.CallStatus)filterValue),
+    //        BO.CallField.OpeningTime => calls.Where(call => call.OpeningTime.Date == ((DateTime)filterValue).Date),
+    //        BO.CallField.AssignmentId => calls.Where(call => call.AssignmentId.ToString() == filterValue.ToString()),
+    //        _ => throw new BO.BlInvalidInputException($"Filtering by {filterField} is not supported")
+    //    };
+    //}
 
+    internal static IEnumerable<BO.CallInList> FilterCall(
+    IEnumerable<BO.CallInList> calls,
+    BO.CallField filterField,
+    object filterValue)
+    {
         return filterField switch
         {
-            BO.CallField.CallId => calls.Where(call => call.CallId.ToString() == filterValue.ToString()),
-            BO.CallField.Type => calls.Where(call => call.CallType == (BO.CallType)filterValue),
-           BO.CallField.Status => calls.Where(call => call.CallStatus == (BO.CallStatus)filterValue),
-           BO.CallField.OpeningTime => calls.Where(call => call.OpeningTime.Date == ((DateTime)filterValue).Date),
-            BO.CallField.AssignmentId => calls.Where(call => call.AssignmentId.ToString() == filterValue.ToString()),
+            CallField.AssignmentId => calls.Where(call => call.AssignmentId.ToString() == filterValue.ToString()),
+            CallField.CallId => calls.Where(call => call.CallId.ToString() == filterValue.ToString()),
+            CallField.CallType => calls.Where(call => call.CallType == (BO.CallType)filterValue),
+            CallField.OpeningTime => calls.Where(call => call.OpeningTime.Date == ((DateTime)filterValue).Date),
+            CallField.RemainingTime => calls.Where(call => call.RemainingTime == (TimeSpan?)filterValue),
+            CallField.LastVolunteerName => calls.Where(call => call.LastVolunteerName == filterValue.ToString()),
+            CallField.CompletionTime => calls.Where(call => call.CompletionTime == (TimeSpan?)filterValue),
+            CallField.CallStatus => calls.Where(call => call.CallStatus == (BO.CallStatus)filterValue),
+            CallField.TotalAssignments => calls.Where(call => call.TotalAssignments == (int)filterValue),
             _ => throw new BO.BlInvalidInputException($"Filtering by {filterField} is not supported")
         };
     }
 
+
+    //internal static IEnumerable<T> SortCalls<T>(IEnumerable<T> calls, BO.CallField? sortField) where T : class
+    //{
+    //    if (!sortField.HasValue)
+    //        return calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId"));
+
+    //    return sortField switch
+    //    {
+    //        BO.CallField.CallId => calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId")),
+    //        BO.CallField.Type => calls.OrderBy(c => GetPropertyValue(c, "CallType") ?? GetPropertyValue(c, "Type")),
+    //        BO.CallField.Status => calls.OrderBy(c => GetPropertyValue(c, "CallStatus") ?? GetPropertyValue(c, "Status")),
+    //        BO.CallField.OpeningTime => calls.OrderBy(c => GetPropertyValue(c, "OpeningTime") ?? GetPropertyValue(c, "OpenTime")),
+    //        BO.CallField.AssignmentId => calls.OrderBy(c => GetPropertyValue(c, "AssignmentId")),
+    //        BO.CallField.Description => calls.OrderBy(c => GetPropertyValue(c, "Description")),
+    //        BO.CallField.Address => calls.OrderBy(c => GetPropertyValue(c, "Address")),
+    //        BO.CallField.MaxEndTime => calls.OrderBy(c => GetPropertyValue(c, "MaxEndTime")),
+    //        _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
+    //    };
+    //}
 
     //internal static IEnumerable<T> SortCallsGeneric<T>(IEnumerable<T> calls, BO.CallField? sortField) where T : class
     //{
@@ -154,7 +193,7 @@ internal static class CallManager
     //    return sortField switch
     //    {
     //        BO.CallField.CallId => calls.OrderBy(c => GetPropertyValue(c, "Id") ?? GetPropertyValue(c, "CallId")),
-    //       BO.CallField.Type => calls.OrderBy(c => GetPropertyValue(c, "CallType") ?? GetPropertyValue(c, "Type")),
+    //        BO.CallField.Type => calls.OrderBy(c => GetPropertyValue(c, "CallType") ?? GetPropertyValue(c, "Type")),
     //        BO.CallField.Status => calls.OrderBy(c => GetPropertyValue(c, "CallStatus") ?? GetPropertyValue(c, "Status")),
     //        BO.CallField.OpeningTime => calls.OrderBy(c => GetPropertyValue(c, "OpeningTime") ?? GetPropertyValue(c, "OpenTime")),
     //        BO.CallField.AssignmentId => calls.OrderBy(c => GetPropertyValue(c, "AssignmentId")),
@@ -203,19 +242,7 @@ internal static class CallManager
             };
         });
     }
-    
 
-    internal static IEnumerable<T> SortCalls<T>(IEnumerable<T> calls, BO.CallField sortField) 
-    {
-        return sortField switch
-        {
-            BO.CallField.Status => calls.OrderBy(c => ((dynamic)c!).Status),
-            BO.CallField.OpeningTime => calls.OrderBy(c => ((dynamic)c!).OpeningTime),
-            BO.CallField.MaxEndTime => calls.OrderBy(c => ((dynamic)c!).MaxEndTime),
-            BO.CallField.Address => calls.OrderBy(c => ((dynamic)c!).FullAddress),
-            _ => calls.OrderBy(c => ((dynamic)c!).CallId)
-        };
-    }
     public static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)
     {
         try
@@ -236,7 +263,7 @@ internal static class CallManager
                 }
             });
         }
-    
+
         catch (BO.BlInvalidInputException e)
         {
         }
@@ -264,4 +291,58 @@ internal static class CallManager
 
         Tools.SendEmail(volunteer.Email, subject, body);
     }
+
+    internal static IEnumerable<BO.ClosedCallInList> SortClosedCalls(
+    IEnumerable<BO.ClosedCallInList> calls,
+    BO.ClosedCallField sortField)
+    {
+        return sortField switch
+        {
+            ClosedCallField.Id => calls.OrderBy(c => c.Id),
+            ClosedCallField.CallType => calls.OrderBy(c => c.CallType),
+            ClosedCallField.FullAddress => calls.OrderBy(c => c.FullAddress),
+            ClosedCallField.OpenTime => calls.OrderBy(c => c.OpenTime),
+            ClosedCallField.AssignmentEntryTime => calls.OrderBy(c => c.AssignmentEntryTime),
+            ClosedCallField.ActualEndTime => calls.OrderBy(c => c.ActualEndTime),
+            ClosedCallField.EndType => calls.OrderBy(c => c.EndType),
+            _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
+        };
+    }
+
+    internal static IEnumerable<BO.OpenCallInList> SortOpenCalls(
+    IEnumerable<BO.OpenCallInList> calls,
+    BO.OpenCallField sortField)
+    {
+        return sortField switch
+        {
+            OpenCallField.Id => calls.OrderBy(c => c.Id),
+            OpenCallField.Type => calls.OrderBy(c => c.Type),
+            OpenCallField.Description => calls.OrderBy(c => c.Description),
+            OpenCallField.FullAddress => calls.OrderBy(c => c.FullAddress),
+            OpenCallField.OpenTime => calls.OrderBy(c => c.OpenTime),
+            OpenCallField.MaxEndTime => calls.OrderBy(c => c.MaxEndTime),
+            OpenCallField.DistanceFromVolunteer => calls.OrderBy(c => c.DistanceFromVolunteer),
+            _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
+        };
+    }
+    internal static IEnumerable<BO.CallInList> SortCalls(
+    IEnumerable<BO.CallInList> calls,
+    BO.CallField sortField)
+    {
+        return sortField switch
+        {
+            CallField.AssignmentId => calls.OrderBy(c => c.AssignmentId),
+            CallField.CallId => calls.OrderBy(c => c.CallId),
+            CallField.CallType => calls.OrderBy(c => c.CallType),
+            CallField.OpeningTime => calls.OrderBy(c => c.OpeningTime),
+            CallField.RemainingTime => calls.OrderBy(c => c.RemainingTime),
+            CallField.LastVolunteerName => calls.OrderBy(c => c.LastVolunteerName),
+            CallField.CompletionTime => calls.OrderBy(c => c.CompletionTime),
+            CallField.CallStatus => calls.OrderBy(c => c.CallStatus),
+            CallField.TotalAssignments => calls.OrderBy(c => c.TotalAssignments),
+            _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
+        };
+    }
+
+
 }

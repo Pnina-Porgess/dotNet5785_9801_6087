@@ -87,19 +87,21 @@ public enum CallCompletionType
 /// <summary>
 /// Enum for specifying the field by which calls can be sorted.
 /// </summary>
-
+/// <summary>
+/// Fields for sorting and filtering calls.
+/// </summary>
 public enum CallField
 {
-    CallId,             // Sort by the unique identifier of the call
-    Type,           // Sort by the type of the call
-    Description,    // Sort by the description of the call
-    Address,        // Sort by the address of the call
-    OpeningTime,    // Sort by the opening time of the call
-    MaxEndTime,     // Sort by the maximum end time
-    Status,         // Sort by the current status of the call
-    AssignmentId    // Sort by the assignment ID
+    AssignmentId,        // ID of the assignment
+    CallId,              // ID of the call
+    CallType,            // Type of the call
+    OpeningTime,         // Time the call was opened
+    RemainingTime,       // Remaining time to complete the call
+    LastVolunteerName,   // Name of the last assigned volunteer
+    CompletionTime,      // Time taken to complete the call
+    CallStatus,          // Status of the call
+    TotalAssignments     // Total number of assignments for the call
 }
-
 
 /// <summary>
 /// Enumeration representing the time units for advancing the system clock.
@@ -112,4 +114,31 @@ public enum TimeUnit
     Month,
     Year
 }
+/// <summary>
+/// Represents the fields available for sorting in an open call.
+/// </summary>
+public enum OpenCallField
+{
+    Id,                     // Unique identifier for the call
+    Type,                   // Type of the call
+    Description,            // A textual description of the call
+    FullAddress,            // The full address where the call is located
+    OpenTime,               // The time when the call was opened
+    MaxEndTime,             // The deadline for completing the call
+    DistanceFromVolunteer   // Computed distance from the volunteer's location
+}
+/// <summary>
+/// Represents the fields available for sorting in a closed call.
+/// </summary>
+public enum ClosedCallField
+{
+    Id,                     // Unique identifier for the call
+    CallType,               // Type of the call
+    FullAddress,            // Full address of the call
+    OpenTime,               // The time the call was opened
+    AssignmentEntryTime,    // The time the call was assigned to a volunteer
+    ActualEndTime,          // The actual time the call was closed
+    EndType                 // Type of call closure (e.g., handled, cancelled, expired)
+}
+
 

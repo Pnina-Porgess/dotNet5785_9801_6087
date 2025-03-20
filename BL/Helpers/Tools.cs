@@ -1,6 +1,4 @@
-﻿
-
-using BO;
+﻿using BO;
 using System.Text.Json;
 namespace Helpers;
 using System.Net;
@@ -11,7 +9,6 @@ internal static class Tools
     {
  private static readonly DalApi.IDal _dal = DalApi.Factory.Get; //stage 4
  
-
     public static double CalculateDistance(object latitude1, object longitude1, double latitude2, double longitude2)
     {
         // המרת פרמטרים מסוג object ל-double
