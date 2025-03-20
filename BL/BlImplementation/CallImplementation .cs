@@ -199,8 +199,9 @@ namespace BlImplementation
             try
             {
                 var assignment = _dal.Assignment.Read(assignmentId);
+                var volunteer = _dal.Volunteer.Read(requesterId);
 
-                if (assignment.VolunteerId != requesterId && _dal.Volunteer.Read(requesterId) is null)
+                if (assignment.VolunteerId != requesterId && volunteer is null)
                 {
                     throw new BO.BlInvalidInputException("Requester does not have permission to cancel this treatment.");
                 }
@@ -235,7 +236,9 @@ namespace BlImplementation
                 };
 
                 _dal.Assignment.Update(updatedAssignment);
+                CallManager.SendEmailToVolunteer(volunteer!, assignment);
             }
+           
             catch (Exception ex)
             {
                 // טיפול בחריגות כלליות

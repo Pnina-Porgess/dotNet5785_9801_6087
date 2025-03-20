@@ -226,18 +226,18 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>289849219</Id>
-    <Name>David</Name>
-    <Phone>055-123-7894</Phone>
-    <Email>David@gmail.com</Email>
+    <Id>329236087</Id>
+    <Name>pnina</Name>
+    <Phone>1234567898</Phone>
+    <Email>5321745@gmail.com</Email>
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>10</MaximumDistance>
-    <Password>Rn0chuIVa14xX365ycVMS3+HSSYHUhXyE4T0YUX3rk0=</Password>
-    <Address>Eilat, HaTmarim St.</Address>
-    <Latitude>34.9482</Latitude>
-    <Longitude>29.5581</Longitude>
+    <DistanceType>drivingDistance</DistanceType>
+    <MaximumDistance>123</MaximumDistance>
+    <Password>ir3Y4/oVAE27M1agrTKuPozV2LsYKj8GwcW1sJpzO80=</Password>
+    <Address>10 Downing Street, London, UK</Address>
+    <Latitude>51.503487750000005</Latitude>
+    <Longitude>-0.12769645443243238</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
 </ArrayOfVolunteer>

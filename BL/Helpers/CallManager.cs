@@ -241,4 +241,27 @@ internal static class CallManager
         {
         }
     }
+    internal static void SendEmailToVolunteer(DO.Volunteer volunteer, DO.Assignment assignment)
+    {
+        var call = _dal.Call.Read(assignment.CallId)!;
+
+        string subject = "Assignment Canceled";
+        string body = $@"
+        Hello {volunteer.Name},
+
+        Your assignment for handling call {assignment.Id} has been canceled by the administrator.
+
+        Call Details:
+        - Call ID: {assignment.CallId}
+        - Call Type: {call.TypeOfReading}
+        - Call Address: {call.Adress}
+        - Opening Time: {call.TimeOfOpen}
+        - Description: {call.Description}
+        - Entry Time for Treatment: {assignment.EntryTime}
+
+        Best regards,  
+        Call Management System";
+
+        Tools.SendEmail(volunteer.Email, subject, body);
+    }
 }
