@@ -404,8 +404,8 @@
     <Id>2050</Id>
     <CallId>1000</CallId>
     <VolunteerId>329236087</VolunteerId>
-    <TypeOfEndTime>treated</TypeOfEndTime>
+    <TypeOfEndTime>CancelingAnAdministrator</TypeOfEndTime>
     <EntryTime>2025-03-20T01:06:34.665285+02:00</EntryTime>
-    <EndTime>2025-03-20T00:53:35</EndTime>
+    <EndTime>2025-03-20T17:29:54.5244787+02:00</EndTime>
   </Assignment>
 </Assignments>

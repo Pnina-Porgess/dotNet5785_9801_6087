@@ -1,11 +1,13 @@
 ﻿
 
 using BO;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using System.Text.Json;
 namespace Helpers;
-    internal static class Tools
+using System.Net;
+using System.Net.Mail;
+
+
+internal static class Tools
     {
  private static readonly DalApi.IDal _dal = DalApi.Factory.Get; //stage 4
  
@@ -69,6 +71,27 @@ namespace Helpers;
         double longitude = double.Parse(root.GetProperty("lon").GetString());
 
         return (latitude, longitude);
+    }
+    public static void SendEmail(string toEmail, string subject, string body)
+    {
+        var fromAddress = new MailAddress("p3225096@gmail.com", "Ydidim");
+        var toAddress = new MailAddress(toEmail);
+
+        var smtpClient = new SmtpClient("smtp.gmail.com")
+        {
+            Port = 587,
+            Credentials = new NetworkCredential("p3225096@gmail.com", "3W3EM48XDMT1ALPYSEVB5ZA5"),
+            EnableSsl = true,
+        };
+
+        using (var message = new MailMessage(fromAddress, toAddress)
+        {
+            Subject = subject,
+            Body = body,
+        })
+        {
+            smtpClient.Send(message);
+        }
     }
 }
    
