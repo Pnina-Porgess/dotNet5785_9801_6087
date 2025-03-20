@@ -22,10 +22,10 @@ public interface ICall
     void AddCall(Call call);
 
     // Method to request a list of closed calls by volunteer
-    IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, TypeOfReading? filterStatus, CallField? sortField);
+    IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, TypeOfReading? filterStatus, ClosedCallField? sortField);
  
     // Method to request a list of open calls available for a volunteer to choose
-    IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, CallStatus? filterStatus, CallField? sortField);
+    IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, CallStatus? filterStatus, OpenCallField? sortField);
 
     // Method to update "treatment completion" for a call
     void CompleteCallTreatment(int volunteerId, int assignmentId);
