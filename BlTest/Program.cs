@@ -547,16 +547,29 @@ internal class Program
                     break;
 
                 case BO.CallField.TotalAssignments:
-
+                    Console.WriteLine("Enter call ID:");
+                    if (int.TryParse(Console.ReadLine(), out int TotalAssignments))
+                    {
+                        filterValue = TotalAssignments;
+                    }
                     break;
                 case BO.CallField.RemainingTime:
-
+                    Console.Write("Enter Remaining Time: (in format (HH:MM:SS): ");
+                        if (TimeSpan.TryParse(Console.ReadLine(), out TimeSpan RemainingTime))
+                        {
+                            filterValue = RemainingTime;
+                        }
                     break;
                 case BO.CallField.CompletionTime:
-
+                    Console.Write("Enter CompletionTime Time: (in format (HH:MM:SS): ");
+                    if (TimeSpan.TryParse(Console.ReadLine(), out TimeSpan CompletionTime))
+                    {
+                        filterValue = CompletionTime;
+                    }
                     break;
                 case BO.CallField.LastVolunteerName:
-
+                    Console.WriteLine("Enter volunteer's name:");
+                    filterValue = Console.ReadLine();
                     break;
             }
         }
