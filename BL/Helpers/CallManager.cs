@@ -1,6 +1,7 @@
 
 using BO;
 using DalApi;
+using DO;
 using Helpers;
 
 internal static class CallManager
@@ -266,6 +267,39 @@ internal static class CallManager
 
         catch (BO.BlInvalidInputException e)
         {
+        }
+    }
+    internal static void SendEmailWhenCalOpened(BO.Call call)
+    {
+        var volunteer = _dal.Volunteer.ReadAll();
+        foreach (var item in volunteer)
+        {
+            if (item.MaximumDistance == null)
+            { break; }
+           else if (item.MaximumDistance >= Tools.CalculateDistance(item.Latitude!, item.Longitude!, call.Latitude, call.Longitude))
+            {
+                string subject = "Openning call";
+                string body = $@"
+        Hello {item.Name},
+
+       A new call has been opened in your area.
+        Call Details:
+        - Call ID: {call.Id}
+        - Call Type: {call.Type}
+        - Call Address: {call.Address}
+        - Opening Time: {call.OpeningTime}
+        - Description: {call.Description}
+        - Entry Time for Treatment: {call.MaxEndTime}
+        -call Status:{call.Status}
+
+        If you wish to handle this call, please log into the system.
+
+        Best regards,  
+       Call Management System";
+
+                Tools.SendEmail(item.Email, subject, body);
+            }
+
         }
     }
     internal static void SendEmailToVolunteer(DO.Volunteer volunteer, DO.Assignment assignment)

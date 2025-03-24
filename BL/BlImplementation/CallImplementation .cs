@@ -15,6 +15,7 @@ namespace BlImplementation
             newCall.Longitude = longitude;
             var call = CallManager.CreateDoCall(newCall);
             _dal.Call.Create(call);
+            CallManager.SendEmailWhenCalOpened(newCall);
         }
 
         public void UpdateCall(BO.Call call)
@@ -330,7 +331,7 @@ namespace BlImplementation
                     (CallManager.CalculateCallStatus(c.Id) == BO.CallStatus.Open || CallManager.CalculateCallStatus(c.Id) == BO.CallStatus.OpenAtRisk)) // הפשטת הבדיקה
                     .Select(c => new BO.OpenCallInList
                     {
-                        Id = volunteerId, // ת.ז של המתנדב
+                        Id = c.Id, // ת.ז של המתנדב
                         Type = (BO.TypeOfReading)c.TypeOfReading, // סוג הקריאה
                         Description = c.Description!, // תיאור מילולי
                         FullAddress = c.Adress, // כתובת הקריאה

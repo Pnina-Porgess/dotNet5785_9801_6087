@@ -21,7 +21,7 @@ public enum DistanceType
 /// </summary>
 public enum TypeOfReading
 {
-  FlatTire,   
+    FlatTire,   
     DeadBattery, 
     EngineFailure,
     None

@@ -77,7 +77,7 @@ internal static class Tools
         var smtpClient = new SmtpClient("smtp.gmail.com")
         {
             Port = 587,
-            Credentials = new NetworkCredential("yedidim.tzippi.mali@gmail.com", "zdjq kchm vqqi nure"),
+            Credentials = new NetworkCredential("yedidimproject1234@gmail.com", "lucg ughi pfwj fzol"),
             EnableSsl = true,
         };
 

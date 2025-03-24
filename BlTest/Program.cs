@@ -66,7 +66,7 @@ internal class Program
                
                 Console.WriteLine("Welcome to Volunteer Management System");
                 Console.WriteLine("====================================");
-                Console.WriteLine("Please press 0 to log out, 1 for the volunteer menu, 2 for the readings menu, 3 for the administrator menu.");
+                Console.WriteLine("Please press:\n 0 to log out\n 1 for the volunteer \n 2 for the calls \n 3 for admin \n");
                 choice = (MainMenu)GetEnumValue(typeof(MainMenu));
                 // After successful login, show appropriate menu based on role
                 switch (choice)
@@ -296,7 +296,7 @@ internal class Program
         int maxDistance = int.TryParse(Console.ReadLine() ?? "", out int d) ? d : 0;
         Console.Write("Enter Distance Type (1: Air, 2: Walking, 3: Driving): ");
         BO.DistanceType distanceType = (BO.DistanceType)int.Parse(Console.ReadLine()!);
-        Console.Write("Enter role (0: Manager, 1: Volunteer): ");
+        Console.Write("Enter role (0: Volunteer, 1: Manager): ");
         BO.Role role = (BO.Role)int.Parse(Console.ReadLine()!);
 
         BO.Volunteer newVolunteer = new BO.Volunteer
@@ -411,7 +411,9 @@ internal class Program
         var volunteersList = s_bl.Volunteer.GetVolunteersList(isActive, sortBy);
         foreach (var volunteer in volunteersList)
         {
+            Console.WriteLine("------------------------------");
             Console.WriteLine(volunteer);
+            Console.WriteLine("------------------------------");
         }
     }
 
@@ -632,6 +634,9 @@ internal class Program
         Console.Write($"Enter assignment ID to complete the assignment: ");
         int AssigmentCencelId = int.TryParse(Console.ReadLine() ?? "", out int c) ? c : 0;
         s_bl.Call.CancelCallTreatment(VolunteerId, AssigmentCencelId);
+        Console.WriteLine("Cancel Call successfully.");
+
+
     }
 
     private static void CompleteCallTreatment()
@@ -641,6 +646,8 @@ internal class Program
         Console.Write($"Enter assignment ID to complete the assignment: ");
         int AssigmentId = int.TryParse(Console.ReadLine() ?? "", out int a) ? a : 0;
         s_bl.Call.CompleteCallTreatment(UpdateId, AssigmentId);
+        Console.WriteLine("Complete Call successfully.");
+
     }
 
     private static void GetClosedCallsByVolunteer()
@@ -658,7 +665,10 @@ internal class Program
                 CallFieldType = (BO.ClosedCallField)CallField;
             var closedCalls = s_bl.Call.GetClosedCallsByVolunteer(volId, filterType, CallFieldType);
             foreach (var closedCall in closedCalls)
+            { Console.WriteLine("------------------------------");
                 Console.WriteLine(closedCall);
+                Console.WriteLine("------------------------------");
+            }
         }
     }
 
@@ -677,7 +687,10 @@ internal class Program
                 CallFieldType = (BO.OpenCallField)CallField;
             var closedCalls = s_bl.Call.GetOpenCallsForVolunteer(volunteerId, CallFilter, CallFieldType);
             foreach (var closedCall in closedCalls)
+            { Console.WriteLine("------------------------------"); 
                 Console.WriteLine(closedCall);
+                Console.WriteLine("------------------------------");
+            }
         }
     }
 

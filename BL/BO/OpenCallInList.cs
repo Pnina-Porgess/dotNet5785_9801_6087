@@ -29,7 +29,7 @@ namespace BO
                    $"Description: {(!string.IsNullOrEmpty(Description) ? Description : "None")}\n" +
                    $"Address: {FullAddress}\n" +
                    $"Opened At: {OpenTime}\n" +
-                   $"Deadline: {(MaxEndTime.HasValue ? MaxEndTime.ToString() : "None")}\n" +
+                   $"MaxEndTime: {(MaxEndTime.HasValue ? MaxEndTime.ToString() : "None")}\n" +
                    $"Distance from Volunteer: {DistanceFromVolunteer} km";
         }
     }
