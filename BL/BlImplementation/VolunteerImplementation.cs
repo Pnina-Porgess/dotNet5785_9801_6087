@@ -182,14 +182,6 @@ internal class VolunteerImplementation : IVolunteer
         {
             throw new BO.BlInvalidInputException($"Invalid data for volunteer update: {ex.Message}", ex);
         }
-        catch (BO.BlUnauthorizedAccessException ex)
-        {
-            throw new BO.BlInvalidInputException($"Invalid data for volunteer update: {ex.Message}", ex);
-        }
-        catch (Exception ex)
-        {
-            throw new BO.BlDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
-        }
     }
 
     /// <summary>
@@ -199,24 +191,35 @@ internal class VolunteerImplementation : IVolunteer
     /// <param name="sortBy">Sorting criteria.</param>
     /// <returns>A sorted and filtered list of volunteers.</returns>
     /// <exception cref="BO.BlDatabaseException">Thrown if an error occurs while accessing data.</exception>
-    public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null)
+   
+        public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null)
     {
+
         try
         {
-            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v =>
-                !isActive.HasValue || v.IsActive == isActive);
+            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll();
+            if (isActive.HasValue)
+            {
+                volunteers = volunteers.Where(c => c.IsActive == isActive.Value);
+            }
 
             var volunteerList = VolunteerManager.GetVolunteerList(volunteers);
 
-            return sortBy switch
+            volunteerList = sortBy.HasValue ? sortBy.Value switch
             {
-                BO.VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName),
-                _ => volunteerList.OrderBy(v => v.Id)
-            };
+                BO.VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
+                BO.VolunteerSortBy.TotalHandledCalls => volunteerList.OrderBy(v => v.TotalHandledCalls).ToList(),
+                BO.VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderBy(v => v.TotalCancelledCalls).ToList(),
+                BO.VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderBy(v => v.TotalExpiredCalls).ToList(),
+                _ => volunteerList.OrderBy(v => v.Id).ToList()
+            } : volunteerList.OrderBy(v => v.Id).ToList();
+
+            return volunteerList;
         }
-        catch (Exception ex)
+        catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDatabaseException("Error accessing data.", ex);
         }
     }
+
 }

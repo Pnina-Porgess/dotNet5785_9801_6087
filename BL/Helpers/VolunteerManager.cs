@@ -6,35 +6,7 @@ namespace Helpers;
 internal static class VolunteerManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
-    /// <summary>
-    /// Maps a DO.Volunteer object to a BO.Volunteer object.
-    /// </summary>
-    /// <param name="volunteer">The data object representing a volunteer.</param>
-    /// <returns>A business object representing the mapped volunteer.</returns>
-    internal static BO.Volunteer MapVolunteer(DO.Volunteer volunteer)
-    {
-        return new BO.Volunteer
-        {
-            Id = volunteer.Id,
-            FullName = volunteer.Name,
-            Phone = volunteer.Phone,
-            Email = volunteer.Email,
-            IsActive = volunteer.IsActive,
-            Role = (BO.Role)volunteer.Role,
-        };
-    }
-
-    /// <summary>
-    /// Verifies that the entered password matches the stored encrypted password.
-    /// </summary>
-    /// <param name="enteredPassword">The password entered by the user.</param>
-    /// <param name="storedPassword">The encrypted password stored in the system.</param>
-    /// <returns>True if the password matches; otherwise, false.</returns>
-    internal static bool VerifyPassword(string enteredPassword, string storedPassword)
-    {
-        var encryptedPassword = EncryptPassword(enteredPassword);
-        return encryptedPassword == storedPassword;
-    }
+   
 
     /// <summary>
     /// Retrieves a list of volunteers and their statistics.
