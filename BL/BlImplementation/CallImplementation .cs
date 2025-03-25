@@ -118,9 +118,9 @@ namespace BlImplementation
 
                 if (filterField.HasValue && filterValue != null)
                 {
-                    callList = CallManager.FilterCall(callList, filterField.Value, filterValue);
+                    callList = callList.Where(c =>c.GetType().GetProperty(filterField.ToString()!)?.GetValue(c)?.Equals(filterValue)==true);
                 }
-
+          
                 return sortField switch
                 {
                     CallField.AssignmentId => callList.OrderBy(c => c.AssignmentId),
@@ -327,7 +327,7 @@ namespace BlImplementation
                     ClosedCallField.FullAddress => closedCalls.OrderBy(c => c.FullAddress),
                     ClosedCallField.OpenTime => closedCalls.OrderBy(c => c.OpenTime),
                     ClosedCallField.AssignmentEntryTime => closedCalls.OrderBy(c => c.AssignmentEntryTime),
-                    ClosedCallField.ActualEndTime => closedCalls.OrderBy(c => c.ActualEndTime),
+                    ClosedCallField.ActualEndTime => closedCalls.OrderBy(c => c.ActualEndTime.GetValueOrDefault(DateTime.MinValue)),
                     ClosedCallField.EndType => closedCalls.OrderBy(c => c.EndType),
                     _ =>closedCalls.OrderBy(c => c.Id)
                 };

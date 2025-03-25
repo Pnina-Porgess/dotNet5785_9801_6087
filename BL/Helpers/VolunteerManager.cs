@@ -6,50 +6,39 @@ namespace Helpers;
 internal static class VolunteerManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
-    //הופך מתנדב מDO לBO
-    internal static BO.Volunteer MapVolunteer(DO.Volunteer volunteer)
-    {
-        return new BO.Volunteer
-        {
-            Id = volunteer.Id,
-            FullName = volunteer.Name,
-            Phone = volunteer.Phone,
-            Email = volunteer.Email,
-            IsActive = volunteer.IsActive,
-           Role = (BO.Role)volunteer.Role,
-
-        };
-    }
-    internal static bool VerifyPassword(string enteredPassword, string storedPassword)
-    {
-        var encryptedPassword = EncryptPassword(enteredPassword);
-        return encryptedPassword == storedPassword;
-    }
     internal static IEnumerable<BO.VolunteerInList> GetVolunteerList(IEnumerable<DO.Volunteer> volunteers)
     {
-  
-        var volunteerInList = volunteers.Select(static v =>
+
+        try
+        {
+            var volunteerInList = volunteers.Select(static v =>
           {
               var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
               var assignedResponseId = volunteerAssignments.FirstOrDefault(a => a?.EntryTime == null)?.CallId;
               return new BO.VolunteerInList
               {
                   Id = v.Id,
-                  FullName = v.Name, // ניתן לשנות את השם המלא אם יש צורך
+                  FullName = v.Name,
                   IsActive = v.IsActive,
                   TotalHandledCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.treated), // חישוב מספר השיחות שנפגעו
                   TotalCancelledCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.SelfCancellation),  // חישוב מספר השיחות שבוטלו
                   TotalExpiredCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.CancellationHasExpired),  // חישוב מספר השיחות שזמן ההגשה שלהן פג
-                  CurrentCallId = assignedResponseId,  // אם יש קריאה בשטח, נרצה להחזיר את מזהה הקריאה
+                  CurrentCallId = assignedResponseId,
                   CurrentCallType = (BO.TypeOfReading)(assignedResponseId.HasValue
-                        ? (BO.TypeOfReading)(s_dal.Call.Read(assignedResponseId.Value)?.TypeOfReading)
-                        : BO.TypeOfReading.None) // אם אין קריאה, נחזיר None
+                        ? (BO.TypeOfReading)(s_dal.Call.Read(assignedResponseId.Value)?.TypeOfReading)!
+                        : BO.TypeOfReading.None)
               };
           }).ToList();
-       return volunteerInList;
+            return volunteerInList;
+        }
+      
+        catch (Exception ex)
+        {
+            throw new BO.BlDatabaseException("An error occurred while retrieving closed calls", ex);
+        }
 
     }
-    //ססמא חזקה
+
     internal static bool IsPasswordStrong(string password)
     {
         if (password.Length < 8)
@@ -64,7 +53,7 @@ internal static class VolunteerManager
             return false;
         return true;
     }
-    //שדות מלאים ותקינים
+
     internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
     {
        if (boVolunteer == null)
@@ -85,7 +74,7 @@ internal static class VolunteerManager
         if (boVolunteer?.Password?.Length < 6 || !VolunteerManager.IsPasswordStrong(boVolunteer?.Password!))
             throw new BO.BlInvalidInputException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
     }
-//תז תקינה
+
     internal static bool IsValidId(int id)
     {
         string idString = id.ToString();
@@ -108,14 +97,14 @@ internal static class VolunteerManager
 
         return sum % 10 == 0;
     }
-    //הצפנת הססמא
+   
     internal static string EncryptPassword(string password)
     {
         using var sha256 = SHA256.Create();
         var hashedBytes = sha256?.ComputeHash(Encoding.UTF8.GetBytes(password));
         return Convert.ToBase64String(hashedBytes!);
     }
-    //יוצר VOLUNTEER מעביר מBO TO DO
+   
     internal static DO.Volunteer CreateDoVolunteer(BO.Volunteer boVolunteer)
     {
         return new DO.Volunteer(

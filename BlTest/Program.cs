@@ -405,8 +405,14 @@ internal class Program
     {
         Console.Write("Enter true to show active, false for inactive, or any other value to show all: ");
         bool? isActive = bool.TryParse(Console.ReadLine() ?? "", out bool g) ? g : (bool?)null;
-        Console.Write("Enter sorting option (0: FullName, 1: TotalHandledCalls, 2: TotalCanceledCalls, 3: TotalExpiredCalls): ");
-        BO.VolunteerSortBy sortBy = (BO.VolunteerSortBy)int.Parse(Console.ReadLine()!);
+        foreach (var field in Enum.GetValues(typeof(BO.VolunteerSortBy)))
+        {
+            Console.Write($"{(int)field}: {field}  ");
+        }
+        BO.VolunteerSortBy? sortBy = null;
+        if (int.TryParse(Console.ReadLine(), out int VolauteerField) && VolauteerField > 0 && VolauteerField <= 3)
+            sortBy = (BO.VolunteerSortBy)VolauteerField;
+
 
         var volunteersList = s_bl.Volunteer.GetVolunteersList(isActive, sortBy);
         foreach (var volunteer in volunteersList)
@@ -487,7 +493,7 @@ internal class Program
         Console.WriteLine("Choose a field to filter by:");
         foreach (var field in Enum.GetValues(typeof(BO.CallField)))
         {
-            Console.WriteLine($"{(int)field}: {field}");
+            Console.Write($"{(int)field}: {field}  ");
         }
 
         // קבלת הבחירה מהמשתמש
@@ -504,7 +510,7 @@ internal class Program
                     Console.WriteLine("Choose call type:");
                     foreach (var type in Enum.GetValues(typeof(BO.TypeOfReading)))
                     {
-                        Console.WriteLine($"{(int)type}: {type}");
+                        Console.Write($"{(int)type}: {type}  ");
                     }
                     if (int.TryParse(Console.ReadLine(), out int typeInput) && Enum.IsDefined(typeof(BO.TypeOfReading), typeInput))
                     {
@@ -655,13 +661,19 @@ internal class Program
         Console.Write("Enter volunteer ID: ");
         if (int.TryParse(Console.ReadLine(), out int volId))
         {
-            Console.WriteLine("Filter by call type? (1: FlatTire, 2: DeadBattery, 3: EngineFailure , 0: None):");
+            foreach (var type in Enum.GetValues(typeof(BO.TypeOfReading)))
+            {
+                Console.Write($"{(int)type}: {type}  ");
+            }
             BO.TypeOfReading? filterType = null;
-            if (int.TryParse(Console.ReadLine(), out int typeFilter) && typeFilter > 0 && typeFilter <= 3)
+            if (int.TryParse(Console.ReadLine(), out int typeFilter) && typeFilter > 0 && typeFilter <= 6)
                 filterType = (BO.TypeOfReading)typeFilter;
-            Console.WriteLine("Sort by call type? (0: ID, 1: CallType, 2: FullAddress , 3: OpenTime, 4:AssignmentEntryTime, 5:ActualEndTime, 6:EndType):");
+            foreach (var field in Enum.GetValues(typeof(BO.ClosedCallField)))
+            {
+                Console.Write($"{(int)field}: {field}  ");
+            }
             BO.ClosedCallField? CallFieldType = null;
-            if (int.TryParse(Console.ReadLine(), out int CallField) && CallField > 0 && CallField <= 3)
+            if (int.TryParse(Console.ReadLine(), out int CallField) && CallField > 0 && CallField <= 6)
                 CallFieldType = (BO.ClosedCallField)CallField;
             var closedCalls = s_bl.Call.GetClosedCallsByVolunteer(volId, filterType, CallFieldType);
             foreach (var closedCall in closedCalls)
@@ -677,11 +689,17 @@ internal class Program
         Console.Write("Enter volunteer ID: ");
         if (int.TryParse(Console.ReadLine(), out int volunteerId))
         {
-            Console.WriteLine("Filter by call type? (1: Urgent, 2: Medium_Urgency, 3: General_Assistance, 4: Non_Urgent, 0: None):");
+            foreach (var status in Enum.GetValues(typeof(BO.CallStatus)))
+            {
+                Console.Write($"{(int)status}: {status}  ");
+            }
             BO.CallStatus? CallFilter = null;
             if (int.TryParse(Console.ReadLine(), out int CallField) && CallField > 0 && CallField <= 3)
                 CallFilter = (BO.CallStatus)CallField;
-            Console.WriteLine("Sort by call type? (0: Status, 1: OpeningTime, 2: MaxEndTime , 3: Address):");
+            foreach (var field in Enum.GetValues(typeof(BO.OpenCallField)))
+            {
+                Console.Write($"{(int)field}: {field}  ");
+            }
             BO.OpenCallField? CallFieldType = null;
             if (int.TryParse(Console.ReadLine(), out CallField) && CallField > 0 && CallField <= 3)
                 CallFieldType = (BO.OpenCallField)CallField;

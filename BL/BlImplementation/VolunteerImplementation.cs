@@ -13,15 +13,14 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-            //var existingVolunteer = _dal.Volunteer.Read(v => v.Id == volunteer.Id) ??
-            //    throw new BO.BlNotFoundException($"Volunteer with ID={volunteer.Id} already exists.");
+     
             var existingVolunteer = _dal.Volunteer.Read(v => v.Id == volunteer.Id);
             if (existingVolunteer != null)
             {
                 throw new BO.BlAlreadyExistsException($"Volunteer with ID={volunteer.Id} already exists.");
             }
             VolunteerManager.ValidateInputFormat(volunteer);
-             (volunteer.Latitude, volunteer.Longitude) = Tools.GetCoordinatesFromAddress(volunteer.CurrentAddress);
+             (volunteer.Latitude, volunteer.Longitude) = Tools.GetCoordinatesFromAddress(volunteer.CurrentAddress!);
             DO.Volunteer doVolunteer =( VolunteerManager.CreateDoVolunteer(volunteer));
             _dal.Volunteer.Create(doVolunteer);
         }
@@ -29,10 +28,7 @@ internal class VolunteerImplementation : IVolunteer
         {
             throw new BO.BlDatabaseException($"Volunt", ex);
         }
-        //catch (Exception ex)
-        //{
-        //    throw new BO.BlDatabaseException("An unexpected error occurred while adding the volunteer.", ex);
-        //}
+      
 
     }
 
@@ -144,22 +140,18 @@ internal class VolunteerImplementation : IVolunteer
         {
             throw new BO.BlInvalidInputException($"Invalid data for volunteer update: {ex.Message}", ex);
         }
-        catch (BO.BlUnauthorizedAccessException ex)
-        {
-            throw new BO.BlInvalidInputException($"Invalid data for volunteer update: {ex.Message}", ex);
-        }
-        catch (Exception ex)
-        {
-            throw new BO.BlDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
-        }
+  
     }
     public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null)
     {
 
         try
         {
-            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v =>
-                !isActive.HasValue || v.IsActive == isActive);
+            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll();
+            if (isActive.HasValue)
+            {
+                volunteers = volunteers.Where(c =>c.IsActive == isActive.Value);
+            }
 
             var volunteerList = VolunteerManager.GetVolunteerList(volunteers);
            
