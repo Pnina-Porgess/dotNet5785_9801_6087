@@ -40,16 +40,7 @@ public enum CallStatusInProgress
     InProgress, // Currently being handled
     AtRisk      // Close to the maximum allowed time
 }
-/// <summary>
-/// Types of calls.
-/// </summary>
-//public enum TypeOfReading
-//{
-//    None,
-//    Regular,
-//    Emergency,
-//    HighPriority
-//}
+
 /// <summary>
 /// Specifies the fields by which a list of volunteers can be sorted.
 /// </summary>

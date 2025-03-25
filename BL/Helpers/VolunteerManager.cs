@@ -6,6 +6,41 @@ namespace Helpers;
 internal static class VolunteerManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
+    /// <summary>
+    /// Maps a DO.Volunteer object to a BO.Volunteer object.
+    /// </summary>
+    /// <param name="volunteer">The data object representing a volunteer.</param>
+    /// <returns>A business object representing the mapped volunteer.</returns>
+    internal static BO.Volunteer MapVolunteer(DO.Volunteer volunteer)
+    {
+        return new BO.Volunteer
+        {
+            Id = volunteer.Id,
+            FullName = volunteer.Name,
+            Phone = volunteer.Phone,
+            Email = volunteer.Email,
+            IsActive = volunteer.IsActive,
+            Role = (BO.Role)volunteer.Role,
+        };
+    }
+
+    /// <summary>
+    /// Verifies that the entered password matches the stored encrypted password.
+    /// </summary>
+    /// <param name="enteredPassword">The password entered by the user.</param>
+    /// <param name="storedPassword">The encrypted password stored in the system.</param>
+    /// <returns>True if the password matches; otherwise, false.</returns>
+    internal static bool VerifyPassword(string enteredPassword, string storedPassword)
+    {
+        var encryptedPassword = EncryptPassword(enteredPassword);
+        return encryptedPassword == storedPassword;
+    }
+
+    /// <summary>
+    /// Retrieves a list of volunteers and their statistics.
+    /// </summary>
+    /// <param name="volunteers">A collection of DO.Volunteer objects.</param>
+    /// <returns>A list of BO.VolunteerInList objects with volunteer details and statistics.</returns>
     internal static IEnumerable<BO.VolunteerInList> GetVolunteerList(IEnumerable<DO.Volunteer> volunteers)
     {
 
@@ -37,8 +72,14 @@ internal static class VolunteerManager
             throw new BO.BlDatabaseException("An error occurred while retrieving closed calls", ex);
         }
 
+        return volunteerInList;
     }
 
+    /// <summary>
+    /// Checks if the password meets the strength requirements.
+    /// </summary>
+    /// <param name="password">The password to validate.</param>
+    /// <returns>True if the password is strong; otherwise, false.</returns>
     internal static bool IsPasswordStrong(string password)
     {
         if (password.Length < 8)
@@ -54,6 +95,11 @@ internal static class VolunteerManager
         return true;
     }
 
+    /// <summary>
+    /// Validates the format of a volunteer's input.
+    /// </summary>
+    /// <param name="boVolunteer">The volunteer object to validate.</param>
+    /// <exception cref="BO.BlInvalidInputException">Thrown if any input field is invalid.</exception>
     internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
     {
        if (boVolunteer == null)
@@ -75,6 +121,11 @@ internal static class VolunteerManager
             throw new BO.BlInvalidInputException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
     }
 
+    /// <summary>
+    /// Validates an Israeli ID using a checksum algorithm.
+    /// </summary>
+    /// <param name="id">The ID to validate.</param>
+    /// <returns>True if the ID is valid; otherwise, false.</returns>
     internal static bool IsValidId(int id)
     {
         string idString = id.ToString();
@@ -97,14 +148,24 @@ internal static class VolunteerManager
 
         return sum % 10 == 0;
     }
-   
+
+    /// <summary>
+    /// Encrypts a password using SHA256.
+    /// </summary>
+    /// <param name="password">The password to encrypt.</param>
+    /// <returns>The encrypted password as a Base64 string.</returns>
     internal static string EncryptPassword(string password)
     {
         using var sha256 = SHA256.Create();
         var hashedBytes = sha256?.ComputeHash(Encoding.UTF8.GetBytes(password));
         return Convert.ToBase64String(hashedBytes!);
     }
-   
+
+    /// <summary>
+    /// Creates a DO.Volunteer object from a BO.Volunteer object.
+    /// </summary>
+    /// <param name="boVolunteer">The business object representing the volunteer.</param>
+    /// <returns>A data object representing the volunteer.</returns>
     internal static DO.Volunteer CreateDoVolunteer(BO.Volunteer boVolunteer)
     {
         return new DO.Volunteer(
@@ -124,8 +185,14 @@ internal static class VolunteerManager
 
         );
     }
-    //בודק שבססמא חזקה ומחזיר כתובת בקווי אורך ורוחב
-    internal static (double? Latitude, double? Longitude) logicalChecking(BO.Volunteer boVolunteer)
+
+    /// <summary>
+    /// Performs logical checks on the volunteer's data.
+    /// </summary>
+    /// <param name="boVolunteer">The volunteer object to check.</param>
+    /// <returns>The volunteer's coordinates.</returns>
+    /// <exception cref="BO.BlLogicalException">Thrown if the ID is invalid.</exception>
+    internal static (double? Latitude, double? Longitude) LogicalChecking(BO.Volunteer boVolunteer)
     {
         if (!IsValidId(boVolunteer.Id))
             throw new BO.BlLogicalException("The ID is not correct");
@@ -133,12 +200,24 @@ internal static class VolunteerManager
         return (r,w);
     }
 
-    //הרשאות למי שמוסמך
+    /// <summary>
+    /// Validates permissions for performing an action on a volunteer.
+    /// </summary>
+    /// <param name="requesterId">The ID of the requester.</param>
+    /// <param name="boVolunteer">The volunteer object.</param>
+    /// <exception cref="BO.BlUnauthorizedAccessException">Thrown if permissions are insufficient.</exception>
     internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
     {
         if (!(requesterId == boVolunteer.Id) && !(boVolunteer.Role == BO.Role.Manager))
             throw new BO.BlUnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
     }
+
+    /// <summary>
+    /// Checks if fields can be updated based on the original volunteer's role.
+    /// </summary>
+    /// <param name="original">The original volunteer object.</param>
+    /// <param name="boVolunteer">The new volunteer object.</param>
+    /// <returns>True if the update is allowed; otherwise, false.</returns>
     internal static bool CanUpdateFields(DO.Volunteer original, BO.Volunteer boVolunteer)
     {
         if ((BO.Role)original.Role != boVolunteer.Role)
@@ -148,6 +227,13 @@ internal static class VolunteerManager
         }
         return true;
     }
+
+    /// <summary>
+    /// Calculates the status of a call based on the time remaining.
+    /// </summary>
+    /// <param name="call">The call object.</param>
+    /// <param name="riskThreshold">The threshold in minutes for at-risk status.</param>
+    /// <returns>The status of the call.</returns>
     public static BO.CallStatusInProgress CalculateStatus(DO.Call call, int riskThreshold = 30)
     {
 
