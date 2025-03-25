@@ -4,7 +4,7 @@
     {
         public int? AssignmentId { get; set; } // Unique ID for the assignment, nullable if no assignment exists.
         public int CallId { get; set; } // Unique running ID for the call, cannot be null.
-        public CallType CallType { get; set; } // Type of the call, cannot be null.
+        public TypeOfReading CallType { get; set; } // Type of the call, cannot be null.
         public DateTime OpeningTime { get; set; } // The time the call was opened, cannot be null.
         public TimeSpan? RemainingTime { get; set; } // Remaining time until the call's maximum allowed completion, nullable if no limit exists.
         public string? LastVolunteerName { get; set; } // Name of the last assigned volunteer, nullable if no volunteer was ever assigned.

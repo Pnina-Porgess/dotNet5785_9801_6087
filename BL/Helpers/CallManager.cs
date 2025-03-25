@@ -18,7 +18,7 @@ internal static class CallManager
             throw new BO.BlNotFoundException("Volunteer object cannot be null.");
         //if (call.Id < 1000)
         //    throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
-        if ((call.Type != BO.CallType.None) && (call.Type != BO.CallType.Regular) && (call.Type != BO.CallType.Emergency) && (call.Type != BO.CallType.HighPriority))
+        if ((call.Type != BO.TypeOfReading.None) && (call.Type != BO.TypeOfReading.EngineFailure) && (call.Type != BO.TypeOfReading.DeadBattery) && (call.Type != BO.TypeOfReading.FlatTire))
             throw new BO.BlInvalidInputException(@"Invalid CallType format. PCallType must be None\\Regular\\Emergency\\HighPriority.");
         //if (call.Description?.Length < 2)
         //    throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
@@ -139,7 +139,7 @@ internal static class CallManager
         return new BO.CallInList
         {
             CallId = call.Id,
-            CallType = (BO.CallType)call.TypeOfReading,
+            CallType = (BO.TypeOfReading)call.TypeOfReading,
             OpeningTime = call.TimeOfOpen,
             CallStatus = CalculateCallStatus(call.Id),
             AssignmentId = latestAssignment?.Id,
@@ -160,7 +160,7 @@ internal static class CallManager
         {
             CallField.AssignmentId => calls.Where(call => call.AssignmentId.ToString() == filterValue.ToString()),
             CallField.CallId => calls.Where(call => call.CallId.ToString() == filterValue.ToString()),
-            CallField.CallType => calls.Where(call => call.CallType == (BO.CallType)filterValue),
+            CallField.CallType => calls.Where(call => call.CallType == (BO.TypeOfReading)filterValue),
             CallField.OpeningTime => calls.Where(call => call.OpeningTime.Date == ((DateTime)filterValue).Date),
             CallField.RemainingTime => calls.Where(call => call.RemainingTime == (TimeSpan?)filterValue),
             CallField.LastVolunteerName => calls.Where(call => call.LastVolunteerName == filterValue.ToString()),

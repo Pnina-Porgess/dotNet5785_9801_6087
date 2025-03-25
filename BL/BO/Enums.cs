@@ -43,13 +43,13 @@ public enum CallStatusInProgress
 /// <summary>
 /// Types of calls.
 /// </summary>
-public enum CallType
-{
-    None,
-    Regular,
-    Emergency,
-    HighPriority
-}
+//public enum TypeOfReading
+//{
+//    None,
+//    Regular,
+//    Emergency,
+//    HighPriority
+//}
 /// <summary>
 /// Specifies the fields by which a list of volunteers can be sorted.
 /// </summary>

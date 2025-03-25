@@ -72,7 +72,7 @@ internal static class Tools
     }
     public static void SendEmail(string toEmail, string subject, string body)
     {
-        var fromAddress = new MailAddress("projectydidim@gmail.com", "Ydidim");
+        var fromAddress = new MailAddress("projectydidim@gmail.com", "Yedidim");
         var toAddress = new MailAddress(toEmail);
 
         var smtpClient = new SmtpClient("smtp.gmail.com")
