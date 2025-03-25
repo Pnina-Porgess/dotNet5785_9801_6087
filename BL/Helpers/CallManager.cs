@@ -151,25 +151,6 @@ internal static class CallManager
         };
     }
     /// <summary>
-    /// Filters a list of calls based on a specified field and value.
-    /// </summary>
-    internal static IEnumerable<BO.CallInList> FilterCall(IEnumerable<BO.CallInList> calls,BO.CallField filterField,object filterValue)
-    {
-        return filterField switch
-        {
-            CallField.AssignmentId => calls.Where(call => call.AssignmentId.ToString() == filterValue.ToString()),
-            CallField.CallId => calls.Where(call => call.CallId.ToString() == filterValue.ToString()),
-            CallField.CallType => calls.Where(call => call.CallType == (BO.TypeOfReading)filterValue),
-            CallField.OpeningTime => calls.Where(call => call.OpeningTime.Date == ((DateTime)filterValue).Date),
-            CallField.RemainingTime => calls.Where(call => call.RemainingTime == (TimeSpan?)filterValue),
-            CallField.LastVolunteerName => calls.Where(call => call.LastVolunteerName == filterValue.ToString()),
-            CallField.CompletionTime => calls.Where(call => call.CompletionTime == (TimeSpan?)filterValue),
-            CallField.CallStatus => calls.Where(call => call.CallStatus == (BO.CallStatus)filterValue),
-            CallField.TotalAssignments => calls.Where(call => call.TotalAssignments == (int)filterValue),
-            _ => throw new BO.BlInvalidInputException($"Filtering by {filterField} is not supported")
-        };
-    }
-    /// <summary>
     /// Validates whether the assignment can be completed.
     /// </summary>
     internal static void ValidateAssignmentForCompletion(DO.Assignment assignment, int volunteerId)
