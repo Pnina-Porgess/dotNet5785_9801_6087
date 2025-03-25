@@ -41,6 +41,7 @@ internal static class Tools
         double distance = EarthRadiusKm * c;
         return distance;
     }
+
     public static double DegreesToRadians(double degrees)
     {
         return degrees * Math.PI / 180;
