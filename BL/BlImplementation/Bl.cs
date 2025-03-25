@@ -1,20 +1,34 @@
-﻿namespace BlImplementation;
-using BlApi;
-internal class Bl : IBl
+﻿namespace BlImplementation
 {
-    public IVolunteer? Volunteer
+    using BlApi;
+
+    /// <summary>
+    /// Implementation of the IBl interface providing access to various business logic services.
+    /// </summary>
+    internal class Bl : IBl
     {
-        get { return new VolunteerImplementation(); }
-    }
-    public ICall? Call
-    {
-        get
+        /// <summary>
+        /// Gets an instance of the IVolunteer service.
+        /// </summary>
+        public IVolunteer? Volunteer
         {
-            return new CallImplementation();
+            get { return new VolunteerImplementation(); }
         }
+
+        /// <summary>
+        /// Gets an instance of the ICall service.
+        /// </summary>
+        public ICall? Call
+        {
+            get
+            {
+                return new CallImplementation();
+            }
+        }
+
+        /// <summary>
+        /// Gets an instance of the IAdmin service for administrative functionality.
+        /// </summary>
+        public IAdmin Admin { get; } = new AdminImplementation();
     }
-
-    public IAdmin Admin { get; } = new AdminImplementation();
-
 }
-
