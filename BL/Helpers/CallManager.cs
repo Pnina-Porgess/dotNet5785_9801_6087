@@ -4,47 +4,71 @@ using DO;
 using Helpers;
 
 internal static class CallManager
-
 {
     private static IDal _dal = Factory.Get; //stage 4
+
+    /// <summary>
+    /// Validates the input format of the call object.
+    /// </summary>
+    /// <param name="call">The call object to validate.</param>
+    /// <exception cref="BO.BlNotFoundException">Thrown if the call is null.</exception>
+    /// <exception cref="BO.BlInvalidInputException">Thrown if the call type is invalid or other properties are incorrect.</exception>
     internal static void ValidateInputFormat(BO.Call call)
     {
         if (call == null)
             throw new BO.BlNotFoundException("Volunteer object cannot be null.");
-        //if (call.Id < 1000)
-        //    throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
-        if ((call.Type != BO.TypeOfReading.None) && (call.Type != BO.TypeOfReading.EngineFailure) && (call.Type != BO.TypeOfReading.DeadBattery) && (call.Type != BO.TypeOfReading.FlatTire))
+
+        if ((call.Type != BO.TypeOfReading.None) &&
+            (call.Type != BO.TypeOfReading.EngineFailure) &&
+            (call.Type != BO.TypeOfReading.DeadBattery) &&
+            (call.Type != BO.TypeOfReading.FlatTire))
             throw new BO.BlInvalidInputException(@"Invalid CallType format. PCallType must be None\\Regular\\Emergency\\HighPriority.");
-        //if (call.Description?.Length < 2)
-        //    throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
     }
+
+    /// <summary>
+    /// Performs logical checks on the call’s timings and returns the coordinates from the address.
+    /// </summary>
+    /// <param name="call">The call object to check.</param>
+    /// <returns>A tuple containing latitude and longitude of the call address.</returns>
+    /// <exception cref="BO.BlInvalidInputException">Thrown if the max end time is earlier than the opening time.</exception>
     internal static (double Latitude, double Longitude) logicalChecking(BO.Call call)
     {
         if (call.MaxEndTime < call.OpeningTime)
-            throw new BO.BlInvalidInputException(".");
+            throw new BO.BlInvalidInputException("Max end time cannot be earlier than opening time.");
 
         return Tools.GetCoordinatesFromAddress(call.Address);
-
-
     }
+
+    /// <summary>
+    /// Creates a DO call object from the BO call object.
+    /// </summary>
+    /// <param name="newCall">The BO call object to convert.</param>
+    /// <returns>A DO call object.</returns>
     internal static DO.Call CreateDoCall(BO.Call newCall)
     {
         return new DO.Call(
-                    Id: newCall.Id,
-                    TypeOfReading: (DO.TypeOfReading)newCall.Type,
-                    Description: newCall.Description,
-                    Adress: newCall.Address,
-                    Latitude: newCall.Latitude,
-                    Longitude: newCall.Longitude,
-                    TimeOfOpen: newCall.OpeningTime,
-                    MaxTimeToFinish: newCall?.MaxEndTime ?? DateTime.Now.AddHours(1)
+            Id: newCall.Id,
+            TypeOfReading: (DO.TypeOfReading)newCall.Type,
+            Description: newCall.Description,
+            Adress: newCall.Address,
+            Latitude: newCall.Latitude,
+            Longitude: newCall.Longitude,
+            TimeOfOpen: newCall.OpeningTime,
+            MaxTimeToFinish: newCall?.MaxEndTime ?? DateTime.Now.AddHours(1)
         );
     }
+
+    /// <summary>
+    /// Calculates the current status of a call based on its assignments and other parameters.
+    /// </summary>
+    /// <param name="callId">The ID of the call to check.</param>
+    /// <returns>The calculated call status.</returns>
+    /// <exception cref="ArgumentException">Thrown if the call does not exist or has no assignments.</exception>
     internal static BO.CallStatus CalculateCallStatus(int callId)
     {
         try
         {
-            //// Get the call from database
+            // Get the call from database
             var call = _dal.Call.Read(callId);
             if (call == null)
                 throw new ArgumentException($"Call with ID={callId} does not exist.");
@@ -53,6 +77,7 @@ internal static class CallManager
             var assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
             if (assignments == null)
                 throw new ArgumentException($"Call with ID={callId} does not has assignment.");
+
             // If there are no assignments at all
             if (!assignments.Any())
             {
@@ -89,6 +114,13 @@ internal static class CallManager
             throw new BO.InvalidOperationException($"Error calculating call status: {ex.Message}", ex);
         }
     }
+
+    /// <summary>
+    /// Checks whether the call was ever assigned.
+    /// </summary>
+    /// <param name="callId">The ID of the call to check.</param>
+    /// <returns>True if the call was never assigned, false otherwise.</returns>
+    /// <exception cref="ArgumentException">Thrown if the call does not exist.</exception>
     internal static bool WasNeverAssigned(int callId)
     {
         try
@@ -111,6 +143,14 @@ internal static class CallManager
             throw new BO.InvalidOperationException($"Error checking call assignment status: {ex.Message}", ex);
         }
     }
+
+    /// <summary>
+    /// Creates a CallInList object to display information about a call in the list.
+    /// </summary>
+    /// <param name="call">The DO call object.</param>
+    /// <param name="assignments">The assignments related to the call.</param>
+    /// <param name="volunteers">A dictionary of volunteer names by their ID.</param>
+    /// <returns>A BO.CallInList object.</returns>
     internal static BO.CallInList CreateCallInList(DO.Call call, IEnumerable<DO.Assignment> assignments, Dictionary<int, string> volunteers)
     {
         var callAssignments = assignments.Where(a => a.CallId == call.Id).OrderByDescending(a => a.EntryTime).ToList();
@@ -131,9 +171,14 @@ internal static class CallManager
             CompletionTime = latestAssignment?.EndTime.HasValue == true ? latestAssignment.EndTime - latestAssignment.EntryTime : null
         };
     }
+
     /// <summary>
-    /// Validates whether the assignment can be completed.
+    /// Validates if the assignment can be marked as completed.
     /// </summary>
+    /// <param name="assignment">The assignment to validate.</param>
+    /// <param name="volunteerId">The ID of the volunteer attempting to complete the assignment.</param>
+    /// <exception cref="ArgumentException">Thrown if the assignment does not exist.</exception>
+    /// <exception cref="BO.BlInvalidInputException">Thrown if the assignment has already been completed or the volunteer doesn't have permission.</exception>
     internal static void ValidateAssignmentForCompletion(DO.Assignment assignment, int volunteerId)
     {
         if (assignment == null)
@@ -150,6 +195,13 @@ internal static class CallManager
             throw new BO.BlInvalidInputException("This treatment has already been completed or cancelled.");
         }
     }
+
+    /// <summary>
+    /// Creates a list of closed calls with related assignments.
+    /// </summary>
+    /// <param name="calls">A collection of DO calls.</param>
+    /// <param name="assignments">A collection of DO assignments.</param>
+    /// <returns>A collection of BO.ClosedCallInList objects.</returns>
     public static IEnumerable<BO.ClosedCallInList> CreateClosedCallList(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments)
     {
         return calls.Select(call =>
@@ -168,6 +220,11 @@ internal static class CallManager
         });
     }
 
+    /// <summary>
+    /// Periodically updates the calls based on the current clock and checks for expired assignments.
+    /// </summary>
+    /// <param name="oldClock">The previous clock time.</param>
+    /// <param name="newClock">The new clock time.</param>
     public static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)
     {
         try
@@ -188,11 +245,15 @@ internal static class CallManager
                 }
             });
         }
-
         catch (BO.BlInvalidInputException e)
         {
         }
     }
+
+    /// <summary>
+    /// Sends an email notification to all volunteers within the specified distance from a new call.
+    /// </summary>
+    /// <param name="call">The call object that was opened.</param>
     internal static void SendEmailWhenCalOpened(BO.Call call)
     {
         var volunteer = _dal.Volunteer.ReadAll();
@@ -223,9 +284,14 @@ internal static class CallManager
 
                 Tools.SendEmail(item.Email, subject, body);
             }
-
         }
     }
+
+    /// <summary>
+    /// Sends an email notification to the volunteer when their assignment is canceled.
+    /// </summary>
+    /// <param name="volunteer">The volunteer to notify.</param>
+    /// <param name="assignment">The assignment that was canceled.</param>
     internal static void SendEmailToVolunteer(DO.Volunteer volunteer, DO.Assignment assignment)
     {
         var call = _dal.Call.Read(assignment.CallId)!;
