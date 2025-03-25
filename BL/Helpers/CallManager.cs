@@ -7,7 +7,6 @@ using Helpers;
 internal static class CallManager
 
 {
-
     private static IDal _dal = Factory.Get; //stage 4
     /// <summary>
     /// Validates the format of a given call object.
