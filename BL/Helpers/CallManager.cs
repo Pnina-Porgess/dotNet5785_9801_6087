@@ -1,6 +1,5 @@
-using BO;
+
 using DalApi;
-using DO;
 using Helpers;
 
 internal static class CallManager

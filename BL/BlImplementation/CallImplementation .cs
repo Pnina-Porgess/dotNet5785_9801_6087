@@ -1,6 +1,5 @@
 ﻿
 using BlApi;
-using BO;
 using Helpers;
 
 namespace BlImplementation
@@ -143,15 +142,15 @@ namespace BlImplementation
           
                 return sortField switch
                 {
-                    CallField.AssignmentId => callList.OrderBy(c => c.AssignmentId),
-                    CallField.CallId => callList.OrderBy(c => c.CallId),
-                    CallField.CallType => callList.OrderBy(c => c.CallType),
-                    CallField.OpeningTime => callList.OrderBy(c => c.OpeningTime),
-                    CallField.RemainingTime => callList.OrderBy(c => c.RemainingTime),
-                    CallField.LastVolunteerName => callList.OrderBy(c => c.LastVolunteerName),
-                    CallField.CompletionTime => callList.OrderBy(c => c.CompletionTime),
-                    CallField.CallStatus => callList.OrderBy(c => c.CallStatus),
-                    CallField.TotalAssignments => callList.OrderBy(c => c.TotalAssignments),
+                    BO.CallField.AssignmentId => callList.OrderBy(c => c.AssignmentId),
+                    BO.CallField.CallId => callList.OrderBy(c => c.CallId),
+                    BO.CallField.CallType => callList.OrderBy(c => c.CallType),
+                    BO.CallField.OpeningTime => callList.OrderBy(c => c.OpeningTime),
+                    BO.CallField.RemainingTime => callList.OrderBy(c => c.RemainingTime),
+                    BO.CallField.LastVolunteerName => callList.OrderBy(c => c.LastVolunteerName),
+                    BO.CallField.CompletionTime => callList.OrderBy(c => c.CompletionTime),
+                    BO.CallField.CallStatus => callList.OrderBy(c => c.CallStatus),
+                    BO.CallField.TotalAssignments => callList.OrderBy(c => c.TotalAssignments),
                     _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
                 };
             }
@@ -364,12 +363,12 @@ namespace BlImplementation
 
                 return sortField switch
                 {
-                    ClosedCallField.CallType => closedCalls.OrderBy(c => c.CallType),
-                    ClosedCallField.FullAddress => closedCalls.OrderBy(c => c.FullAddress),
-                    ClosedCallField.OpenTime => closedCalls.OrderBy(c => c.OpenTime),
-                    ClosedCallField.AssignmentEntryTime => closedCalls.OrderBy(c => c.AssignmentEntryTime),
-                    ClosedCallField.ActualEndTime => closedCalls.OrderBy(c => c.ActualEndTime.GetValueOrDefault(DateTime.MinValue)),
-                    ClosedCallField.EndType => closedCalls.OrderBy(c => c.EndType),
+                    BO.ClosedCallField.CallType => closedCalls.OrderBy(c => c.CallType),
+                    BO.ClosedCallField.FullAddress => closedCalls.OrderBy(c => c.FullAddress),
+                    BO.ClosedCallField.OpenTime => closedCalls.OrderBy(c => c.OpenTime),
+                    BO.ClosedCallField.AssignmentEntryTime => closedCalls.OrderBy(c => c.AssignmentEntryTime),
+                    BO.ClosedCallField.ActualEndTime => closedCalls.OrderBy(c => c.ActualEndTime.GetValueOrDefault(DateTime.MinValue)),
+                    BO.ClosedCallField.EndType => closedCalls.OrderBy(c => c.EndType),
                     _ =>closedCalls.OrderBy(c => c.Id)
                 };
             }
@@ -412,13 +411,13 @@ namespace BlImplementation
 
                 return sortField switch
                 {
-                    OpenCallField.Id => openCalls.OrderBy(c => c.Id),
-                    OpenCallField.Type => openCalls.OrderBy(c => c.Type),
-                    OpenCallField.Description => openCalls.OrderBy(c => c.Description),
-                    OpenCallField.FullAddress => openCalls.OrderBy(c => c.FullAddress),
-                    OpenCallField.OpenTime => openCalls.OrderBy(c => c.OpenTime),
-                    OpenCallField.MaxEndTime => openCalls.OrderBy(c => c.MaxEndTime),
-                    OpenCallField.DistanceFromVolunteer => openCalls.OrderBy(c => c.DistanceFromVolunteer),
+                    BO.OpenCallField.Id => openCalls.OrderBy(c => c.Id),
+                    BO.OpenCallField.Type => openCalls.OrderBy(c => c.Type),
+                    BO.OpenCallField.Description => openCalls.OrderBy(c => c.Description),
+                    BO.OpenCallField.FullAddress => openCalls.OrderBy(c => c.FullAddress),
+                    BO.OpenCallField.OpenTime => openCalls.OrderBy(c => c.OpenTime),
+                    BO.OpenCallField.MaxEndTime => openCalls.OrderBy(c => c.MaxEndTime),
+                    BO.OpenCallField.DistanceFromVolunteer => openCalls.OrderBy(c => c.DistanceFromVolunteer),
                     _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
                 };
 

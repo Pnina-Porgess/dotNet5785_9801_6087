@@ -242,14 +242,14 @@
   </Volunteer>
   <Volunteer>
     <Id>329236087</Id>
-    <Name>pnina</Name>
+    <Name>PNINA</Name>
     <Phone>1234567898</Phone>
-    <Email>gfgf@gmail.com</Email>
-    <Role>Volunteer</Role>
+    <Email>dghg@gmail.com</Email>
+    <Role>Manager</Role>
     <IsActive>true</IsActive>
-    <DistanceType>walkingDistance</DistanceType>
+    <DistanceType>AerialDistance</DistanceType>
     <MaximumDistance>123</MaximumDistance>
-    <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
+    <Password>Uwa3B3xCQdF//HA5Aw/UW1BlqscVe5WHW4MziAAVYTk=</Password>
     <Address>Eilat, HaTmarim St.</Address>
     <Latitude>32.338841</Latitude>
     <Longitude>34.889062</Longitude>

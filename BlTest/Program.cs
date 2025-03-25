@@ -1,7 +1,4 @@
-﻿using BlApi;
-using BO;
-using DO;
-using System;
+﻿
 
 namespace BlTest;
 
@@ -303,8 +300,6 @@ internal class Program
         string address = Console.ReadLine()!;
         Console.Write("Enter max Distance: ");
         int maxDistance = int.TryParse(Console.ReadLine() ?? "", out int d) ? d : 0;
-        Console.Write("Enter Distance Type (1: Air, 2: Walking, 3: Driving): ");
-        BO.DistanceType distanceType = (BO.DistanceType)int.Parse(Console.ReadLine()!);
         Console.Write("Enter role (0: Volunteer, 1: Manager): ");
         BO.Role role = (BO.Role)int.Parse(Console.ReadLine()!);
 
@@ -319,7 +314,7 @@ internal class Program
             Role = role,
             IsActive = true,
             MaxDistance = maxDistance,
-            DistanceType = distanceType,
+            DistanceType = BO.DistanceType.AerialDistance,
             TotalCanceledCalls = 0,
             TotalHandledCalls = 0,
             TotalExpiredCalls = 0
@@ -357,7 +352,7 @@ internal class Program
                 Console.WriteLine("Username and password cannot be empty!");
                 continue;
             }
-            Console.Write(s_bl.Volunteer.Login(username, password));
+            Console.Write("successfully, role: " + s_bl.Volunteer.Login(username, password));
             break;
         }
     }
@@ -382,6 +377,8 @@ internal class Program
         {
             Console.Write("id: ");
             updateId = int.TryParse(Console.ReadLine() ?? "", out int na) ? na : 0;
+            Console.Write("Username: ");
+            string? username = Console.ReadLine();
             Console.Write("Password: ");
             Password = Console.ReadLine();
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(Password))
@@ -457,7 +454,7 @@ internal class Program
         Console.Write($"Enter new MaxEndTime : ");
         DateTime? MaxEndTime = DateTime.Parse(Console.ReadLine()!);
         Console.Write($"Enter new   0 for Open,1 for InProgress,2 for Closed,3 for Expired,4 for OpenAtRisk,5 for InProgressAtRisk: ");
-        CallStatus Status = (CallStatus)int.Parse(Console.ReadLine()!);
+        BO.CallStatus Status = (BO.CallStatus)int.Parse(Console.ReadLine()!);
         BO.Call addCall = new BO.Call { Type = newType, Description = Description, Address = Address, OpeningTime = OpeningTime, MaxEndTime = MaxEndTime, Status = Status };
         s_bl.Call.AddCall(addCall);
         Console.WriteLine("Add call successfully");
@@ -507,7 +504,7 @@ internal class Program
 
         Console.Write($"Enter new status (0 - Open, 1 - InProgress, 2 - Closed, 3 - Expired, 4 - OpenAtRisk, 5 - InProgressAtRisk), current: {existingCall.Status} (press Enter to keep current): ");
         input = Console.ReadLine()!;
-         existingCall.Status =(string.IsNullOrEmpty(input)) ? existingCall.Status:(CallStatus)int.Parse(input);
+         existingCall.Status =(string.IsNullOrEmpty(input)) ? existingCall.Status:(BO.CallStatus)int.Parse(input);
 
         s_bl.Call.UpdateCall(existingCall);
 
@@ -659,7 +656,7 @@ internal class Program
     /// </summary>
     private static void GetCallCountsByStatus()
     {
-        string[] statusNames = Enum.GetNames(typeof(CallStatus));
+        string[] statusNames = Enum.GetNames(typeof(BO.CallStatus));
         int[] counts = s_bl.Call.GetCallCountsByStatus();
         for (int j = 0; j < counts.Length; j++)
             Console.WriteLine($"{statusNames[j]}: {counts[j]}");
