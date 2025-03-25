@@ -45,7 +45,7 @@ public enum CallStatusInProgress
 /// Specifies the fields by which a list of volunteers can be sorted.
 /// </summary>
 public enum VolunteerSortBy
-{
+{id,
     FullName,
     TotalHandledCalls,
     TotalCanceledCalls,

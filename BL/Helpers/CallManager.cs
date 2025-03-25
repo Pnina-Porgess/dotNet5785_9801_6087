@@ -1,4 +1,3 @@
-
 using BO;
 using DalApi;
 using DO;
@@ -8,9 +7,6 @@ internal static class CallManager
 
 {
     private static IDal _dal = Factory.Get; //stage 4
-    /// <summary>
-    /// Validates the format of a given call object.
-    /// </summary>
     internal static void ValidateInputFormat(BO.Call call)
     {
         if (call == null)
@@ -22,9 +18,6 @@ internal static class CallManager
         //if (call.Description?.Length < 2)
         //    throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
     }
-    /// <summary>
-    /// Performs logical checks on a call's time and address.
-    /// </summary>
     internal static (double Latitude, double Longitude) logicalChecking(BO.Call call)
     {
         if (call.MaxEndTime < call.OpeningTime)
@@ -34,9 +27,6 @@ internal static class CallManager
 
 
     }
-    /// <summary>
-    /// Converts a business object (BO) call to a data object (DO) call.
-    /// </summary>
     internal static DO.Call CreateDoCall(BO.Call newCall)
     {
         return new DO.Call(
@@ -50,9 +40,6 @@ internal static class CallManager
                     MaxTimeToFinish: newCall?.MaxEndTime ?? DateTime.Now.AddHours(1)
         );
     }
-    /// <summary>
-    /// Calculates the status of a call based on its assignments and time constraints.
-    /// </summary>
     internal static BO.CallStatus CalculateCallStatus(int callId)
     {
         try
@@ -102,9 +89,6 @@ internal static class CallManager
             throw new BO.InvalidOperationException($"Error calculating call status: {ex.Message}", ex);
         }
     }
-    /// <summary>
-    /// Determines whether a call was never assigned.
-    /// </summary>
     internal static bool WasNeverAssigned(int callId)
     {
         try
@@ -127,9 +111,6 @@ internal static class CallManager
             throw new BO.InvalidOperationException($"Error checking call assignment status: {ex.Message}", ex);
         }
     }
-    /// <summary>
-    /// Creates a summary of a call including assignment and volunteer details.
-    /// </summary>
     internal static BO.CallInList CreateCallInList(DO.Call call, IEnumerable<DO.Assignment> assignments, Dictionary<int, string> volunteers)
     {
         var callAssignments = assignments.Where(a => a.CallId == call.Id).OrderByDescending(a => a.EntryTime).ToList();
@@ -169,9 +150,6 @@ internal static class CallManager
             throw new BO.BlInvalidInputException("This treatment has already been completed or cancelled.");
         }
     }
-    /// <summary>
-    /// Creates a list of closed calls based on the call and assignment data.
-    /// </summary>
     public static IEnumerable<BO.ClosedCallInList> CreateClosedCallList(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments)
     {
         return calls.Select(call =>
@@ -189,9 +167,7 @@ internal static class CallManager
             };
         });
     }
-    /// <summary>
-    /// Performs periodic updates for open calls based on time progression.
-    /// </summary>
+
     public static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)
     {
         try
@@ -217,9 +193,6 @@ internal static class CallManager
         {
         }
     }
-    /// <summary>
-    /// Sends an email notification to nearby volunteers when a call is opened.
-    /// </summary>
     internal static void SendEmailWhenCalOpened(BO.Call call)
     {
         var volunteer = _dal.Volunteer.ReadAll();
@@ -231,51 +204,48 @@ internal static class CallManager
             {
                 string subject = "Openning call";
                 string body = $@"
-        Hello {item.Name},
+      Hello {item.Name},
 
-       A new call has been opened in your area.
-        Call Details:
-        - Call ID: {call.Id}
-        - Call Type: {call.Type}
-        - Call Address: {call.Address}
-        - Opening Time: {call.OpeningTime}
-        - Description: {call.Description}
-        - Entry Time for Treatment: {call.MaxEndTime}
-        -call Status:{call.Status}
+     A new call has been opened in your area.
+      Call Details:
+      - Call ID: {call.Id}
+      - Call Type: {call.Type}
+      - Call Address: {call.Address}
+      - Opening Time: {call.OpeningTime}
+      - Description: {call.Description}
+      - Entry Time for Treatment: {call.MaxEndTime}
+      -call Status:{call.Status}
 
-        If you wish to handle this call, please log into the system.
+      If you wish to handle this call, please log into the system.
 
-        Best regards,  
-       Call Management System";
+      Best regards,  
+     Call Management System";
 
                 Tools.SendEmail(item.Email, subject, body);
             }
 
         }
     }
-    /// <summary>
-    /// Sends an email to a volunteer when their assignment is canceled.
-    /// </summary>
     internal static void SendEmailToVolunteer(DO.Volunteer volunteer, DO.Assignment assignment)
     {
         var call = _dal.Call.Read(assignment.CallId)!;
 
         string subject = "Assignment Canceled";
         string body = $@"
-        Hello {volunteer.Name},
+      Hello {volunteer.Name},
 
-        Your assignment for handling call {assignment.Id} has been canceled by the administrator.
+      Your assignment for handling call {assignment.Id} has been canceled by the administrator.
 
-        Call Details:
-        - Call ID: {assignment.CallId}
-        - Call Type: {call.TypeOfReading}
-        - Call Address: {call.Adress}
-        - Opening Time: {call.TimeOfOpen}
-        - Description: {call.Description}
-        - Entry Time for Treatment: {assignment.EntryTime}
+      Call Details:
+      - Call ID: {assignment.CallId}
+      - Call Type: {call.TypeOfReading}
+      - Call Address: {call.Adress}
+      - Opening Time: {call.TimeOfOpen}
+      - Description: {call.Description}
+      - Entry Time for Treatment: {assignment.EntryTime}
 
-        Best regards,  
-        Call Management System";
+      Best regards,  
+      Call Management System";
 
         Tools.SendEmail(volunteer.Email, subject, body);
     }
