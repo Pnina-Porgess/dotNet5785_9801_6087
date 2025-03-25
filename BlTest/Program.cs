@@ -420,7 +420,7 @@ internal class Program
     private static void AddCall()
     {
         Console.Write($"Enter new type 1 for Regular, 2 for Emergency, 3 for HighPriority: ");
-        CallType newType = (CallType)int.Parse(Console.ReadLine()!);
+         BO.TypeOfReading newType = (BO.TypeOfReading)int.Parse(Console.ReadLine()!);
         Console.Write($"Enter new Description: ");
         string? Description = Console.ReadLine() ?? null;
         Console.Write($"Enter new Address: ");
@@ -458,7 +458,7 @@ internal class Program
 
         Console.Write($"Enter new type (1 - Regular, 2 - Emergency, 3 - HighPriority), current: {existingCall.Type} (press Enter to keep current): ");
         string input = Console.ReadLine()!;
-        existingCall.Type = (string.IsNullOrEmpty(input)) ? existingCall.Type : (CallType)int.Parse(input);
+        existingCall.Type = (string.IsNullOrEmpty(input)) ? existingCall.Type : (BO.TypeOfReading)int.Parse(input);
 
 
         Console.Write($"Enter new Description (current: {existingCall.Description}, press Enter to keep current): ");
@@ -502,13 +502,13 @@ internal class Program
             {
                 case BO.CallField.CallType:
                     Console.WriteLine("Choose call type:");
-                    foreach (var type in Enum.GetValues(typeof(BO.CallType)))
+                    foreach (var type in Enum.GetValues(typeof(BO.TypeOfReading)))
                     {
                         Console.WriteLine($"{(int)type}: {type}");
                     }
-                    if (int.TryParse(Console.ReadLine(), out int typeInput) && Enum.IsDefined(typeof(BO.CallType), typeInput))
+                    if (int.TryParse(Console.ReadLine(), out int typeInput) && Enum.IsDefined(typeof(BO.TypeOfReading), typeInput))
                     {
-                        filterValue = (BO.CallType)typeInput;
+                        filterValue = (BO.TypeOfReading)typeInput;
                     }
                     break;
 
@@ -659,7 +659,7 @@ internal class Program
             BO.TypeOfReading? filterType = null;
             if (int.TryParse(Console.ReadLine(), out int typeFilter) && typeFilter > 0 && typeFilter <= 3)
                 filterType = (BO.TypeOfReading)typeFilter;
-            Console.WriteLine("Sort by call type? (0: Status, 1: OpeningTime, 2: MaxEndTime , 3: Address):");
+            Console.WriteLine("Sort by call type? (0: ID, 1: CallType, 2: FullAddress , 3: OpenTime, 4:AssignmentEntryTime, 5:ActualEndTime, 6:EndType):");
             BO.ClosedCallField? CallFieldType = null;
             if (int.TryParse(Console.ReadLine(), out int CallField) && CallField > 0 && CallField <= 3)
                 CallFieldType = (BO.ClosedCallField)CallField;

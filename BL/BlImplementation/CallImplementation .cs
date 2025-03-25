@@ -1,5 +1,6 @@
 ﻿
 using BlApi;
+using BO;
 using Helpers;
 
 namespace BlImplementation
@@ -95,7 +96,7 @@ namespace BlImplementation
             return new BO.Call
             {
                 Id = dalCall.Id,
-                Type = (BO.CallType)dalCall.TypeOfReading,
+                Type = (BO.TypeOfReading)dalCall.TypeOfReading,
                 Description = dalCall.Description,
                 Address = dalCall.Adress,
                 Latitude = dalCall.Latitude,
@@ -120,7 +121,19 @@ namespace BlImplementation
                     callList = CallManager.FilterCall(callList, filterField.Value, filterValue);
                 }
 
-                return CallManager.SortCalls(callList, sortField ?? BO.CallField.CallId).ToList();
+                return sortField switch
+                {
+                    CallField.AssignmentId => callList.OrderBy(c => c.AssignmentId),
+                    CallField.CallId => callList.OrderBy(c => c.CallId),
+                    CallField.CallType => callList.OrderBy(c => c.CallType),
+                    CallField.OpeningTime => callList.OrderBy(c => c.OpeningTime),
+                    CallField.RemainingTime => callList.OrderBy(c => c.RemainingTime),
+                    CallField.LastVolunteerName => callList.OrderBy(c => c.LastVolunteerName),
+                    CallField.CompletionTime => callList.OrderBy(c => c.CompletionTime),
+                    CallField.CallStatus => callList.OrderBy(c => c.CallStatus),
+                    CallField.TotalAssignments => callList.OrderBy(c => c.TotalAssignments),
+                    _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
+                };
             }
             catch (Exception ex)
             {
@@ -305,11 +318,21 @@ namespace BlImplementation
                 var closedCalls = CallManager.CreateClosedCallList(calls, assignments);
                 if (filterType.HasValue)
                 {
-                    closedCalls= closedCalls.Where(c => c.CallType == filterType.Value);
+                    closedCalls = closedCalls.Where(c => (BO.TypeOfReading)c.CallType == filterType.Value);
                 }
 
-                return CallManager.SortClosedCalls( closedCalls, sortField ?? BO.ClosedCallField.Id);
+                return sortField switch
+                {
+                    ClosedCallField.CallType => closedCalls.OrderBy(c => c.CallType),
+                    ClosedCallField.FullAddress => closedCalls.OrderBy(c => c.FullAddress),
+                    ClosedCallField.OpenTime => closedCalls.OrderBy(c => c.OpenTime),
+                    ClosedCallField.AssignmentEntryTime => closedCalls.OrderBy(c => c.AssignmentEntryTime),
+                    ClosedCallField.ActualEndTime => closedCalls.OrderBy(c => c.ActualEndTime),
+                    ClosedCallField.EndType => closedCalls.OrderBy(c => c.EndType),
+                    _ =>closedCalls.OrderBy(c => c.Id)
+                };
             }
+           
             catch (DO.DalDoesNotExistException ex)
             {
                 throw new BO.BlNotFoundException($"Could not find data for volunteer {volunteerId}", ex);
@@ -340,7 +363,17 @@ namespace BlImplementation
                         DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!,volunteer.Longitude!, c.Latitude, c.Longitude)
                     });
 
-                return CallManager.SortOpenCalls(openCalls, sortField ?? BO.OpenCallField.Id);
+                return sortField switch
+                {
+                    OpenCallField.Id => openCalls.OrderBy(c => c.Id),
+                    OpenCallField.Type => openCalls.OrderBy(c => c.Type),
+                    OpenCallField.Description => openCalls.OrderBy(c => c.Description),
+                    OpenCallField.FullAddress => openCalls.OrderBy(c => c.FullAddress),
+                    OpenCallField.OpenTime => openCalls.OrderBy(c => c.OpenTime),
+                    OpenCallField.MaxEndTime => openCalls.OrderBy(c => c.MaxEndTime),
+                    OpenCallField.DistanceFromVolunteer => openCalls.OrderBy(c => c.DistanceFromVolunteer),
+                    _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
+                };
 
             }
          

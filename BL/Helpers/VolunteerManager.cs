@@ -42,8 +42,8 @@ internal static class VolunteerManager
                   TotalExpiredCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.CancellationHasExpired),  // חישוב מספר השיחות שזמן ההגשה שלהן פג
                   CurrentCallId = assignedResponseId,  // אם יש קריאה בשטח, נרצה להחזיר את מזהה הקריאה
                   CurrentCallType = (BO.TypeOfReading)(assignedResponseId.HasValue
-                        ? (BO.CallType)(s_dal.Call.Read(assignedResponseId.Value)?.TypeOfReading)
-                        : BO.CallType.None) // אם אין קריאה, נחזיר None
+                        ? (BO.TypeOfReading)(s_dal.Call.Read(assignedResponseId.Value)?.TypeOfReading)
+                        : BO.TypeOfReading.None) // אם אין קריאה, נחזיר None
               };
           }).ToList();
        return volunteerInList;

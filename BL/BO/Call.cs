@@ -10,7 +10,7 @@ namespace BO
     {
 
         public int Id { get; init; }// Unique identifier for the call.
-        public CallType Type { get; set; }// Type of the call (enumeration).
+        public TypeOfReading Type { get; set; }// Type of the call (enumeration).
         public string? Description { get; set; }// Textual description of the call.
         public string Address { get; set; }// Full address of the call.
         public double Latitude { get; set; }// Latitude coordinate of the address.
