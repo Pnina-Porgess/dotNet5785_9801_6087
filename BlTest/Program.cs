@@ -95,9 +95,9 @@ internal class Program
             }
         }
     }
-
-   
-
+    /// <summary>
+    /// Displays the volunteer main menu and allows performing volunteer management operations.
+    /// </summary>
     private static void VolunteerMainMenu()
     {
         VolunteerMenu choice;
@@ -139,6 +139,9 @@ internal class Program
             }
         } while (choice != VolunteerMenu.Logout);
     }
+    /// <summary>
+    /// Displays the call management menu and allows performing various call-related operations.
+    /// </summary>
     private static void CallMainMenu()
     {
         CallMenu choice;
@@ -202,6 +205,9 @@ internal class Program
             }
         } while (choice != CallMenu.Back);
     }
+    /// <summary>
+    /// Displays the admin main menu and allows performing system management operations.
+    /// </summary>
     private static void AdminMainMenu()
     {
         AdminFunctions choice;
@@ -277,6 +283,9 @@ internal class Program
 
         } while (choice != AdminFunctions.Logout);
     }
+    /// <summary>
+    /// Adds a new volunteer to the system based on user input.
+    /// </summary>
 
     private static void AddVolunteer()
     {
@@ -320,6 +329,10 @@ internal class Program
         Console.WriteLine("Volunteer added successfully");
     }
 
+    /// <summary>
+    /// Deletes a volunteer from the system based on the provided volunteer ID.
+    /// </summary>
+
     private static void DeleteVolunteer()
     {
         Console.Write("Enter volunteer ID to delete: ");
@@ -327,7 +340,9 @@ internal class Program
         s_bl.Volunteer.DeleteVolunteer(volunteerId);
         Console.WriteLine("Volunteer deleted successfully");
     }
-
+    /// <summary>
+    /// Handles the login process for a volunteer using a username and password.
+    /// </summary>
     private static void Login()
     {
         while (true)
@@ -346,7 +361,9 @@ internal class Program
             break;
         }
     }
-
+    /// <summary>
+    /// Retrieves and displays the details of a volunteer based on the provided ID.
+    /// </summary>
     private static void GetVolunteerDetails()
     {
         Console.Write("Enter volunteer ID number: ");
@@ -354,7 +371,9 @@ internal class Program
         var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(id);
         Console.WriteLine(volunteerDetails);
     }
-
+    /// <summary>
+    /// Updates the details of an existing volunteer, allowing the user to keep existing values if no new input is provided.
+    /// </summary>
     private static void UpdateVolunteerDetails()
     {
         int updateId;
@@ -363,8 +382,6 @@ internal class Program
         {
             Console.Write("id: ");
             updateId = int.TryParse(Console.ReadLine() ?? "", out int na) ? na : 0;
-            Console.Write("Username: ");
-            string? username = Console.ReadLine();
             Console.Write("Password: ");
             Password = Console.ReadLine();
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(Password))
@@ -400,7 +417,9 @@ internal class Program
         s_bl.Volunteer.UpdateVolunteerDetails(updateId, existingVolunteer);
         Console.WriteLine("Volunteer updated successfully");
     }
-
+    /// <summary>
+    /// Retrieves and displays a list of volunteers, with optional filtering by activity status and sorting preference.
+    /// </summary>
     private static void GetVolunteersList()
     {
         Console.Write("Enter true to show active, false for inactive, or any other value to show all: ");
@@ -422,7 +441,9 @@ internal class Program
             Console.WriteLine("------------------------------");
         }
     }
-
+    /// <summary>
+    /// Adds a new call to the system based on user input.
+    /// </summary>
     private static void AddCall()
     {
         Console.Write($"Enter new type 1 for Regular, 2 for Emergency, 3 for HighPriority: ");
@@ -442,7 +463,9 @@ internal class Program
         Console.WriteLine("Add call successfully");
 
     }
-
+    /// <summary>
+    /// Deletes a call from the system based on the provided call ID.
+    /// </summary>
     private static void DeleteCall()
     {
         Console.Write("Enter Call ID to delete: ");
@@ -450,7 +473,9 @@ internal class Program
         s_bl.Call.DeleteCall(CallId);
         Console.WriteLine("Delete call successfully");
     }
-
+    /// <summary>
+    /// Updates an existing call's details, allowing the user to modify or keep existing values.
+    /// </summary>
     private static void UpdateCall()
     {
 
@@ -488,6 +513,9 @@ internal class Program
 
         Console.WriteLine("Call updated successfully.");
     }
+    /// <summary>
+    /// Retrieves and displays a list of calls, with optional filtering and sorting.
+    /// </summary>
     private static void GetCalls()
     { // Step 1: Ask for filter field
         Console.WriteLine("Choose a field to filter by:");
@@ -617,14 +645,18 @@ internal class Program
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
-
+    /// <summary>
+    /// Retrieves and displays details of a specific call based on the provided call ID.
+    /// </summary>
     private static void GetCallDetails()
     {
         Console.Write("Enter call ID to get details: ");
         int CallIdToGetDetaails = int.TryParse(Console.ReadLine() ?? "", out int d) ? d : 0;
         Console.Write(s_bl.Call.GetCallDetails(CallIdToGetDetaails));
     }
-
+    /// <summary>
+    /// Retrieves and displays the number of calls grouped by status.
+    /// </summary>
     private static void GetCallCountsByStatus()
     {
         string[] statusNames = Enum.GetNames(typeof(CallStatus));
@@ -632,7 +664,9 @@ internal class Program
         for (int j = 0; j < counts.Length; j++)
             Console.WriteLine($"{statusNames[j]}: {counts[j]}");
     }
-
+    /// <summary>
+    /// Cancels a volunteer's treatment of a specific call based on the provided volunteer and assignment ID.
+    /// </summary>
     private static void CancelCallTreatment()
     {
         Console.Write($"Enter volunteer ID to update assignment: ");
@@ -644,7 +678,9 @@ internal class Program
 
 
     }
-
+    /// <summary>
+    /// Marks a call treatment as completed by a volunteer based on the provided assignment ID.
+    /// </summary>
     private static void CompleteCallTreatment()
     {
         Console.Write($"Enter volunteer ID to update assignment: ");
@@ -655,7 +691,9 @@ internal class Program
         Console.WriteLine("Complete Call successfully.");
 
     }
-
+    /// <summary>
+    /// Retrieves and displays a list of closed calls assigned to a specific volunteer, with optional filtering.
+    /// </summary>
     private static void GetClosedCallsByVolunteer()
     {
         Console.Write("Enter volunteer ID: ");
@@ -683,7 +721,9 @@ internal class Program
             }
         }
     }
-
+    /// <summary>
+    /// Retrieves and displays a list of open calls available for a specific volunteer, with optional filtering.
+    /// </summary
     private static void GetOpenCallsForVolunteer()
     {
         Console.Write("Enter volunteer ID: ");
@@ -711,7 +751,9 @@ internal class Program
             }
         }
     }
-
+    /// <summary>
+    /// Assigns a volunteer to a specific call for treatment.
+    /// </summary>
     private static void SelectCallForTreatment()
     {
         Console.Write("To create a connection between volunteer and reading: ");
@@ -722,7 +764,11 @@ internal class Program
         s_bl.Call.SelectCallForTreatment(volunteer, call);
         Console.WriteLine("The call was successfully assigned.");
     }
-
+    /// <summary>
+    /// Prompts the user for an enum value and ensures it is valid.
+    /// </summary>
+    /// <param name="enumType">The enum type to validate the input against.</param>
+    /// <returns>The selected enum value as an integer.</returns>
     private static int GetEnumValue(Type enumType)
     {
         while (true)

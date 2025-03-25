@@ -15,8 +15,8 @@ internal static class CallManager
         //    throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
         if ((call.Type != BO.TypeOfReading.None) && (call.Type != BO.TypeOfReading.EngineFailure) && (call.Type != BO.TypeOfReading.DeadBattery) && (call.Type != BO.TypeOfReading.FlatTire))
             throw new BO.BlInvalidInputException(@"Invalid CallType format. PCallType must be None\\Regular\\Emergency\\HighPriority.");
-        //if (call.Description?.Length < 2)
-        //    throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
+        if (call.Description?.Length < 2)
+           throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
     }
     internal static (double Latitude, double Longitude) logicalChecking(BO.Call call)
     {
@@ -188,6 +188,7 @@ internal static class CallManager
 
         catch (BO.BlInvalidInputException e)
         {
+            Console.WriteLine($"Error updating periodic calls: {e.Message}"); // Logging error
         }
     }
     internal static void SendEmailWhenCalOpened(BO.Call call)
@@ -195,9 +196,8 @@ internal static class CallManager
         var volunteer = _dal.Volunteer.ReadAll();
         foreach (var item in volunteer)
         {
-            if (item.MaximumDistance == null)
-            { break; }
-            else if (item.MaximumDistance >= Tools.CalculateDistance(item.Latitude!, item.Longitude!, call.Latitude, call.Longitude))
+     
+         if (item.MaximumDistance >= Tools.CalculateDistance(item.Latitude!, item.Longitude!, call.Latitude, call.Longitude))
             {
                 string subject = "Openning call";
                 string body = $@"

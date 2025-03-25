@@ -44,7 +44,7 @@ internal static class VolunteerManager
             throw new BO.BlDatabaseException("An error occurred while retrieving closed calls", ex);
         }
 
-        return volunteerInList;
+     
     }
 
     /// <summary>
@@ -89,8 +89,8 @@ internal static class VolunteerManager
         if (boVolunteer.FullName.Length < 2)
             throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
 
-        if (boVolunteer?.Password?.Length < 6 || !VolunteerManager.IsPasswordStrong(boVolunteer?.Password!))
-            throw new BO.BlInvalidInputException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
+        //if (boVolunteer?.Password?.Length < 6 || !VolunteerManager.IsPasswordStrong(boVolunteer?.Password!))
+        //    throw new BO.BlInvalidInputException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
     }
 
     /// <summary>
