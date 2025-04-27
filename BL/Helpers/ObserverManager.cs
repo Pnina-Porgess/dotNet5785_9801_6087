@@ -84,6 +84,4 @@ class ObserverManager //stage 5
     }
 
 }
-apps-fileview.texmex_20250417.00_p2
-ObserverManager.cs
-המערכת מציגה את ObserverManager.cs.
+
