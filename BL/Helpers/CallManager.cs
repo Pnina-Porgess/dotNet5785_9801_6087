@@ -1,4 +1,3 @@
-
 using DalApi;
 using Helpers;
 
@@ -259,8 +258,8 @@ internal static class CallManager
         var volunteer = _dal.Volunteer.ReadAll();
         foreach (var item in volunteer)
         {
-     
-         if (item.MaximumDistance >= Tools.CalculateDistance(item.Latitude!, item.Longitude!, call.Latitude, call.Longitude))
+
+            if (item.MaximumDistance >= Tools.CalculateDistance(item.Latitude!, item.Longitude!, call.Latitude, call.Longitude))
             {
                 string subject = "Openning call";
                 string body = $@"

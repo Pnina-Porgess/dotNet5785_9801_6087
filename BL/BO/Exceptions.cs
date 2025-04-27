@@ -76,42 +76,15 @@ public class BlConfigException : Exception
     public BlConfigException(string message) : base(message) { }
     public BlConfigException(string message, Exception innerException) : base(message, innerException) { }
 }
-/// <summary>
-/// Exception thrown when the provided address is invalid
-/// </summary>
-[Serializable]
-public class InvalidAddressException : Exception
-{
-    public InvalidAddressException(string message) : base(message) { }
-    public InvalidAddressException(string message, Exception innerException) : base(message, innerException) { }
-}
+
+
 
 /// <summary>
-/// Exception thrown when geolocation coordinates are not found for the given address
+/// General exception in the Bl.
 /// </summary>
 [Serializable]
-public class BlGeolocationNotFoundException : Exception
+public class BlGeneralException : Exception
 {
-    public BlGeolocationNotFoundException(string message) : base(message) { }
-    public BlGeolocationNotFoundException(string message, Exception innerException) : base(message, innerException) { }
-}
-
-/// <summary>
-/// Exception thrown when there is an error in API request
-/// </summary>
-[Serializable]
-public class BlApiRequestException : Exception
-{
-    public BlApiRequestException(string message) : base(message) { }
-    public BlApiRequestException(string message, Exception innerException) : base(message, innerException) { }
-}
-
-/// <summary>
-/// Exception thrown when there is an error in distance calculation between points
-/// </summary>
-[Serializable]
-public class DistanceCalculationException : Exception
-{
-    public DistanceCalculationException(string message) : base(message) { }
-    public DistanceCalculationException(string message, Exception innerException) : base(message, innerException) { }
+    public BlGeneralException(string message) : base(message) { }
+    public BlGeneralException(string message, Exception innerException) : base(message, innerException) { }
 }

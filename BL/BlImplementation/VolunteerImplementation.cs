@@ -25,8 +25,8 @@ internal class VolunteerImplementation : IVolunteer
             }
 
             VolunteerManager.ValidateInputFormat(volunteer);
-             (volunteer.Latitude, volunteer.Longitude) = Tools.GetCoordinatesFromAddress(volunteer.CurrentAddress!);
-            DO.Volunteer doVolunteer =( VolunteerManager.CreateDoVolunteer(volunteer));
+            (volunteer.Latitude, volunteer.Longitude) = Tools.GetCoordinatesFromAddress(volunteer.CurrentAddress!);
+            DO.Volunteer doVolunteer = (VolunteerManager.CreateDoVolunteer(volunteer));
             _dal.Volunteer.Create(doVolunteer);
         }
         catch (Exception ex)
@@ -191,8 +191,8 @@ internal class VolunteerImplementation : IVolunteer
     /// <param name="sortBy">Sorting criteria.</param>
     /// <returns>A sorted and filtered list of volunteers.</returns>
     /// <exception cref="BO.BlDatabaseException">Thrown if an error occurs while accessing data.</exception>
-   
-        public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null)
+
+    public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null)
     {
 
         try

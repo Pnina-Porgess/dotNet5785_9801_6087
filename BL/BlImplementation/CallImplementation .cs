@@ -1,5 +1,5 @@
-﻿
-using BlApi;
+﻿using BlApi;
+using BO;
 using Helpers;
 
 namespace BlImplementation
@@ -7,10 +7,6 @@ namespace BlImplementation
     public class CallImplementation : ICall
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
-        /// <summary>
-        /// Adds a new call to the system.
-        /// </summary>
-        /// <param name="call">The call object to add.</param>
         public void AddCall(BO.Call newCall)
         {
             CallManager.ValidateInputFormat(newCall);
@@ -21,10 +17,7 @@ namespace BlImplementation
             _dal.Call.Create(call);
             CallManager.SendEmailWhenCalOpened(newCall);
         }
-        /// <summary>
-        /// Updates the details of an existing call.
-        /// </summary>
-        /// <param name="call">The call object containing the updated information.</param>
+
         public void UpdateCall(BO.Call call)
         {
             try
@@ -45,10 +38,7 @@ namespace BlImplementation
                 throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
-        /// <summary>
-        /// Deletes a specific call by its ID.
-        /// </summary>
-        /// <param name="callId">The ID of the call to delete.</param>
+
         public void DeleteCall(int callId)
         {
             try
@@ -70,11 +60,7 @@ namespace BlImplementation
                 throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
-        /// <summary>
-        /// Gets the details of a specific call by its ID.
-        /// </summary>
-        /// <param name="callId">The ID of the call to retrieve details for.</param>
-        /// <returns>The detailed information of the specified call.</returns>
+
         public BO.Call GetCallDetails(int callId)
         {
             // Get call from DAL
@@ -119,13 +105,7 @@ namespace BlImplementation
                 Assignments = assignmentsList
             };
         }
-        /// <summary>
-        /// Gets a list of calls based on a specific filter and sorting criteria.
-        /// </summary>
-        /// <param name="filterField">The field to filter the calls by (e.g., call status, date).</param>
-        /// <param name="filterValue">The value to filter the calls by (e.g., a specific status or date).</param>
-        /// <param name="sortField">The field to sort the calls by (e.g., call date, priority).</param>
-        /// <returns>An enumerable list of calls that match the filter and sort criteria.</returns>
+
         public IEnumerable<BO.CallInList> GetCalls(BO.CallField? filterField = null, object? filterValue = null, BO.CallField? sortField = null)
         {
             try
@@ -137,20 +117,20 @@ namespace BlImplementation
 
                 if (filterField.HasValue && filterValue != null)
                 {
-                    callList = callList.Where(c =>c.GetType().GetProperty(filterField.ToString()!)?.GetValue(c)?.Equals(filterValue)==true);
+                    callList = callList.Where(c => c.GetType().GetProperty(filterField.ToString()!)?.GetValue(c)?.Equals(filterValue) == true);
                 }
-          
+
                 return sortField switch
                 {
-                    BO.CallField.AssignmentId => callList.OrderBy(c => c.AssignmentId),
-                    BO.CallField.CallId => callList.OrderBy(c => c.CallId),
-                    BO.CallField.CallType => callList.OrderBy(c => c.CallType),
-                    BO.CallField.OpeningTime => callList.OrderBy(c => c.OpeningTime),
-                    BO.CallField.RemainingTime => callList.OrderBy(c => c.RemainingTime),
-                    BO.CallField.LastVolunteerName => callList.OrderBy(c => c.LastVolunteerName),
-                    BO.CallField.CompletionTime => callList.OrderBy(c => c.CompletionTime),
-                    BO.CallField.CallStatus => callList.OrderBy(c => c.CallStatus),
-                    BO.CallField.TotalAssignments => callList.OrderBy(c => c.TotalAssignments),
+                    CallField.AssignmentId => callList.OrderBy(c => c.AssignmentId),
+                    CallField.CallId => callList.OrderBy(c => c.CallId),
+                    CallField.CallType => callList.OrderBy(c => c.CallType),
+                    CallField.OpeningTime => callList.OrderBy(c => c.OpeningTime),
+                    CallField.RemainingTime => callList.OrderBy(c => c.RemainingTime),
+                    CallField.LastVolunteerName => callList.OrderBy(c => c.LastVolunteerName),
+                    CallField.CompletionTime => callList.OrderBy(c => c.CompletionTime),
+                    CallField.CallStatus => callList.OrderBy(c => c.CallStatus),
+                    CallField.TotalAssignments => callList.OrderBy(c => c.TotalAssignments),
                     _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
                 };
             }
@@ -159,10 +139,7 @@ namespace BlImplementation
                 throw new BO.BlNotFoundException("Error retrieving calls list", ex);
             }
         }
-        /// <summary>
-        /// Gets the count of calls grouped by their status.
-        /// </summary>
-        /// <returns>An array where each element represents the count of calls for a specific status.</returns>
+
         public int[] GetCallCountsByStatus()
         {
             try
@@ -200,11 +177,7 @@ namespace BlImplementation
                 throw new BO.BlDatabaseException("An unexpected error occurred while calculating call quantities", ex);
             }
         }
-        /// <summary>
-        /// Marks the treatment for a call as completed.
-        /// </summary>
-        /// <param name="volunteerId">The ID of the volunteer completing the treatment.</param>
-        /// <param name="assignmentId">The ID of the assignment related to the call.</param>
+
         public void CompleteCallTreatment(int volunteerId, int assignmentId)
         {
             try
@@ -233,11 +206,7 @@ namespace BlImplementation
                 throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
-        /// <summary>
-        /// Cancels the treatment for a call.
-        /// </summary>
-        /// <param name="requesterId">The ID of the person requesting the cancellation.</param>
-        /// <param name="assignmentId">The ID of the assignment related to the call.</param>
+
         public void CancelCallTreatment(int requesterId, int assignmentId)
         {
             try
@@ -282,18 +251,14 @@ namespace BlImplementation
                 _dal.Assignment.Update(updatedAssignment);
                 CallManager.SendEmailToVolunteer(volunteer!, assignment);
             }
-           
+
             catch (Exception ex)
             {
                 // טיפול בחריגות כלליות
                 throw new BO.BlInvalidInputException($"An unexpected error occurred: {ex.Message}", ex);
             }
         }
-        /// <summary>
-        /// Assigns a volunteer to handle a specific call.
-        /// </summary>
-        /// <param name="volunteerId">The ID of the volunteer to assign to the call.</param>
-        /// <param name="callId">The ID of the call to assign to the volunteer.</param>
+
         public void SelectCallForTreatment(int volunteerId, int callId)
         {
             try
@@ -336,19 +301,13 @@ namespace BlImplementation
                 throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
-        /// <summary>
-        /// Gets a list of closed calls handled by a specific volunteer.
-        /// </summary>
-        /// <param name="volunteerId">The ID of the volunteer whose closed calls are to be retrieved.</param>
-        /// <param name="filterStatus">Optional filter for the status of the calls (e.g., completed, canceled).</param>
-        /// <param name="sortField">Optional sorting field for the closed calls list.</param>
-        /// <returns>An enumerable list of closed calls handled by the volunteer.</returns>
-        public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId,  BO.TypeOfReading? filterType = null, BO.ClosedCallField? sortField = null)
+
+        public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, BO.TypeOfReading? filterType = null, BO.ClosedCallField? sortField = null)
         {
-           try
+            try
             {
                 // Get all assignments for this volunteer
-                var assignments = _dal.Assignment.ReadAll(a =>a.VolunteerId == volunteerId &&a.EndTime != null);  // Only closed calls
+                var assignments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.EndTime != null);  // Only closed calls
 
                 // Get all calls associated with these assignments
                 var callIds = assignments.Select(a => a.CallId).Distinct();
@@ -363,16 +322,16 @@ namespace BlImplementation
 
                 return sortField switch
                 {
-                    BO.ClosedCallField.CallType => closedCalls.OrderBy(c => c.CallType),
-                    BO.ClosedCallField.FullAddress => closedCalls.OrderBy(c => c.FullAddress),
-                    BO.ClosedCallField.OpenTime => closedCalls.OrderBy(c => c.OpenTime),
-                    BO.ClosedCallField.AssignmentEntryTime => closedCalls.OrderBy(c => c.AssignmentEntryTime),
-                    BO.ClosedCallField.ActualEndTime => closedCalls.OrderBy(c => c.ActualEndTime.GetValueOrDefault(DateTime.MinValue)),
-                    BO.ClosedCallField.EndType => closedCalls.OrderBy(c => c.EndType),
-                    _ =>closedCalls.OrderBy(c => c.Id)
+                    ClosedCallField.CallType => closedCalls.OrderBy(c => c.CallType),
+                    ClosedCallField.FullAddress => closedCalls.OrderBy(c => c.FullAddress),
+                    ClosedCallField.OpenTime => closedCalls.OrderBy(c => c.OpenTime),
+                    ClosedCallField.AssignmentEntryTime => closedCalls.OrderBy(c => c.AssignmentEntryTime),
+                    ClosedCallField.ActualEndTime => closedCalls.OrderBy(c => c.ActualEndTime.GetValueOrDefault(DateTime.MinValue)),
+                    ClosedCallField.EndType => closedCalls.OrderBy(c => c.EndType),
+                    _ => closedCalls.OrderBy(c => c.Id)
                 };
             }
-           
+
             catch (DO.DalDoesNotExistException ex)
             {
                 throw new BO.BlNotFoundException($"Could not find data for volunteer {volunteerId}", ex);
@@ -382,13 +341,7 @@ namespace BlImplementation
                 throw new BO.BlDatabaseException("An error occurred while retrieving closed calls", ex);
             }
         }
-        /// <summary>
-        /// Gets a list of open calls available for a volunteer to handle.
-        /// </summary>
-        /// <param name="volunteerId">The ID of the volunteer.</param>
-        /// <param name="filterStatus">Optional filter for the status of the open calls.</param>
-        /// <param name="sortField">Optional sorting field for the open calls list.</param>
-        /// <returns>An enumerable list of open calls available for the volunteer to choose from.</returns>
+
         public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallStatus? filterStatus, BO.OpenCallField? sortField)
         {
             try
@@ -406,24 +359,24 @@ namespace BlImplementation
                         FullAddress = c.Adress, // כתובת הקריאה
                         OpenTime = c.TimeOfOpen, // זמן פתיחת הקריאה
                         MaxEndTime = c.MaxTimeToFinish, // זמן סיום משוער
-                        DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!,volunteer.Longitude!, c.Latitude, c.Longitude)
+                        DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!, volunteer.Longitude!, c.Latitude, c.Longitude)
                     });
 
                 return sortField switch
                 {
-                    BO.OpenCallField.Id => openCalls.OrderBy(c => c.Id),
-                    BO.OpenCallField.Type => openCalls.OrderBy(c => c.Type),
-                    BO.OpenCallField.Description => openCalls.OrderBy(c => c.Description),
-                    BO.OpenCallField.FullAddress => openCalls.OrderBy(c => c.FullAddress),
-                    BO.OpenCallField.OpenTime => openCalls.OrderBy(c => c.OpenTime),
-                    BO.OpenCallField.MaxEndTime => openCalls.OrderBy(c => c.MaxEndTime),
-                    BO.OpenCallField.DistanceFromVolunteer => openCalls.OrderBy(c => c.DistanceFromVolunteer),
+                    OpenCallField.Id => openCalls.OrderBy(c => c.Id),
+                    OpenCallField.Type => openCalls.OrderBy(c => c.Type),
+                    OpenCallField.Description => openCalls.OrderBy(c => c.Description),
+                    OpenCallField.FullAddress => openCalls.OrderBy(c => c.FullAddress),
+                    OpenCallField.OpenTime => openCalls.OrderBy(c => c.OpenTime),
+                    OpenCallField.MaxEndTime => openCalls.OrderBy(c => c.MaxEndTime),
+                    OpenCallField.DistanceFromVolunteer => openCalls.OrderBy(c => c.DistanceFromVolunteer),
                     _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
                 };
 
             }
-         
-        
+
+
             catch (DO.DalDoesNotExistException ex)
             {
                 throw new BO.BlNotFoundException($"Could not find data for volunteer {volunteerId}", ex);
@@ -435,6 +388,6 @@ namespace BlImplementation
 
         }
 
-      
+
     }
 }

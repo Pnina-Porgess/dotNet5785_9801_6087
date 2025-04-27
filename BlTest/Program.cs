@@ -1,16 +1,14 @@
-﻿
-
-namespace BlTest;
+﻿namespace BlTest;
 
 internal class Program
 {
-   
+
     private enum MainMenu
     {
-      LogOut,
-      ManageVolunteers,
-      ManageCalls,
-      Admin
+        LogOut,
+        ManageVolunteers,
+        ManageCalls,
+        Admin
     }
     private enum VolunteerMenu
     {
@@ -22,7 +20,7 @@ internal class Program
         UpdateVolunteerDetails,
         GetVolunteersList
     }
-    
+
     enum AdminFunctions
     {
         Logout,
@@ -60,7 +58,7 @@ internal class Program
             try
             {
                 // Initial login screen
-               
+
                 Console.WriteLine("Welcome to Volunteer Management System");
                 Console.WriteLine("====================================");
                 Console.WriteLine("Please press:\n 0 to log out\n 1 for the volunteer \n 2 for the calls \n 3 for admin \n");
@@ -444,7 +442,7 @@ internal class Program
     private static void AddCall()
     {
         Console.Write($"Enter new type 1 for Regular, 2 for Emergency, 3 for HighPriority: ");
-         BO.TypeOfReading newType = (BO.TypeOfReading)int.Parse(Console.ReadLine()!);
+        BO.TypeOfReading newType = (BO.TypeOfReading)int.Parse(Console.ReadLine()!);
         Console.Write($"Enter new Description: ");
         string? Description = Console.ReadLine() ?? null;
         Console.Write($"Enter new Address: ");
@@ -491,11 +489,11 @@ internal class Program
 
         Console.Write($"Enter new Description (current: {existingCall.Description}, press Enter to keep current): ");
         input = Console.ReadLine()!;
-         existingCall.Description =(string.IsNullOrEmpty(input))? existingCall.Description: input;
+        existingCall.Description = (string.IsNullOrEmpty(input)) ? existingCall.Description : input;
 
         Console.Write($"Enter new Address (current: {existingCall.Address}, press Enter to keep current): ");
         input = Console.ReadLine()!;
-        existingCall.Address =(string.IsNullOrEmpty(input))? existingCall.Address: input;
+        existingCall.Address = (string.IsNullOrEmpty(input)) ? existingCall.Address : input;
 
         Console.Write($"Enter new max end time (current: {existingCall.MaxEndTime}, press Enter to keep current): ");
         input = Console.ReadLine()!;
@@ -504,7 +502,7 @@ internal class Program
 
         Console.Write($"Enter new status (0 - Open, 1 - InProgress, 2 - Closed, 3 - Expired, 4 - OpenAtRisk, 5 - InProgressAtRisk), current: {existingCall.Status} (press Enter to keep current): ");
         input = Console.ReadLine()!;
-         existingCall.Status =(string.IsNullOrEmpty(input)) ? existingCall.Status:(BO.CallStatus)int.Parse(input);
+        existingCall.Status = (string.IsNullOrEmpty(input)) ? existingCall.Status : (BO.CallStatus)int.Parse(input);
 
         s_bl.Call.UpdateCall(existingCall);
 
@@ -588,10 +586,10 @@ internal class Program
                     break;
                 case BO.CallField.RemainingTime:
                     Console.Write("Enter Remaining Time: (in format (HH:MM:SS): ");
-                        if (TimeSpan.TryParse(Console.ReadLine(), out TimeSpan RemainingTime))
-                        {
-                            filterValue = RemainingTime;
-                        }
+                    if (TimeSpan.TryParse(Console.ReadLine(), out TimeSpan RemainingTime))
+                    {
+                        filterValue = RemainingTime;
+                    }
                     break;
                 case BO.CallField.CompletionTime:
                     Console.Write("Enter CompletionTime Time: (in format (HH:MM:SS): ");
@@ -712,7 +710,8 @@ internal class Program
                 CallFieldType = (BO.ClosedCallField)CallField;
             var closedCalls = s_bl.Call.GetClosedCallsByVolunteer(volId, filterType, CallFieldType);
             foreach (var closedCall in closedCalls)
-            { Console.WriteLine("------------------------------");
+            {
+                Console.WriteLine("------------------------------");
                 Console.WriteLine(closedCall);
                 Console.WriteLine("------------------------------");
             }
@@ -742,7 +741,8 @@ internal class Program
                 CallFieldType = (BO.OpenCallField)CallField;
             var closedCalls = s_bl.Call.GetOpenCallsForVolunteer(volunteerId, CallFilter, CallFieldType);
             foreach (var closedCall in closedCalls)
-            { Console.WriteLine("------------------------------"); 
+            {
+                Console.WriteLine("------------------------------");
                 Console.WriteLine(closedCall);
                 Console.WriteLine("------------------------------");
             }
