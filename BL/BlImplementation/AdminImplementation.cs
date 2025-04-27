@@ -17,7 +17,7 @@
         /// <returns>The current date and time.</returns>
         public DateTime GetClock()
         {
-            return ClockManager.Now;
+            return AdminManager.Now;
         }
 
         /// <summary>
@@ -29,41 +29,40 @@
         {
             DateTime newTime = unit switch
             {
-                BO.TimeUnit.Minute => ClockManager.Now.AddMinutes(1),
-                BO.TimeUnit.Hour => ClockManager.Now.AddHours(1),
-                BO.TimeUnit.Day => ClockManager.Now.AddDays(1),
-                BO.TimeUnit.Month => ClockManager.Now.AddMonths(1),
-                BO.TimeUnit.Year => ClockManager.Now.AddYears(1),
+                BO.TimeUnit.Minute => AdminManager.Now.AddMinutes(1),
+                BO.TimeUnit.Hour => AdminManager.Now.AddHours(1),
+                BO.TimeUnit.Day => AdminManager.Now.AddDays(1),
+                BO.TimeUnit.Month => AdminManager.Now.AddMonths(1),
+                BO.TimeUnit.Year => AdminManager.Now.AddYears(1),
                 _ => throw new NotImplementedException("Invalid time unit")
             };
 
-            ClockManager.UpdateClock(newTime);
+            AdminManager.UpdateClock(newTime);
         }
 
         /// <summary>
         /// Retrieves the current risk range setting.
         /// </summary>
         /// <returns>The current risk range as a TimeSpan.</returns>
-        public TimeSpan GetRiskRange()
-        {
-            return _dal.Config.GetRiskRange();
-        }
+      
+        public TimeSpan GetRiskRange() => AdminManager.RiskRange;
+
 
         /// <summary>
         /// Updates the risk range setting.
         /// </summary>
         /// <param name="range">The new risk range to set.</param>
         /// <exception cref="BO.BlConfigException">Thrown if the update fails.</exception>
-        public void SetRiskRange(TimeSpan range)
+        public void SetRiskRange (TimeSpan RiskRange) => AdminManager.RiskRange = RiskRange;
+
+
+        /// <summary>
+        /// Initializes the database with test data after resetting it.
+        /// </summary>
+        /// <exception cref="BO.BlConfigException">Thrown if the initialization fails.</exception>
+        public void InitializeDB()
         {
-            try
-            {
-                _dal.Config.SetRiskRange(range);
-            }
-            catch (DO.DalConfigException ex)
-            {
-                throw new BO.BlConfigException("Failed to update risk range", ex);
-            }
+            AdminManager.InitializeDB();
         }
 
         /// <summary>
@@ -72,33 +71,20 @@
         /// <exception cref="BO.BlConfigException">Thrown if the reset fails.</exception>
         public void ResetDB()
         {
-            try
-            {
-                _dal.ResetDB();
-                ClockManager.UpdateClock(ClockManager.Now);
-            }
-            catch (DO.DalConfigException ex)
-            {
-                throw new BO.BlConfigException("Failed to reset database", ex);
-            }
+            AdminManager.ResetDB();
         }
 
-        /// <summary>
-        /// Initializes the database with test data after resetting it.
-        /// </summary>
-        /// <exception cref="BO.BlConfigException">Thrown if the initialization fails.</exception>
-        public void InitializeDB()
-        {
-            try
-            {
-                ResetDB(); // First reset the database
-                DalTest.Initialization.Do(); // Initialize with test data
-                ClockManager.UpdateClock(ClockManager.Now);
-            }
-            catch (DO.DalConfigException ex)
-            {
-                throw new BO.BlConfigException("Failed to initialize database", ex);
-            }
-        }
+        #region Stage 5
+        public void AddClockObserver(Action clockObserver) =>
+        AdminManager.ClockUpdatedObservers += clockObserver;
+        public void RemoveClockObserver(Action clockObserver) =>
+        AdminManager.ClockUpdatedObservers -= clockObserver;
+        public void AddConfigObserver(Action configObserver) =>
+       AdminManager.ConfigUpdatedObservers += configObserver;
+        public void RemoveConfigObserver(Action configObserver) =>
+        AdminManager.ConfigUpdatedObservers -= configObserver;
+        #endregion Stage 5
+
+
     }
 }

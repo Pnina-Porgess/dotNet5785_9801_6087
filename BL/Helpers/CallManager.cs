@@ -82,11 +82,11 @@ internal static class CallManager
             if (!assignments.Any())
             {
                 // Check if call has expired
-                if (ClockManager.Now > call.MaxTimeToFinish)
+                if (AdminManager.Now > call.MaxTimeToFinish)
                     return BO.CallStatus.Expired;
 
                 // Check if call is at risk (less than 30 minutes to expiration)
-                var timeToExpiration = call.MaxTimeToFinish - ClockManager.Now;
+                var timeToExpiration = call.MaxTimeToFinish - AdminManager.Now;
                 if (timeToExpiration?.TotalMinutes <= 30)
                     return BO.CallStatus.OpenAtRisk;
 
@@ -103,7 +103,7 @@ internal static class CallManager
                 return successfulAssignment ? BO.CallStatus.Closed : BO.CallStatus.Open;
             }
             // There is an active assignment - check if it's at risk
-            var remainingTime = call.MaxTimeToFinish - ClockManager.Now;
+            var remainingTime = call.MaxTimeToFinish - AdminManager.Now;
             if (remainingTime?.TotalMinutes <= 30)
                 return BO.CallStatus.InProgressAtRisk;
 
@@ -229,19 +229,19 @@ internal static class CallManager
     {
         try
         {
-            _dal.Call.ReadAll(c => c.MaxTimeToFinish > ClockManager.Now).ToList().ForEach(call =>
+            _dal.Call.ReadAll(c => c.MaxTimeToFinish > AdminManager.Now).ToList().ForEach(call =>
             {
                 List<DO.Assignment> allAssignmentsCall = _dal.Assignment.ReadAll(a => a.CallId == call.Id && a.EndTime == null).ToList();
 
                 if (!allAssignmentsCall.Any())
                 {
-                    DO.Assignment newAssignment = new DO.Assignment(0, call.Id, 0, DO.TypeOfEndTime.CancellationHasExpired, ClockManager.Now);
+                    DO.Assignment newAssignment = new DO.Assignment(0, call.Id, 0, DO.TypeOfEndTime.CancellationHasExpired, AdminManager.Now);
                     _dal.Assignment.Create(newAssignment);
                 }
                 else
                 {
                     DO.Assignment updatedAssignment = allAssignmentsCall.FirstOrDefault(a => a.EndTime == null);
-                    _dal.Assignment.Update(updatedAssignment with { EndTime = ClockManager.Now, TypeOfEndTime = DO.TypeOfEndTime.CancellationHasExpired });
+                    _dal.Assignment.Update(updatedAssignment with { EndTime = AdminManager.Now, TypeOfEndTime = DO.TypeOfEndTime.CancellationHasExpired });
                 }
             });
         }

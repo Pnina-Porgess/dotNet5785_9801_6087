@@ -210,7 +210,7 @@ internal static class VolunteerManager
     public static BO.CallStatusInProgress CalculateStatus(DO.Call call, int riskThreshold = 30)
     {
 
-        var timeToEnd = call.MaxTimeToFinish - ClockManager.Now;
+        var timeToEnd = call.MaxTimeToFinish - AdminManager.Now;
         if (timeToEnd?.TotalMinutes <= riskThreshold)
         {
             return BO.CallStatusInProgress.AtRisk;

@@ -29,7 +29,7 @@ namespace BlImplementation
                 call.Longitude = longitude;
                 var updatedCall = CallManager.CreateDoCall(call);
                 _dal.Call.Update(updatedCall);
-                CallManager.Observers.NotifyItemUpdated(doStudent.Id);  //stage 5
+                CallManager.Observers.NotifyItemUpdated(updatedCall.Id);  //stage 5
                 CallManager.Observers.NotifyListUpdated();  //stage 5
 
             }
@@ -196,7 +196,7 @@ namespace BlImplementation
                 // Update the assignment to reflect the completion of treatment
                 var updatedAssignment = assignment! with
                 {
-                    EndTime = ClockManager.Now, // Set the end time to the current time
+                    EndTime = AdminManager.Now, // Set the end time to the current time
                     TypeOfEndTime = DO.TypeOfEndTime.treated // Set the end type as "Treated"
                 };
 
