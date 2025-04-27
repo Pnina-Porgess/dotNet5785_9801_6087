@@ -3,7 +3,7 @@
     /// <summary>
     /// Provides access to the main system interfaces for Volunteers, Calls, and Admin operations.
     /// </summary>
-    public interface IBl   //stage 5 הרחבת ממשק
+    public interface IBl 
     {
         /// <summary>
         /// Gets the volunteer operations interface.
