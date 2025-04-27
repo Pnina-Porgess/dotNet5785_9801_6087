@@ -177,7 +177,7 @@ internal class VolunteerImplementation : IVolunteer
 
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteerToUpdate);
             _dal.Volunteer.Update(doVolunteer);
-            VolunteerManager.Observers.NotifyItemUpdated(doStudent.Id);  //stage 5
+            VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.Id);  //stage 5
             VolunteerManager.Observers.NotifyListUpdated();  //stage 5
 
         }
