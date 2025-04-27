@@ -15,6 +15,7 @@ namespace BlImplementation
             newCall.Longitude = longitude;
             var call = CallManager.CreateDoCall(newCall);
             _dal.Call.Create(call);
+            CallManager.Observers.NotifyListUpdated();  //stage 5 
             CallManager.SendEmailWhenCalOpened(newCall);
         }
 
@@ -28,6 +29,9 @@ namespace BlImplementation
                 call.Longitude = longitude;
                 var updatedCall = CallManager.CreateDoCall(call);
                 _dal.Call.Update(updatedCall);
+                CallManager.Observers.NotifyItemUpdated(doStudent.Id);  //stage 5
+                CallManager.Observers.NotifyListUpdated();  //stage 5
+
             }
             catch (DO.DalAlreadyExistsException ex)
             {
@@ -50,6 +54,7 @@ namespace BlImplementation
                 }
                 // Attempt to delete the call
                 _dal.Call.Delete(callId);
+                CallManager.Observers.NotifyListUpdated();  //stage 5 
             }
             catch (DO.DalAlreadyExistsException ex)
             {
@@ -117,9 +122,9 @@ namespace BlImplementation
 
                 if (filterField.HasValue && filterValue != null)
                 {
-                    callList = callList.Where(c => c.GetType().GetProperty(filterField.ToString()!)?.GetValue(c)?.Equals(filterValue) == true);
+                    callList = callList.Where(c =>c.GetType().GetProperty(filterField.ToString()!)?.GetValue(c)?.Equals(filterValue)==true);
                 }
-
+          
                 return sortField switch
                 {
                     CallField.AssignmentId => callList.OrderBy(c => c.AssignmentId),
@@ -251,7 +256,7 @@ namespace BlImplementation
                 _dal.Assignment.Update(updatedAssignment);
                 CallManager.SendEmailToVolunteer(volunteer!, assignment);
             }
-
+           
             catch (Exception ex)
             {
                 // טיפול בחריגות כלליות
@@ -302,12 +307,12 @@ namespace BlImplementation
             }
         }
 
-        public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, BO.TypeOfReading? filterType = null, BO.ClosedCallField? sortField = null)
+        public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId,  BO.TypeOfReading? filterType = null, BO.ClosedCallField? sortField = null)
         {
-            try
+           try
             {
                 // Get all assignments for this volunteer
-                var assignments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.EndTime != null);  // Only closed calls
+                var assignments = _dal.Assignment.ReadAll(a =>a.VolunteerId == volunteerId &&a.EndTime != null);  // Only closed calls
 
                 // Get all calls associated with these assignments
                 var callIds = assignments.Select(a => a.CallId).Distinct();
@@ -328,10 +333,10 @@ namespace BlImplementation
                     ClosedCallField.AssignmentEntryTime => closedCalls.OrderBy(c => c.AssignmentEntryTime),
                     ClosedCallField.ActualEndTime => closedCalls.OrderBy(c => c.ActualEndTime.GetValueOrDefault(DateTime.MinValue)),
                     ClosedCallField.EndType => closedCalls.OrderBy(c => c.EndType),
-                    _ => closedCalls.OrderBy(c => c.Id)
+                    _ =>closedCalls.OrderBy(c => c.Id)
                 };
             }
-
+           
             catch (DO.DalDoesNotExistException ex)
             {
                 throw new BO.BlNotFoundException($"Could not find data for volunteer {volunteerId}", ex);
@@ -341,7 +346,7 @@ namespace BlImplementation
                 throw new BO.BlDatabaseException("An error occurred while retrieving closed calls", ex);
             }
         }
-
+       
         public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallStatus? filterStatus, BO.OpenCallField? sortField)
         {
             try
@@ -359,7 +364,7 @@ namespace BlImplementation
                         FullAddress = c.Adress, // כתובת הקריאה
                         OpenTime = c.TimeOfOpen, // זמן פתיחת הקריאה
                         MaxEndTime = c.MaxTimeToFinish, // זמן סיום משוער
-                        DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!, volunteer.Longitude!, c.Latitude, c.Longitude)
+                        DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!,volunteer.Longitude!, c.Latitude, c.Longitude)
                     });
 
                 return sortField switch
@@ -375,8 +380,8 @@ namespace BlImplementation
                 };
 
             }
-
-
+         
+        
             catch (DO.DalDoesNotExistException ex)
             {
                 throw new BO.BlNotFoundException($"Could not find data for volunteer {volunteerId}", ex);
@@ -387,6 +392,17 @@ namespace BlImplementation
             }
 
         }
+        #region Stage 5
+        public void AddObserver(Action listObserver) =>
+        CallManager.Observers.AddListObserver(listObserver); //stage 5
+        public void AddObserver(int id, Action observer) =>
+    CallManager.Observers.AddObserver(id, observer); //stage 5
+        public void RemoveObserver(Action listObserver) =>
+    CallManager.Observers.RemoveListObserver(listObserver); //stage 5
+        public void RemoveObserver(int id, Action observer) =>
+    CallManager.Observers.RemoveObserver(id, observer); //stage 5
+        #endregion Stage 5
+
 
 
     }

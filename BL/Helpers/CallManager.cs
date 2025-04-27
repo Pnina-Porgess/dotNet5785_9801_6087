@@ -4,6 +4,7 @@ using Helpers;
 internal static class CallManager
 {
     private static IDal _dal = Factory.Get; //stage 4
+    internal static ObserverManager Observers = new();
 
     /// <summary>
     /// Validates the input format of the call object.

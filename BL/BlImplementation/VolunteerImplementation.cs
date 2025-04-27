@@ -28,6 +28,8 @@ internal class VolunteerImplementation : IVolunteer
             (volunteer.Latitude, volunteer.Longitude) = Tools.GetCoordinatesFromAddress(volunteer.CurrentAddress!);
             DO.Volunteer doVolunteer = (VolunteerManager.CreateDoVolunteer(volunteer));
             _dal.Volunteer.Create(doVolunteer);
+            VolunteerManager.Observers.NotifyListUpdated(); //stage 5                                                    
+
         }
         catch (Exception ex)
         {
@@ -55,6 +57,8 @@ internal class VolunteerImplementation : IVolunteer
             }
 
             _dal.Volunteer.Delete(id);
+            VolunteerManager.Observers.NotifyListUpdated(); //stage 5                                                    
+
         }
         catch (Exception ex)
         {
@@ -173,6 +177,9 @@ internal class VolunteerImplementation : IVolunteer
 
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteerToUpdate);
             _dal.Volunteer.Update(doVolunteer);
+            VolunteerManager.Observers.NotifyItemUpdated(doStudent.Id);  //stage 5
+            VolunteerManager.Observers.NotifyListUpdated();  //stage 5
+
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -221,5 +228,16 @@ internal class VolunteerImplementation : IVolunteer
             throw new BO.BlDatabaseException("Error accessing data.", ex);
         }
     }
+    #region Stage 5
+    public void AddObserver(Action listObserver) =>
+    VolunteerManager.Observers.AddListObserver(listObserver); //stage 5
+    public void AddObserver(int id, Action observer) =>
+VolunteerManager.Observers.AddObserver(id, observer); //stage 5
+    public void RemoveObserver(Action listObserver) =>
+VolunteerManager.Observers.RemoveListObserver(listObserver); //stage 5
+    public void RemoveObserver(int id, Action observer) =>
+VolunteerManager.Observers.RemoveObserver(id, observer); //stage 5
+    #endregion Stage 5
+
 
 }

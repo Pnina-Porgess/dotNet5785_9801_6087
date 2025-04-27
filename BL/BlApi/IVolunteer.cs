@@ -3,7 +3,7 @@
     /// <summary>
     /// Provides methods for managing volunteers in the system.
     /// </summary>
-    public interface IVolunteer
+    public interface IVolunteer : IObservable //stage 5 הרחבת ממשק
     {
         /// <summary>
         /// Logs in a volunteer using their username and password.
