@@ -5,7 +5,7 @@ namespace BlApi
     /// <summary>
     /// Provides methods for managing calls in the system.
     /// </summary>
-    public interface ICall
+    public interface ICall : IObservable //stage 5 הרחבת ממשק
     {
         /// <summary>
         /// Gets the count of calls grouped by their status.
