@@ -7,6 +7,8 @@
     /// </summary>
     internal class Bl : IBl
     {
+        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
         /// <summary>
         /// Gets an instance of the IVolunteer service.
         /// </summary>
