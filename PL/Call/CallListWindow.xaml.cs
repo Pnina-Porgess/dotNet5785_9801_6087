@@ -19,6 +19,7 @@ namespace PL.Call
     /// </summary>
     public partial class CallListWindow : Window
     {
+   
         public CallListWindow()
         {
             InitializeComponent();
@@ -35,5 +36,6 @@ namespace PL.Call
         {
 
         }
+
     }
 }
