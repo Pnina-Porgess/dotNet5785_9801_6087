@@ -47,18 +47,19 @@
                 <Button Content="Add one minute" HorizontalAlignment="Left" Margin="30,0,0,4" Grid.Row="1" Click="btnAddOneMinute_Click"/>
                 <Button Content="Add one hour" HorizontalAlignment="Left" Margin="30,0,0,0" Grid.Row="2" VerticalAlignment="Top" Click="btnAddOneHour_Click"/>
                 <Button Content="Add one day" HorizontalAlignment="Left" Margin="30,0,0,0" Grid.Row="3" VerticalAlignment="Top"  Click="btnAddOneDay_Click"/>
-                <Button Content="Add one mounth" HorizontalAlignment="Left" Margin="30,0,0,0" Grid.Row="4" VerticalAlignment="Top" Click="btnAddOneMounth_Click"/>
+                <Button Content="Add one mounth" HorizontalAlignment="Left" Margin="30,0,0,0" Grid.Row="4" VerticalAlignment="Top" Click="btnAddOneMonth_Click"/>
                 <Button Content="Add one year " HorizontalAlignment="Left" Margin="30,0,0,0" Grid.Row="5" VerticalAlignment="Top" Click="btnAddOneYear_Click"/>
 
 
             </Grid>
-            <Button Grid.Column="1" Content="Reast DB" HorizontalAlignment="Left" Margin="178,26,0,0" Grid.Row="3" VerticalAlignment="Top" />
-            <Button Grid.Column="1" Content="Init DB" HorizontalAlignment="Left" Margin="82,26,0,0" Grid.Row="3" VerticalAlignment="Top"/>
-            <Button Grid.Column="3" Content="Opening volunteer list" HorizontalAlignment="Left" Margin="178,28,0,0" Grid.Row="3" VerticalAlignment="Top"/>
-            <Button Grid.Column="3" Content="Opening call list" HorizontalAlignment="Left" Margin="84,28,0,0" Grid.Row="3" VerticalAlignment="Top"/>
-            <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="128,65,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+            <Button Grid.Column="1" Content="Reast DB" HorizontalAlignment="Left" Margin="178,26,0,0" Grid.Row="3" VerticalAlignment="Top" Click="ResetDatabase_Click" />
+            <Button Grid.Column="1" Content="Init DB" HorizontalAlignment="Left" Margin="82,26,0,0" Grid.Row="3" VerticalAlignment="Top" Click="InitializeDatabase_Click"/>
+            <Button Grid.Column="3" Content="Handle Volunteer" HorizontalAlignment="Left" Margin="178,28,0,0" Grid.Row="3" VerticalAlignment="Top"/>
+             <!--Button for opening the list view screen.-->
+            <Button Grid.Column="2" Content="Handle Calls" HorizontalAlignment="Left" Margin="0,28,0,0" Grid.Row="3" VerticalAlignment="Top" Grid.ColumnSpan="2" Click="OnHandleCallsButton_Click"/>
+            <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="128,65,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding RiskRange}" VerticalAlignment="Top" Width="120"/>
             <Label Grid.Column="1" Content="Max RiskRange:" HorizontalAlignment="Left" Margin="37,60,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-            <Button Grid.Column="1" Content="Update" HorizontalAlignment="Left" Margin="259,65,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+            <Button Grid.Column="1" Content="Update" HorizontalAlignment="Left" Margin="259,65,0,0" Grid.Row="1" VerticalAlignment="Top" Click="UpdateButton_Click"/>
         </Grid>
 
     </Grid>
