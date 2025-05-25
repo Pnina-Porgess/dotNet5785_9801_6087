@@ -1,4 +1,4 @@
-﻿using System;
+﻿//using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,15 +11,16 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using BO;
 
 namespace PL.Volunteer
 {
     /// <summary>
     /// Interaction logic for Call.xaml
     /// </summary>
-    public partial class Call : Window
+    public partial class VolunteerWindow : Window
     {
-        public Call()
+        public VolunteerWindow()
         {
             InitializeComponent();
         }

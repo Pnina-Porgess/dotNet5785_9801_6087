@@ -54,8 +54,9 @@
             </Grid>
             <Button Grid.Column="1" Content="Reast DB" HorizontalAlignment="Left" Margin="178,26,0,0" Grid.Row="3" VerticalAlignment="Top" Click="ResetDatabase_Click" />
             <Button Grid.Column="1" Content="Init DB" HorizontalAlignment="Left" Margin="82,26,0,0" Grid.Row="3" VerticalAlignment="Top" Click="InitializeDatabase_Click"/>
-            <Button Grid.Column="3" Content="Handle Volunteer" HorizontalAlignment="Left" Margin="178,28,0,0" Grid.Row="3" VerticalAlignment="Top"/>
-             <!--Button for opening the list view screen.-->
+            <!--Button for opening the list view screen of volunteer.-->
+            <Button Grid.Column="3" Content="Handle Volunteer" HorizontalAlignment="Left" Margin="178,28,0,0" Grid.Row="3" VerticalAlignment="Top" Click="OnHandlevolunteerButton_Click"/>
+             <!--Button for opening the list view screen of call.-->
             <Button Grid.Column="2" Content="Handle Calls" HorizontalAlignment="Left" Margin="0,28,0,0" Grid.Row="3" VerticalAlignment="Top" Grid.ColumnSpan="2" Click="OnHandleCallsButton_Click"/>
             <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="128,65,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding RiskRange}" VerticalAlignment="Top" Width="120"/>
             <Label Grid.Column="1" Content="Max RiskRange:" HorizontalAlignment="Left" Margin="37,60,0,0" Grid.Row="1" VerticalAlignment="Top"/>
