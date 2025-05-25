@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
         Title="VolunteerListWindow" Height="640" Width="800"
-         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
-
+       DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+   Loaded="Window_Loaded" Closed="Window_Closed">
 
     <!--External Grid-->
     <Grid>
@@ -24,19 +24,91 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Label Content="Label" HorizontalAlignment="Left" Margin="69,0,0,0" VerticalAlignment="Center" Grid.Column="0"
-/>
-            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1"
-/>
+            <Label Content="Label" HorizontalAlignment="Left" Margin="69,0,0,0" VerticalAlignment="Center" Grid.Column="0"/>
+            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1"/>
         </Grid>
-        <ListView  Margin="5" Grid.Row="1" ItemsSource="{Binding Path=VolunteerList}" >
-            <ListView.View >
+        <ListView Margin="5,5,5,83" Grid.Row="1" ItemsSource="{Binding Path=VolunteerList}" Grid.RowSpan="2">
+            <ListView.View>
                 <GridView>
-                    <GridViewColumn/>
+                    <GridViewColumn Header="🆔 ID" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding Id}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header=" IsActive" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding IsActive}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="👤 Full Name" Width="140">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="👤" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding FullName}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="📞 Handled Calls" Width="130">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="📞" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding TotalHandledCalls}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="❌ Canceled Calls" Width="130">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="❌" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding TotalCanceledCalls}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="⏰ Expired Calls" Width="130">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="⏰" Margin="0,0,5,0" Foreground="Red"/>
+                                    <TextBlock Text="{Binding TotalExpiredCalls}" Foreground="Red"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="☎️ Call ID" Width="90">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="☎️" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding CurrentCallId}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100"/>
+        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Left" Height="50" Width="100" Margin="24,434,0,14"/>
     </Grid>
 
 </Window>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BlApi;
+using BO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,18 +21,43 @@ namespace PL.Volunteer
     /// </summary>
     public partial class VolunteerListWindow : Window
     {
+        static readonly IBl s_bl = BlApi.Factory.Get();
         public VolunteerListWindow()
         {
             InitializeComponent();
         }
         public IEnumerable<BO.VolunteerInList> VolunteerList
         {
-            get { return (IEnumerable<BO.VolunteerInList>)GetValue(CourseListProperty); }
-            set { SetValue(CourseListProperty, value); }
+            get { return (IEnumerable<BO.VolunteerInList>)GetValue(VolunteerListProperty); }
+            set { SetValue(VolunteerListProperty, value); }
         }
 
-        public static readonly DependencyProperty CourseListProperty =
-            DependencyProperty.Register("CourseList", typeof(IEnumerable<BO.VolunteerInList>), typeof(VolunteerListWindow), new PropertyMetadata(null));
+        public static readonly DependencyProperty VolunteerListProperty =
+            DependencyProperty.Register("VolunteerList", typeof(IEnumerable<BO.VolunteerInList>), typeof(VolunteerListWindow), new PropertyMetadata(null));
+        public BO.CallField CallType { get; set; } = BO.CallField.AssignmentId;
+        private void queryCallList()
+           => VolunteerList = (CallType == BO.CallField.None) ?
+               s_bl?.Volunteer.GetVolunteersList()! : s_bl?.Volunteer.GetVolunteersList(null, null)!;
+
+        private void VolunteerListObserver()
+            => queryCallList();
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            s_bl.Call.AddObserver(VolunteerListObserver);
+            queryCallList();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+            => s_bl.Call.RemoveObserver(VolunteerListObserver);
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            queryCallList();
+        }
+
 
     }
+
 }
+

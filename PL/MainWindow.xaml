@@ -6,61 +6,80 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        Background="#FFF6F5F0">
+    <Window.Resources>
+        <!-- Japanese-inspired color palette: Sakura Pink and Aizome Blue -->
+        <SolidColorBrush x:Key="SakuraPink" Color="#FFFADADD"/>
+        <SolidColorBrush x:Key="AizomeBlue" Color="#FF223A5E"/>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource SakuraPink}"/>
+            <Setter Property="Foreground" Value="{StaticResource AizomeBlue}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="8,0,8,0"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AizomeBlue}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#FFF7F6F2"/>
+            <Setter Property="Foreground" Value="{StaticResource AizomeBlue}"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource AizomeBlue}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+    </Window.Resources>
     <Grid>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="25*"/>
-                <ColumnDefinition Width="350*"/>
-                <ColumnDefinition Width="50*"/>
-                <ColumnDefinition Width="350*"/>
-                <ColumnDefinition Width="25*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="31*"/>
-                <RowDefinition Height="165*"/>
-                <RowDefinition Height="41*"/>
-                <RowDefinition Height="80*"/>
-                <RowDefinition Height="80*"/>
-                <RowDefinition Height="31*"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Column="3" Margin="0,0,0,31" Grid.RowSpan="3" Grid.ColumnSpan="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="100*"/>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="57*"/>
-                </Grid.RowDefinitions>
-            </Grid>
-            <Grid Grid.Column="3" Margin="0,31,0,0" Grid.RowSpan="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="100*"/>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="50*"/>
-                </Grid.RowDefinitions>
-                <Label HorizontalAlignment="Left" Margin="42,10,0,0" VerticalAlignment="Top" Height="auto" Background="#FFBDBFBD" Content="{Binding CurrentTime}" FontWeight="Bold" FontSize="20"/>
-                <Button Content="Add one minute" HorizontalAlignment="Left" Margin="30,0,0,4" Grid.Row="1" Click="btnAddOneMinute_Click"/>
-                <Button Content="Add one hour" HorizontalAlignment="Left" Margin="30,0,0,0" Grid.Row="2" VerticalAlignment="Top" Click="btnAddOneHour_Click"/>
-                <Button Content="Add one day" HorizontalAlignment="Left" Margin="30,0,0,0" Grid.Row="3" VerticalAlignment="Top"  Click="btnAddOneDay_Click"/>
-                <Button Content="Add one mounth" HorizontalAlignment="Left" Margin="30,0,0,0" Grid.Row="4" VerticalAlignment="Top" Click="btnAddOneMonth_Click"/>
-                <Button Content="Add one year " HorizontalAlignment="Left" Margin="30,0,0,0" Grid.Row="5" VerticalAlignment="Top" Click="btnAddOneYear_Click"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
 
+        <!-- Left: Max RiskRange/Update -->
+        <Border Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Background="{StaticResource SakuraPink}" Width="166" Height="160" CornerRadius="10" Margin="10,0,0,0">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Label Content="Max RiskRange:" Margin="0,16,0,0"/>
+                <TextBox Text="{Binding RiskRange}" Width="120" Margin="0,8,0,0"/>
+                <Button Content="Update" Click="UpdateButton_Click" Margin="0,16,0,0"/>
+            </StackPanel>
+        </Border>
 
-            </Grid>
-            <Button Grid.Column="1" Content="Reast DB" HorizontalAlignment="Left" Margin="178,26,0,0" Grid.Row="3" VerticalAlignment="Top" Click="ResetDatabase_Click" />
-            <Button Grid.Column="1" Content="Init DB" HorizontalAlignment="Left" Margin="82,26,0,0" Grid.Row="3" VerticalAlignment="Top" Click="InitializeDatabase_Click"/>
-            <Button Grid.Column="3" Content="Handle Volunteer" HorizontalAlignment="Left" Margin="178,28,0,0" Grid.Row="3" VerticalAlignment="Top"/>
-             <!--Button for opening the list view screen.-->
-            <Button Grid.Column="2" Content="Handle Calls" HorizontalAlignment="Left" Margin="0,28,0,0" Grid.Row="3" VerticalAlignment="Top" Grid.ColumnSpan="2" Click="OnHandleCallsButton_Click"/>
-            <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="128,65,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding RiskRange}" VerticalAlignment="Top" Width="120"/>
-            <Label Grid.Column="1" Content="Max RiskRange:" HorizontalAlignment="Left" Margin="37,60,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-            <Button Grid.Column="1" Content="Update" HorizontalAlignment="Left" Margin="259,65,0,0" Grid.Row="1" VerticalAlignment="Top" Click="UpdateButton_Click"/>
-        </Grid>
+        <!-- Center: Clock and Add buttons in a row -->
+        <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#FFF6F5F0" Width="439" Height="306" CornerRadius="16" BorderBrush="{StaticResource AizomeBlue}" BorderThickness="1">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Label Content="{Binding CurrentTime}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,24,0,24" Background="{StaticResource SakuraPink}" Padding="18,8" BorderBrush="{StaticResource AizomeBlue}" BorderThickness="1" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                    <Button Content="➕ min" Click="btnAddOneMinute_Click"/>
+                    <Button Content="➕ hr" Click="btnAddOneHour_Click"/>
+                    <Button Content="➕ day" Click="btnAddOneDay_Click"/>
+                    <Button Content="➕ mo" Click="btnAddOneMonth_Click"/>
+                    <Button Content="➕ yr" Click="btnAddOneYear_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
 
+        <!-- Right: Reset/Init -->
+        <Border Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Background="{StaticResource SakuraPink}" Margin="83,0,0,0" Width="136" Height="160" CornerRadius="10">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Button Content="Init DB" Click="InitializeDatabase_Click" Margin="0,24,0,0"/>
+                <Button Content="Reset DB" Click="ResetDatabase_Click" Margin="0,16,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Bottom center: Handle Calls/Volunteers -->
+        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,12,0,0">
+            <Button Content="Handle Calls" Click="OnHandleCallsButton_Click" Background="{StaticResource SakuraPink}" Foreground="{StaticResource AizomeBlue}" Width="120" Margin="8,0"/>
+            <Button Content="Handle Volunteer" Click="OnHandleVolunteersButton_Click" Background="{StaticResource SakuraPink}" Foreground="{StaticResource AizomeBlue}" Width="140" Margin="8,0"/>
+        </StackPanel>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
 ﻿using PL.Call;
+using PL.Volunteer;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -108,6 +109,12 @@ public partial class MainWindow : Window
     private void OnHandleCallsButton_Click(object sender, RoutedEventArgs e)
     {
         new CallListWindow().Show();
+
+    }
+
+    private void OnHandleVolunteersButton_Click(object sender, RoutedEventArgs e)
+    {
+        new VolunteerListWindow().Show();
 
     }
     private void InitializeDatabase_Click(object sender, RoutedEventArgs e)
