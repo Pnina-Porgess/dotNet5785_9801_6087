@@ -91,7 +91,8 @@ public enum CallField
     LastVolunteerName,   // Name of the last assigned volunteer
     CompletionTime,      // Time taken to complete the call
     CallStatus,          // Status of the call
-    TotalAssignments// Total number of assignments for the call
+    TotalAssignments,    // Total number of assignments for the call
+    None
 }
 
 /// <summary>
