@@ -34,10 +34,10 @@ namespace PL.Volunteer
 
         public static readonly DependencyProperty VolunteerListProperty =
             DependencyProperty.Register("VolunteerList", typeof(IEnumerable<BO.VolunteerInList>), typeof(VolunteerListWindow), new PropertyMetadata(null));
-        public BO.CallField CallType { get; set; } = BO.CallField.AssignmentId;
+        public BO.TypeOfReading TypeOfReading { get; set; } = BO.TypeOfReading.None;
         private void queryCallList()
-           => VolunteerList = (CallType == BO.CallField.None) ?
-               s_bl?.Volunteer.GetVolunteersList()! : s_bl?.Volunteer.GetVolunteersList(null, null)!;
+           => VolunteerList = (TypeOfReading == BO.TypeOfReading.None) ?
+               s_bl?.Volunteer.GetVolunteersList()! : s_bl?.Volunteer.GetVolunteersList(null, null, TypeOfReading)!;
 
         private void VolunteerListObserver()
             => queryCallList();
@@ -54,6 +54,20 @@ namespace PL.Volunteer
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             queryCallList();
+        }
+        public BO.VolunteerInList? SelectedVolunteer { get; set; }
+        private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (SelectedVolunteer != null)
+            {
+                var window = new VolunteerWindow(SelectedVolunteer.Id);
+                window.Show();
+            }
+        }
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new VolunteerWindow();
+            window.Show();
         }
 
 

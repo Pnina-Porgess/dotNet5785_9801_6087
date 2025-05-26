@@ -19,7 +19,7 @@
         /// <param name="isActive">Optional filter for volunteer activity status.</param>
         /// <param name="sortBy">Optional sorting parameter for the volunteer list.</param>
         /// <returns>An enumerable list of volunteers.</returns>
-        IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null);
+        IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null, BO.TypeOfReading? filterField = null);
 
         /// <summary>
         /// Gets detailed information about a specific volunteer.

@@ -199,18 +199,17 @@ internal class VolunteerImplementation : IVolunteer
     /// <returns>A sorted and filtered list of volunteers.</returns>
     /// <exception cref="BO.BlDatabaseException">Thrown if an error occurs while accessing data.</exception>
 
-    public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null)
+    public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null, BO.TypeOfReading? filterField = null)
     {
 
         try
         {
-            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll();
-            if (isActive.HasValue)
-            {
-                volunteers = volunteers.Where(c => c.IsActive == isActive.Value);
-            }
+            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v =>
+             !isActive.HasValue || v.IsActive == isActive.Value);
 
             var volunteerList = VolunteerManager.GetVolunteerList(volunteers);
+            volunteerList = volunteerList.Where(vol => !filterField.HasValue || vol.CurrentCallType == filterField);
+           
 
             volunteerList = sortBy.HasValue ? sortBy.Value switch
             {
