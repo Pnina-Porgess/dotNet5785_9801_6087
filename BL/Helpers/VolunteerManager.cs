@@ -22,7 +22,7 @@ internal static class VolunteerManager
             var volunteerInList = volunteers.Select(static v =>
           {
               var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
-              var assignedResponseId = volunteerAssignments.FirstOrDefault(a => a?.EntryTime == null)?.CallId;
+              var assignedResponseId = volunteerAssignments.FirstOrDefault()?.CallId;
               return new BO.VolunteerInList
               {
                   Id = v.Id,
@@ -218,5 +218,8 @@ internal static class VolunteerManager
         return BO.CallStatusInProgress.InProgress;
     }
 }
+
+
+/*   a => a?.EntryTime == null   */
 
 

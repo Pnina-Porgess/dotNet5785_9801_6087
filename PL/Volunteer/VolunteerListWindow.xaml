@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="VolunteerListWindow" Height="640" Width="800"
        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+     
    Loaded="Window_Loaded" Closed="Window_Closed">
 
     <!--External Grid-->
@@ -25,9 +26,17 @@
             </Grid.ColumnDefinitions>
 
             <Label Content="Label" HorizontalAlignment="Left" Margin="69,0,0,0" VerticalAlignment="Center" Grid.Column="0"/>
-            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1"/>
+            <ComboBox
+                 SelectedItem="{Binding TypeOfReading, Mode=TwoWay}"
+                   ItemsSource="{Binding Source={StaticResource VolunteerFieldCollection}}"
+                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" SelectionChanged="ComboBox_SelectionChanged"/>
         </Grid>
-        <ListView Margin="5,5,5,83" Grid.Row="1" ItemsSource="{Binding Path=VolunteerList}" Grid.RowSpan="2">
+        <ListView Margin="5,5,5,83" 
+                  Grid.Row="1" 
+                  ItemsSource="{Binding Path=VolunteerList}" 
+                  MouseDoubleClick="ListView_MouseDoubleClick"
+                  Grid.RowSpan="2"
+                  SelectedItem="{Binding SelectedVolunteer, Mode=TwoWay}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="🆔 ID" Width="80">
@@ -105,10 +114,25 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
+                    <GridViewColumn Header="TypeOfReading" Width="90">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+                                    <TextBlock Text="{Binding CurrentCallType}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Left" Height="50" Width="100" Margin="24,434,0,14"/>
+        <Button Content="➕ Add Volunteer" Grid.Row="2"
+                HorizontalAlignment="Center" Height="45" Width="180"
+                Margin="0,434,0,19"
+               
+                Click="AddButton_Click"/>
     </Grid>
 
 </Window>

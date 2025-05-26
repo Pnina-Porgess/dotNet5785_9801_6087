@@ -25,7 +25,7 @@
             </Grid.ColumnDefinitions>
 
             <Label Content="📋 Sort:" HorizontalAlignment="Left" Margin="69,0,0,0" VerticalAlignment="Center" Grid.Column="0"/>
-            <ComboBox SelectedValue="{Binding Semester, Mode=TwoWay}"
+            <ComboBox
                  SelectedItem="{Binding CallType, Mode=TwoWay}"
                    ItemsSource="{Binding Source={StaticResource CallFieldCollectionKey}}"
                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" SelectionChanged="ComboBox_SelectionChanged"/>

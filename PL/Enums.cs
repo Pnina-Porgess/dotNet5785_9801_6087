@@ -9,3 +9,11 @@ internal class CallFieldCollection : IEnumerable
 
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }
+
+internal class VolunteerFieldCollection : IEnumerable
+{
+    public BO.TypeOfReading TypeOfReading { get; set; } = BO.TypeOfReading.None;
+    static readonly IEnumerable<BO.TypeOfReading> s_enums =
+        (Enum.GetValues(typeof(BO.TypeOfReading)) as IEnumerable<BO.TypeOfReading>)!;
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}
