@@ -44,10 +44,11 @@ public static class Initialization
 };
 
         string[] phones = {
-    "050-321-4571", "052-897-6524", "054-123-8745", "053-549-1235", "055-789-6521",
-    "050-987-1234", "054-112-3345", "053-785-9513", "052-312-6578", "055-654-9872",
-    "053-789-2134", "050-125-6789", "052-456-7890", "054-654-3210", "055-123-7894"
+    "0503214571", "0528976524", "0541238745", "0535491235", "0557896521",
+    "0509871234", "0541123345", "0537859513", "0523126578", "0556549872",
+    "0537892134", "0501256789", "0524567890", "0546543210", "0551237894"
 };
+
         //I used GPT to create this array
         string[] addresses = {
     "Jerusalem, King George St.", "Tel Aviv, Rothschild Blvd.", "Haifa, Carmel Beach", "Beer Sheva, Ben Gurion Blvd.", 
@@ -60,6 +61,11 @@ public static class Initialization
     "Tamar75V21n", "Eli26W83f", "Moshe90R47z", "Chana63S29m", "Ari42D78c", "Chaim56H14p", "Shani81J67y",
    "Yonatan97K50x", "David34Q85v"
 };
+        int[] id =
+        {
+            328216783,328227442,328263249,328265640,328268149,328268149,328276332,328279138
+            ,328279427,328301940,328304944,328306436,328306436,328308646,328332317
+        };
         //I used GPT to create this array
         (double Latitude, double Longitude)[] coordinates = {
     (31.7683, 35.2137),(32.0853, 34.7818), (32.7940, 34.9896), (31.2518, 34.7913), (31.8044, 34.6553), 
@@ -71,11 +77,8 @@ public static class Initialization
         for (int i = 0; i < 15; i++)
 
         {
-            int id;
-            do
-                id = s_rand.Next(100000000, 999999999);
-            while (s_dal.Volunteer.Read(id) != null);
-             id = s_rand.Next(100000000, 999999999);
+       
+    
             string name = names[i];
             string email = emails[i];
             string phone = phones[i];
@@ -83,7 +86,7 @@ public static class Initialization
             double Latitude = coordinates[i].Latitude;
             double Longitude = coordinates[i].Longitude;
             double MaximumDistance = s_rand.Next(5, 50);
-            s_dal!.Volunteer.Create(new Volunteer(id, name, phone, email, Role.Volunteer, true, DistanceType.AerialDistance, MaximumDistance, EncryptPassword(password), addresses[i], Longitude, Latitude));
+            s_dal!.Volunteer.Create(new Volunteer(id[i], name, phone, email, Role.Volunteer, true, DistanceType.AerialDistance, MaximumDistance, EncryptPassword(password), addresses[i], Longitude, Latitude));
 
         }
     }

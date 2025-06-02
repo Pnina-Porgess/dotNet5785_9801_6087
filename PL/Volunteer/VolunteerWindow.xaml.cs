@@ -20,6 +20,7 @@ namespace PL.Volunteer
                 try
                 {
                     CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
+  
                 }
                 catch (Exception ex)
                 {
