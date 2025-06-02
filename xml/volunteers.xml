@@ -136,21 +136,6 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>114593804</Id>
-    <Name>Moshe</Name>
-    <Phone>052-312-6578</Phone>
-    <Email>Moshe@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>17</MaximumDistance>
-    <Password>ROLlsrRq2Hw3AtRWTByuHmlF1IrrtpESEIM5g64dbLg=</Password>
-    <Address>Holon, Jabotinsky St.</Address>
-    <Latitude>34.7874</Latitude>
-    <Longitude>32.0158</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
     <Id>943044590</Id>
     <Name>Chana</Name>
     <Phone>055-654-9872</Phone>
