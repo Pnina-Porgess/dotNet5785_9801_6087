@@ -2,6 +2,7 @@
 {
     public class CallInList
     {
+
         public int? AssignmentId { get; set; } // Unique ID for the assignment, nullable if no assignment exists.
         public int CallId { get; set; } // Unique running ID for the call, cannot be null.
         public TypeOfReading CallType { get; set; } // Type of the call, cannot be null.
