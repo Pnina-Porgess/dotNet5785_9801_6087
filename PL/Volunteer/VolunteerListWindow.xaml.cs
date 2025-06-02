@@ -35,25 +35,25 @@ namespace PL.Volunteer
         public static readonly DependencyProperty VolunteerListProperty =
             DependencyProperty.Register("VolunteerList", typeof(IEnumerable<BO.VolunteerInList>), typeof(VolunteerListWindow), new PropertyMetadata(null));
         public BO.TypeOfReading TypeOfReading { get; set; } = BO.TypeOfReading.None;
-        private void queryCallList()
+        private void queryVolunteerList()
            => VolunteerList = (TypeOfReading == BO.TypeOfReading.None) ?
                s_bl?.Volunteer.GetVolunteersList()! : s_bl?.Volunteer.GetVolunteersList(null, null, TypeOfReading)!;
 
         private void VolunteerListObserver()
-            => queryCallList();
+            => queryVolunteerList();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            s_bl.Call.AddObserver(VolunteerListObserver);
-            queryCallList();
+            s_bl.Volunteer.AddObserver(VolunteerListObserver);
+            queryVolunteerList();
         }
 
         private void Window_Closed(object sender, EventArgs e)
-            => s_bl.Call.RemoveObserver(VolunteerListObserver);
+            => s_bl.Volunteer.RemoveObserver(VolunteerListObserver);
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            queryCallList();
+            queryVolunteerList();
         }
         public BO.VolunteerInList? SelectedVolunteer { get; set; }
         private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)

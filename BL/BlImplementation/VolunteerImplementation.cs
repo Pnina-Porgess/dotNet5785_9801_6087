@@ -136,7 +136,7 @@ internal class VolunteerImplementation : IVolunteer
                 FullName = volunteerDO.Name,
                 Phone = volunteerDO.Phone,
                 Email = volunteerDO.Email,
-                Password = volunteerDO.Password,
+                Password =" ",
                 CurrentAddress = volunteerDO.Address,
                 Latitude = volunteerDO.Latitude,
                 Longitude = volunteerDO.Longitude,
