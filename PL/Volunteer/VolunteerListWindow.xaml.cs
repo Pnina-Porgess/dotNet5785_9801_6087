@@ -70,6 +70,35 @@ namespace PL.Volunteer
             window.Show();
         }
 
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button deleteButton && deleteButton.Tag is BO.VolunteerInList volunteer)
+            {
+                var result = MessageBox.Show(
+                    $"Are you sure you want to delete volunteer #{volunteer.Id} ({volunteer.FullName})?",
+                    "Confirm Deletion",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        s_bl.Volunteer.DeleteVolunteer(volunteer.Id);
+                        // אם יש מנגנון Observer כמו שתיארת – הרשימה תתעדכן לבד
+                        MessageBox.Show("Volunteer deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (BO.BlNotFoundException ex)
+                    {
+                        MessageBox.Show($"Cannot delete volunteer: {ex.Message}", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
 
     }
 
