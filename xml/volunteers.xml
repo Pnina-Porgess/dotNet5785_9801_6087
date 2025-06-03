@@ -172,7 +172,7 @@
     <Email>Yosi@gmail.com</Email>
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
+    <DistanceType>AerialDistance</DistanceType> 
     <MaximumDistance>21</MaximumDistance>
     <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
     <Address>Ashdod, HaShalom St.</Address>
@@ -234,21 +234,6 @@
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
     <MaximumDistance>123</MaximumDistance>
-    <Password>ir3Y4/oVAE27M1agrTKuPozV2LsYKj8GwcW1sJpzO80=</Password>
-    <Address>Ashdod, HaShalom St.</Address>
-    <Latitude>32.455103</Latitude>
-    <Longitude>34.906222</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
-    <Id>214606170</Id>
-    <Name>Shevi</Name>
-    <Phone>1234567876</Phone>
-    <Email>sdefrgthn@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>23</MaximumDistance>
     <Password>ir3Y4/oVAE27M1agrTKuPozV2LsYKj8GwcW1sJpzO80=</Password>
     <Address>Ashdod, HaShalom St.</Address>
     <Latitude>32.455103</Latitude>
