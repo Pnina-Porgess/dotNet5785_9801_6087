@@ -25,8 +25,10 @@ internal class VolunteerImplementation : IVolunteer
             }
 
             VolunteerManager.ValidateInputFormat(volunteer);
+     
             (volunteer.Latitude, volunteer.Longitude) = Tools.GetCoordinatesFromAddress(volunteer.CurrentAddress!);
             DO.Volunteer doVolunteer = (VolunteerManager.CreateDoVolunteer(volunteer));
+            VolunteerManager.ValidatePassword(volunteer);
             _dal.Volunteer.Create(doVolunteer);
             VolunteerManager.Observers.NotifyListUpdated(); //stage 5                                                    
 
@@ -136,7 +138,7 @@ internal class VolunteerImplementation : IVolunteer
                 FullName = volunteerDO.Name,
                 Phone = volunteerDO.Phone,
                 Email = volunteerDO.Email,
-                Password = volunteerDO.Password,
+                Password = "",
                 CurrentAddress = volunteerDO.Address,
                 Latitude = volunteerDO.Latitude,
                 Longitude = volunteerDO.Longitude,
@@ -167,6 +169,9 @@ internal class VolunteerImplementation : IVolunteer
         {
             VolunteerManager.ValidatePermissions(requesterId, volunteerToUpdate);
             VolunteerManager.ValidateInputFormat(volunteerToUpdate);
+            if(volunteerToUpdate.Password != "") {
+                VolunteerManager.ValidatePassword(volunteerToUpdate);
+            }
             (volunteerToUpdate.Latitude, volunteerToUpdate.Longitude) = VolunteerManager.LogicalChecking(volunteerToUpdate);
 
             var existingVolunteer = _dal.Volunteer.Read(volunteerToUpdate.Id)

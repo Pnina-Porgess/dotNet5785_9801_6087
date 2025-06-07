@@ -73,13 +73,34 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="boVolunteer">The volunteer object to validate.</param>
     /// <exception cref="BO.BlInvalidInputException">Thrown if any input field is invalid.</exception>
+    //internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
+    //{
+    //    if (boVolunteer == null)
+    //        throw new BO.BlNotFoundException("Volunteer object cannot be null.");
+
+    //    if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+    //        throw new BO.BlInvalidInputException("Invalid email format.");
+
+    //    if (boVolunteer.Id < 0 || !IsValidId(boVolunteer.Id))
+    //        throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
+
+    //    if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Phone, @"^\d{10}$"))
+    //        throw new BO.BlInvalidInputException("Invalid phone number format. Phone number must have 10 digits.");
+
+    //    if (boVolunteer.FullName.Length < 2)
+    //        throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
+
+    //    if (boVolunteer?.Password?.Length < 6 || !VolunteerManager.IsPasswordStrong(boVolunteer?.Password!))
+    //        throw new BO.BlInvalidInputException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
+    //}
+
     internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
     {
-       if (boVolunteer == null)
-    throw new BO.BlNotFoundException("Volunteer object cannot be null.");
+        if (boVolunteer == null)
+            throw new BO.BlNotFoundException("Volunteer object cannot be null.");
 
-     if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-      throw new BO.BlInvalidInputException("Invalid email format.");
+        if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            throw new BO.BlInvalidInputException("Invalid email format.");
 
         if (boVolunteer.Id < 0 || !IsValidId(boVolunteer.Id))
             throw new BO.BlInvalidInputException("Invalid ID format. ID must be a valid number with a correct checksum.");
@@ -89,8 +110,10 @@ internal static class VolunteerManager
 
         if (boVolunteer.FullName.Length < 2)
             throw new BO.BlInvalidInputException("Volunteer name is too short. Name must have at least 2 characters.");
-
-        if (boVolunteer?.Password?.Length < 6 || !VolunteerManager.IsPasswordStrong(boVolunteer?.Password!))
+    }
+    internal static void ValidatePassword(BO.Volunteer volunteer)
+    {
+        if (string.IsNullOrEmpty(volunteer.Password) || volunteer.Password.Length < 6 || !VolunteerManager.IsPasswordStrong(volunteer.Password))
             throw new BO.BlInvalidInputException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
     }
 

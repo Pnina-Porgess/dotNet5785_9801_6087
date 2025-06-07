@@ -154,14 +154,12 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Content="🗑️"
-                                     
-                                        Foreground="{StaticResource TextBlueBrush}"
-                                        FontWeight="Bold"
-                                        BorderThickness="0"
-                                        Cursor="Hand"
-                                        Padding="4,2"
-                                        Tag="{Binding}"
-                                        Click="DeleteButton_Click"/>
+                    Click="DeleteButton_Click"
+                    Foreground="{StaticResource TextBlueBrush}"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    Padding="4,2"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

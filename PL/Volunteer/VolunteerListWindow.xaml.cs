@@ -26,6 +26,7 @@ namespace PL.Volunteer
         {
             InitializeComponent();
         }
+        //
         public IEnumerable<BO.VolunteerInList> VolunteerList
         {
             get { return (IEnumerable<BO.VolunteerInList>)GetValue(VolunteerListProperty); }
@@ -72,7 +73,7 @@ namespace PL.Volunteer
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button deleteButton && deleteButton.Tag is BO.VolunteerInList volunteer)
+            if ((sender as FrameworkElement)?.DataContext is BO.VolunteerInList volunteer)
             {
                 var result = MessageBox.Show(
                     $"Are you sure you want to delete volunteer #{volunteer.Id} ({volunteer.FullName})?",
@@ -85,7 +86,6 @@ namespace PL.Volunteer
                     try
                     {
                         s_bl.Volunteer.DeleteVolunteer(volunteer.Id);
-                        // אם יש מנגנון Observer כמו שתיארת – הרשימה תתעדכן לבד
                         MessageBox.Show("Volunteer deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     catch (BO.BlNotFoundException ex)
