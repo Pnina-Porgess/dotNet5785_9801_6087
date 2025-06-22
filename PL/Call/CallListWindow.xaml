@@ -35,46 +35,9 @@
                BorderThickness="1" Grid.RowSpan="2">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="AssignmentId" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock Text="" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{Binding AssignmentId}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="CallId" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock Text="" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{Binding CallId}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="CallType" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock Text="" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{Binding CallType}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="OpeningTime" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock Text="" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{Binding OpeningTime}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+             
+                 
+             
                     <GridViewColumn Header="RemainingTime" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -122,6 +85,15 @@
                                     <TextBlock Text="" Margin="0,0,5,0"/>
                                     <TextBlock Text="{Binding TotalAssignments}"/>
                                 </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="מחק🗑️" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="🗑️"
+                                Click="DeleteButton_Click"
+                              />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

@@ -30,7 +30,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
@@ -41,7 +47,7 @@
         <Label Grid.Row="0" Grid.Column="0" Content="Volunteer ID:"/>
         <TextBox Grid.Row="0" Grid.Column="1"
                  Text="{Binding CurrentVolunteer.Id,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 />
+                  IsReadOnly="True"/>
 
         <!-- FullName -->
         <Label Grid.Row="1" Grid.Column="0" Content="Full Name:"/>
@@ -89,6 +95,16 @@
         <Label Grid.Row="9" Grid.Column="0" Content="Max Distance:"/>
         <TextBox Grid.Row="9" Grid.Column="1"
                  Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label Grid.Row="10" Grid.Column="0" Content="Call in progress"/>
+        <Label Grid.Row="11" Grid.Column="0" Content="Assigment Id:"/>
+        <TextBox Grid.Row="11" Grid.Column="1" Text="{Binding CurrentVolunteer.CurrentCall.Id, Mode=TwoWay}"  IsReadOnly="True"/>
+        <Label Grid.Row="12" Grid.Column="0" Content="Call Id:"/>
+        <TextBox Grid.Row="12" Grid.Column="1" Text="{Binding CurrentVolunteer.CurrentCall.CallId, Mode=TwoWay}"  IsReadOnly="True"/>
+        <Label Grid.Row="13" Grid.Column="0" Content="Address"/>
+        <TextBox Grid.Row="13" Grid.Column="1" Text="{Binding CurrentVolunteer.CurrentCall.Address, Mode=TwoWay}" IsReadOnly="True"/>
+
+
 
         <!-- Add/Update Button -->
         <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,90,0,0"

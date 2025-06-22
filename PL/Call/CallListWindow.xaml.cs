@@ -48,6 +48,33 @@ private void Window_Loaded(object sender, RoutedEventArgs e)
             queryCallList();
         }
 
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as FrameworkElement)?.DataContext is BO.CallInList call)
+            {
+                var result = MessageBox.Show(
+                    $"Are you sure you want to delete call #{call.CallId}?",
+                    "Confirm Deletion",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
 
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        s_bl.Call.DeleteCall(call.CallId);
+                        MessageBox.Show("Call deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (BO.BlNotFoundException ex)
+                    {
+                        MessageBox.Show($"Cannot delete call: {ex.Message}", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
     }
 }

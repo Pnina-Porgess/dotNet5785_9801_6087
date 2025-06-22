@@ -17,3 +17,5 @@ internal class VolunteerFieldCollection : IEnumerable
         (Enum.GetValues(typeof(BO.TypeOfReading)) as IEnumerable<BO.TypeOfReading>)!;
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }
+
+

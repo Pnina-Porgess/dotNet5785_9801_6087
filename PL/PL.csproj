@@ -25,12 +25,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Remove="Volunteer\VolunteerWindow.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BL\BL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Call\" />
-    <Folder Include="Volunteer\" />
   </ItemGroup>
 
 </Project>

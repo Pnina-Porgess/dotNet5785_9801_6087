@@ -14,13 +14,13 @@ namespace PL.Volunteer
             InitializeComponent();
 
             if (id == 0)
-                CurrentVolunteer = new BO.Volunteer() ; // אובייקט חדש
+                CurrentVolunteer = new BO.Volunteer(); // אובייקט חדש
             else
             {
                 try
                 {
                     CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
-  
+
                 }
                 catch (Exception ex)
                 {
@@ -74,7 +74,7 @@ namespace PL.Volunteer
             {
                 if (ButtonText == "Add")
                 {
-                 
+
 
                     s_bl.Volunteer.AddVolunteer(CurrentVolunteer!);
                     MessageBox.Show("Volunteer added successfully!");

@@ -108,7 +108,7 @@ internal class VolunteerImplementation : IVolunteer
             var volunteerDO = _dal.Volunteer.Read(volunteerId) ??
                 throw new BO.BlNotFoundException($"Volunteer with ID={volunteerId} does not exist.");
 
-            var currentAssignment = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.EndTime == null).FirstOrDefault();
+            var currentAssignment = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && (BO.TypeOfEndTime)a.TypeOfEndTime ==BO.TypeOfEndTime.treated).FirstOrDefault();
 
             BO.CallInProgress? callInProgress = null;
             if (currentAssignment != null)
@@ -179,7 +179,8 @@ internal class VolunteerImplementation : IVolunteer
 
             if (!VolunteerManager.CanUpdateFields(existingVolunteer!, volunteerToUpdate))
                 throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
-
+            if(volunteerToUpdate.IsActive==false && volunteerToUpdate.CurrentCall != null)
+                throw new BO.BlInvalidInputException("Cannot set volunteer to inactive while they have an active call.");
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteerToUpdate);
             _dal.Volunteer.Update(doVolunteer);
             VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.Id);  //stage 5
