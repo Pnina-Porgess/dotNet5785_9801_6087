@@ -366,10 +366,10 @@ namespace BlImplementation
                         MaxEndTime = c.MaxTimeToFinish, // זמן סיום משוער
                         DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!,volunteer.Longitude!, c.Latitude, c.Longitude)
                     });
-                //if (filterType.HasValue)
-                //{
-                //    openCalls = openCalls.Where(c => (BO.TypeOfReading)c.Type == filterType.Value);
-                //}
+                if (filterType.HasValue)
+                {
+                    openCalls = openCalls.Where(c => (BO.TypeOfReading)c.Type == filterType.Value);
+                }
 
                 return sortField switch
                 {

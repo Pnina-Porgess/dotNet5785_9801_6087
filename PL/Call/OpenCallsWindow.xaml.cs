@@ -16,11 +16,29 @@ namespace PL.Call
 
         public ObservableCollection<OpenCallInList> OpenCalls { get; set; } = new();
 
-        public IEnumerable<TypeOfReading> CallField => Enum.GetValues(typeof(TypeOfReading)).Cast<TypeOfReading>();
-        public IEnumerable<OpenCallField> SortOptions => Enum.GetValues(typeof(OpenCallField)).Cast<OpenCallField>();
+        private BO.OpenCallField _sortField = BO.OpenCallField.Id;
+        public BO.OpenCallField SortField
+        {
+            get => _sortField;
+            set
+            {
+                _sortField = value;
+                OnPropertyChanged(nameof(SortField));
+                LoadOpenCalls();
+            }
+        }
 
-        public OpenCallField? SortField { get; set; } = OpenCallField.Id;
-        public TypeOfReading? FilterStatus { get; set; } = null;
+        private BO.TypeOfReading _filterStatus = BO.TypeOfReading.None;
+        public BO.TypeOfReading FilterStatus
+        {
+            get => _filterStatus;
+            set
+            {
+                _filterStatus = value;
+                OnPropertyChanged(nameof(FilterStatus));
+                LoadOpenCalls();
+            }
+        }
 
         private OpenCallInList? selectedCall;
         public OpenCallInList? SelectedCall
@@ -58,9 +76,11 @@ namespace PL.Call
         {
             try
             {
-                var calls = bl.Call.GetOpenCallsForVolunteer(CurrentVolunteer.Id,
-                                                             FilterStatus,
-                                                             SortField ?? OpenCallField.Id);
+                var calls = bl.Call.GetOpenCallsForVolunteer(
+                    CurrentVolunteer.Id,
+                    FilterStatus == BO.TypeOfReading.None ? null : FilterStatus,
+                    SortField);
+
                 OpenCalls.Clear();
                 foreach (var call in calls)
                     OpenCalls.Add(call);
@@ -91,6 +111,13 @@ namespace PL.Call
         private void FilterOrSort_Changed(object sender, SelectionChangedEventArgs e)
         {
             LoadOpenCalls();
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // עדכון תיאור כבר קורה בפרופרטי SelectedCall, אז זה מספיק
+            if (SelectedCall != null)
+                SelectedDescription = SelectedCall.Description ?? string.Empty;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

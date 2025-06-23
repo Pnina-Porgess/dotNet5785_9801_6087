@@ -85,5 +85,11 @@ private void Window_Loaded(object sender, RoutedEventArgs e)
                 }
             }
         }
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new CallWindow(); // פתיחה ללא מזהה -> מצב הוספה
+            window.Show();
+        }
+
     }
 }

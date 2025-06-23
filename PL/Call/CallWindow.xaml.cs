@@ -1,47 +1,86 @@
-﻿using BlApi;
-using BO;
-using PL.Volunteer;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using System.Windows;
+using BO;
 
 namespace PL.Call
 {
     public partial class CallWindow : Window
     {
-        private static readonly IBl s_bl = BlApi.Factory.Get();
-        public BO.Call Call { get; set; }
-       
+        private readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+        public string ButtonText { get; set; }
+        public CallWindow(int id = 0)
+        {
+            InitializeComponent();
+            ButtonText = id == 0 ? "Add" : "Update";
+
+            if (id == 0)
+            {
+                CurrentCall = new BO.Call
+                {
+                    OpeningTime = DateTime.Now // זמן התחלה = עכשיו
+                };
+            }
+            else
+            {
+                try
+                {
+                    CurrentCall = s_bl.Call.GetCallDetails(id);
+                    s_bl.Call.AddObserver(id, CallObserver);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    Close();
+                }
+            }
+
+            this.Closed += (s, e) =>
+            {
+                if (CurrentCall != null && CurrentCall.Id != 0)
+                    s_bl.Call.RemoveObserver(CurrentCall.Id, CallObserver);
+            };
+
+            DataContext = this;
+        }
+
+        public BO.Call? CurrentCall
+        {
+            get => (BO.Call?)GetValue(CurrentCallProperty);
+            set => SetValue(CurrentCallProperty, value);
+        }
+
         public static readonly DependencyProperty CurrentCallProperty =
             DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(CallWindow), new PropertyMetadata(null));
 
-        public CallWindow(int callId)
+        private void CallObserver()
         {
-            InitializeComponent();
-            Call = s_bl.Call.GetCallDetails(callId);
-            DataContext = this;
-
+            if (CurrentCall == null) return;
+            int id = CurrentCall.Id;
+            CurrentCall = null;
+            CurrentCall = s_bl.Call.GetCallDetails(id);
         }
 
-        // Properties for UI logic
-
-
-
-
-        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // בדיקות פורמט בסיסיות (לדוג' תיאור לא רי
-                // שלח עדכון ל-BL
-                s_bl.Call.UpdateCall(Call);
-                MessageBox.Show("הקריאה עודכנה בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (ButtonText == "Add")
+                {
+
+                    s_bl.Call.AddCall(CurrentCall!);
+                    MessageBox.Show("Call added successfully!");
+                }
+                else
+                {
+                    s_bl.Call.UpdateCall(CurrentCall!);
+                    MessageBox.Show("Call updated successfully!");
+                }
+
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("שגיאה בעדכון הקריאה: " + ex.Message, "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message);
             }
         }
     }

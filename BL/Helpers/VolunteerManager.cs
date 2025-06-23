@@ -214,11 +214,11 @@ internal static class VolunteerManager
     /// <param name="original">The original volunteer object.</param>
     /// <param name="boVolunteer">The new volunteer object.</param>
     /// <returns>True if the update is allowed; otherwise, false.</returns>
-    internal static bool CanUpdateFields(DO.Volunteer original, BO.Volunteer boVolunteer)
+    internal static bool CanUpdateFields(DO.Volunteer original, DO.Volunteer boVolunteer)
     {
-        if ((BO.Role)original.Role != boVolunteer.Role)
+        if ((BO.Role)original.Role != (BO.Role)boVolunteer.Role)
         {
-            if (boVolunteer.Role != BO.Role.Manager)
+            if ((BO.Role)boVolunteer.Role != BO.Role.Manager)
                 return false;
         }
         return true;

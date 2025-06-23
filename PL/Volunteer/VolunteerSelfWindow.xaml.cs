@@ -17,13 +17,8 @@ namespace PL.Volunteer
             {
                 _volunteer = value;
                 OnPropertyChanged(nameof(Volunteer));
-                OnPropertyChanged(nameof(HasCurrentCall));
-                OnPropertyChanged(nameof(NoCurrentCall));
             }
         }
-
-        public bool HasCurrentCall => Volunteer.CurrentCall != null;
-        public bool NoCurrentCall => !HasCurrentCall;
 
         public VolunteerSelfWindow(int volunteerId)
         {

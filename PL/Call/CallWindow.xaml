@@ -3,67 +3,42 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.Call"
         mc:Ignorable="d"
-        Title="CallWindow" Height="600" Width="600"
-    WindowStartupLocation="CenterScreen">
-    
-    
+        Title="ניהול קריאה" Height="500" Width="400">
+
     <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <!-- תיאור -->
+            <Label Content="תיאור:" />
+            <TextBox Text="{Binding CurrentCall.Description, Mode=TwoWay}" />
 
-        <!-- Call Details -->
-        <Label Grid.Row="0" Grid.Column="0" Content="מזהה קריאה:"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Call}" IsReadOnly="True"/>
+            <ComboBox SelectedItem="{Binding CurrentCall.Type, Mode=TwoWay}"
+          ItemsSource="{StaticResource VolunteerFieldCollection}" />
 
-        <Label Grid.Row="1" Grid.Column="0" Content="סוג קריאה:"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Call.Address}" SelectedItem="{Binding Call.CallType}"/>
 
-        <Label Grid.Row="2" Grid.Column="0" Content="תיאור:"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Call.description}" />
+            <ComboBox SelectedItem="{Binding CurrentCall.Status, Mode=TwoWay}"
+          ItemsSource="{StaticResource CallStatusCollection}" />
 
-        <Label Grid.Row="3" Grid.Column="0" Content="כתובת:"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Call.FullAddress}" />
 
-        <Label Grid.Row="4" Grid.Column="0" Content="סטטוס:"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Call.status}" IsReadOnly="True"/>
 
-        <Label Grid.Row="5" Grid.Column="0" Content="זמן פתיחה:"/>
-        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Call.Opening_time}" IsReadOnly="True"/>
+            <!-- כתובת -->
+            <Label Content="כתובת:" />
+            <TextBox Text="{Binding CurrentCall.Address, Mode=TwoWay}" />
 
-        <Label Grid.Row="6" Grid.Column="0" Content="זמן סיום מקסימלי:"/>
-        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Call.Max_finish_time}" IsReadOnly="{Binding IsMaxFinishTimeReadOnly}"/>
+            <!-- זמן מקסימלי לסיום -->
+            <Label Content="זמן מקסימלי לסיום:" />
+            <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" />
 
-        <!-- Assignments List -->
-        <!--<Label Grid.Row="7" Grid.Column="0" Content="הקצאות:" VerticalAlignment="Top"/>
-        <ListView Grid.Row="7" Grid.Column="1" ItemsSource="{Binding Call.AssignmentsList}" Height="100">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="מתנדב" DisplayMemberBinding="{Binding VolunteerFullName}" Width="120"/>
-                    <GridViewColumn Header="התחלה" DisplayMemberBinding="{Binding Start_time}" Width="100"/>
-                    <GridViewColumn Header="סיום" DisplayMemberBinding="{Binding End_time}" Width="100"/>
-                    <GridViewColumn Header="סוג סיום" DisplayMemberBinding="{Binding EndType}" Width="100"/>
-                </GridView>
-            </ListView.View>
-        </ListView>-->
+            <!-- סטטוס לצפייה בלבד -->
+            <Label Content="סטטוס:" />
+            <TextBlock Text="{Binding CurrentCall.Status}" />
 
-        <!-- Update Button -->
-        <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Content="עדכן" Height="40" Margin="0,20,0,0"
-                Click="UpdateButton_Click" IsEnabled="{Binding IsUpdateEnabled}"/>
+            <!-- זמן פתיחה לצפייה בלבד -->
+            <Label Content="זמן פתיחה:" />
+            <TextBlock Text="{Binding CurrentCall.OpeningTime}" />
+
+            <!-- כפתור -->
+            <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click" Margin="0,20,0,0"/>
+        </StackPanel>
     </Grid>
 </Window>

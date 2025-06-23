@@ -177,7 +177,9 @@ internal class VolunteerImplementation : IVolunteer
             var existingVolunteer = _dal.Volunteer.Read(volunteerToUpdate.Id)
                 ?? throw new BO.BlNotFoundException($"Volunteer with ID={volunteerToUpdate.Id} does not exist.");
 
-            if (!VolunteerManager.CanUpdateFields(existingVolunteer!, volunteerToUpdate))
+            var volunteerRequester = _dal.Volunteer.Read(requesterId);
+
+            if (!VolunteerManager.CanUpdateFields(existingVolunteer!, volunteerRequester))
                 throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
             if(volunteerToUpdate.IsActive==false && volunteerToUpdate.CurrentCall != null)
                 throw new BO.BlInvalidInputException("Cannot set volunteer to inactive while they have an active call.");

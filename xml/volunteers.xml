@@ -16,21 +16,6 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>328216783</Id>
-    <Name>Sari</Name>
-    <Phone>0503214571</Phone>
-    <Email>Sari@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>17</MaximumDistance>
-    <Password>W0L901Ef0CpoM8WZnO9jgCpL00vT+V/vhdOrpr0y8iw=</Password>
-    <Address>Jerusalem, King George St.</Address>
-    <Latitude>35.2137</Latitude>
-    <Longitude>31.7683</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
     <Id>328263249</Id>
     <Name>Shira</Name>
     <Phone>0541238745</Phone>
@@ -43,21 +28,6 @@
     <Address>Haifa, Carmel Beach</Address>
     <Latitude>34.9896</Latitude>
     <Longitude>32.794</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
-    <Id>328265640</Id>
-    <Name>Chaya</Name>
-    <Phone>0535491235</Phone>
-    <Email>Chaya@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>26</MaximumDistance>
-    <Password>NAG6mu5oFUd+/z+oIXJg7nK6dZvA7iQPATad8AvEsBc=</Password>
-    <Address>Beer Sheva, Ben Gurion Blvd.</Address>
-    <Latitude>34.7913</Latitude>
-    <Longitude>31.2518</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
@@ -151,21 +121,6 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>214606170</Id>
-    <Name>Shani</Name>
-    <Phone>0524567890</Phone>
-    <Email>Shani@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>10</MaximumDistance>
-    <Password>4RuzNBMLIbCO4JSGy6bXvQozBgJ4InmIoztxDnpyqqQ=</Password>
-    <Address>Herzliya, Sokolov St.</Address>
-    <Latitude>34.8436</Latitude>
-    <Longitude>32.1663</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
     <Id>328308646</Id>
     <Name>Yonatan</Name>
     <Phone>0546543210</Phone>
@@ -178,36 +133,6 @@
     <Address>Hadera, HaSharon Blvd.</Address>
     <Latitude>34.9196</Latitude>
     <Longitude>32.434</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
-    <Id>328332317</Id>
-    <Name>David</Name>
-    <Phone>0551237894</Phone>
-    <Email>David@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>16</MaximumDistance>
-    <Password>Rn0chuIVa14xX365ycVMS3+HSSYHUhXyE4T0YUX3rk0=</Password>
-    <Address>Eilat, HaTmarim St.</Address>
-    <Latitude>34.9482</Latitude>
-    <Longitude>29.5581</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
-    <Id>329236087</Id>
-    <Name>Pnina</Name>
-    <Phone>1234567654</Phone>
-    <Email>1@gmail.com</Email>
-    <Role>Manager</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>1234</MaximumDistance>
-    <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
-    <Address>Tel Aviv, Rothschild Blvd.</Address>
-    <Latitude>32.071428</Latitude>
-    <Longitude>34.778882</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
@@ -238,6 +163,81 @@
     <Address>Ashdod, HaShalom St.</Address>
     <Latitude>32.455103</Latitude>
     <Longitude>34.906222</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>214606170</Id>
+    <Name>ShaniCA</Name>
+    <Phone>0524567890</Phone>
+    <Email>Shani@gmail.com</Email>
+    <Role>Manager</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>10</MaximumDistance>
+    <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
+    <Address>Herzliya, Sokolov St.</Address>
+    <Latitude>32.16361</Latitude>
+    <Longitude>34.810979</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>328332317</Id>
+    <Name>David</Name>
+    <Phone>0551237894</Phone>
+    <Email>David@gmail.com</Email>
+    <Role>Manager</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>16</MaximumDistance>
+    <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
+    <Address>Eilat, HaTmarim St.</Address>
+    <Latitude>32.338841</Latitude>
+    <Longitude>34.889062</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>328216783</Id>
+    <Name>Sari</Name>
+    <Phone>0503214571</Phone>
+    <Email>Sari@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>17</MaximumDistance>
+    <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
+    <Address>Jerusalem, King George St.</Address>
+    <Latitude>-31.897354</Latitude>
+    <Longitude>115.792619</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>328265640</Id>
+    <Name>Chaya</Name>
+    <Phone>0535491235</Phone>
+    <Email>Chaya@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>26</MaximumDistance>
+    <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
+    <Address>Beer Sheva, Ben Gurion Blvd.</Address>
+    <Latitude>52.509737</Latitude>
+    <Longitude>13.371708</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>329236087</Id>
+    <Name>Pnina</Name>
+    <Phone>1234567654</Phone>
+    <Email>1@gmail.com</Email>
+    <Role>Manager</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>1234</MaximumDistance>
+    <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
+    <Address>Tel Aviv, Rothschild Blvd.</Address>
+    <Latitude>32.071428</Latitude>
+    <Longitude>34.778882</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
 </ArrayOfVolunteer>

@@ -544,4 +544,76 @@
     <EntryTime>2025-06-23T01:34:08.6696243+03:00</EntryTime>
     <EndTime>2025-06-22T19:39:35</EndTime>
   </Assignment>
+  <Assignment>
+    <Id>2068</Id>
+    <CallId>1009</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>treated</TypeOfEndTime>
+    <EntryTime>2025-06-23T11:43:20.4640113+03:00</EntryTime>
+    <EndTime>2025-06-22T19:39:35</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2069</Id>
+    <CallId>1012</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>treated</TypeOfEndTime>
+    <EntryTime>2025-06-23T12:27:56.1920687+03:00</EntryTime>
+    <EndTime>2025-06-22T19:39:35</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2070</Id>
+    <CallId>1011</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>treated</TypeOfEndTime>
+    <EntryTime>2025-06-23T12:32:24.5813035+03:00</EntryTime>
+    <EndTime>2025-06-22T19:39:35</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2071</Id>
+    <CallId>1015</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>SelfCancellation</TypeOfEndTime>
+    <EntryTime>2025-06-23T12:45:00.7493186+03:00</EntryTime>
+    <EndTime>2025-06-23T12:45:05.1793075+03:00</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2072</Id>
+    <CallId>1015</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>treated</TypeOfEndTime>
+    <EntryTime>2025-06-23T12:46:44.7505069+03:00</EntryTime>
+    <EndTime>2025-06-22T19:39:35</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2073</Id>
+    <CallId>1021</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>SelfCancellation</TypeOfEndTime>
+    <EntryTime>2025-06-23T13:07:29.8189201+03:00</EntryTime>
+    <EndTime>2025-06-23T13:07:34.7733477+03:00</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2074</Id>
+    <CallId>1021</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>treated</TypeOfEndTime>
+    <EntryTime>2025-06-23T14:40:23.5162714+03:00</EntryTime>
+    <EndTime>2025-06-22T19:39:35</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2075</Id>
+    <CallId>1022</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>SelfCancellation</TypeOfEndTime>
+    <EntryTime>2025-06-23T15:21:40.9363726+03:00</EntryTime>
+    <EndTime>2025-06-23T15:22:45.7679144+03:00</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2076</Id>
+    <CallId>1022</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime />
+    <EntryTime>2025-06-23T15:27:08.2244732+03:00</EntryTime>
+    <EndTime />
+  </Assignment>
 </Assignments>

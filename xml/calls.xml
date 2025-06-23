@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
-    <Id>1002</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
-    <Description>xscdvfv</Description>
-    <Adress>Begin Boulevard, Jerusalem</Adress>
-    <Longitude>35.2105</Longitude>
-    <Latitude>31.7781</Latitude>
-    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
-    <MaxTimeToFinish>2026-02-27T00:00:00</MaxTimeToFinish>
-  </Call>
-  <Call>
     <Id>1003</Id>
     <TypeOfReading>EngineFailure</TypeOfReading>
     <Description />
@@ -151,36 +141,6 @@
     <MaxTimeToFinish>2025-05-14T00:00:00</MaxTimeToFinish>
   </Call>
   <Call>
-    <Id>1020</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
-    <Description />
-    <Adress>HaMeyasdim, Zikhron Ya'akov</Adress>
-    <Longitude>34.8925</Longitude>
-    <Latitude>32.5113</Latitude>
-    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
-    <MaxTimeToFinish>2025-04-16T00:00:00</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1021</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
-    <Description />
-    <Adress>Ahuza, Raanana</Adress>
-    <Longitude>34.9537</Longitude>
-    <Latitude>32.5726</Latitude>
-    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
-    <MaxTimeToFinish>2025-04-23T00:00:00</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1022</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
-    <Description />
-    <Adress>Jabotinsky, Kiryat Gat</Adress>
-    <Longitude>34.8703</Longitude>
-    <Latitude>32.1847</Latitude>
-    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
-    <MaxTimeToFinish>2025-01-03T00:00:00</MaxTimeToFinish>
-  </Call>
-  <Call>
     <Id>1023</Id>
     <TypeOfReading>None</TypeOfReading>
     <Description />
@@ -241,16 +201,6 @@
     <MaxTimeToFinish>2025-01-28T00:00:00</MaxTimeToFinish>
   </Call>
   <Call>
-    <Id>1029</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
-    <Description />
-    <Adress>Ben Gurion, Bat Yam</Adress>
-    <Longitude>35.1047</Longitude>
-    <Latitude>32.6672</Latitude>
-    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
-    <MaxTimeToFinish>2025-03-29T00:00:00</MaxTimeToFinish>
-  </Call>
-  <Call>
     <Id>1030</Id>
     <TypeOfReading>None</TypeOfReading>
     <Description />
@@ -309,16 +259,6 @@
     <Latitude>32.434</Latitude>
     <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
     <MaxTimeToFinish>2025-05-23T00:00:00</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1036</Id>
-    <TypeOfReading>None</TypeOfReading>
-    <Description />
-    <Adress>Rabbi Akiva, Bnei Brak</Adress>
-    <Longitude>34.8019</Longitude>
-    <Latitude>30.61</Latitude>
-    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
-    <MaxTimeToFinish>2025-04-29T00:00:00</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1037</Id>
@@ -399,16 +339,6 @@
     <Latitude>31.8775</Latitude>
     <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
     <MaxTimeToFinish>2025-05-22T00:00:00</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1045</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
-    <Description />
-    <Adress>Sokolov, Holon</Adress>
-    <Longitude>35.45</Longitude>
-    <Latitude>31.8667</Latitude>
-    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
-    <MaxTimeToFinish>2025-01-10T00:00:00</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1046</Id>
@@ -499,5 +429,115 @@
     <Latitude>32.3329</Latitude>
     <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
     <MaxTimeToFinish>2026-02-03T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1021</Id>
+    <TypeOfReading>DeadBattery</TypeOfReading>
+    <Description>ddddddd</Description>
+    <Adress>Ahuza, Raanana</Adress>
+    <Longitude>34.9537</Longitude>
+    <Latitude>32.5726</Latitude>
+    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2026-04-23T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1036</Id>
+    <TypeOfReading>None</TypeOfReading>
+    <Description />
+    <Adress>Rabbi Akiva, Bnei Brak</Adress>
+    <Longitude>34.8309398</Longitude>
+    <Latitude>32.0861575</Latitude>
+    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2025-04-29T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1020</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description>scsvcs </Description>
+    <Adress>HaMeyasdim, Zikhron Ya'akov</Adress>
+    <Longitude>34.9541029</Longitude>
+    <Latitude>32.5687052</Latitude>
+    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2025-04-16T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1029</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>Ben Gurion, Bat Yam</Adress>
+    <Longitude>34.7389122</Longitude>
+    <Latitude>32.0133321</Latitude>
+    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2025-03-29T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1045</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>Sokolov, Holon</Adress>
+    <Longitude>34.7743971</Longitude>
+    <Latitude>32.022827</Latitude>
+    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2025-01-10T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1050</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description>dadafd</Description>
+    <Adress>Soroka Hospital, Beer Sheva</Adress>
+    <Longitude>34.800933082673104</Longitude>
+    <Latitude>31.2582113</Latitude>
+    <TimeOfOpen>0001-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-23T15:31:33.1117046+03:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1002</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description>xscdvfvsdfvgb</Description>
+    <Adress>Begin Boulevard, Jerusalem</Adress>
+    <Longitude>35.210331</Longitude>
+    <Latitude>31.850233</Latitude>
+    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2026-02-27T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1051</Id>
+    <TypeOfReading>FlatTire</TypeOfReading>
+    <Description />
+    <Adress>Soroka Hospital, Beer Sheva</Adress>
+    <Longitude>34.800933082673104</Longitude>
+    <Latitude>31.2582113</Latitude>
+    <TimeOfOpen>2025-06-23T14:52:40.6702606+03:00</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-23T15:53:22.4651001+03:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1052</Id>
+    <TypeOfReading>FlatTire</TypeOfReading>
+    <Description>יויםם</Description>
+    <Adress>Soroka Hospital, Beer Sheva</Adress>
+    <Longitude>34.800933082673104</Longitude>
+    <Latitude>31.2582113</Latitude>
+    <TimeOfOpen>2025-06-23T14:56:23.5194339+03:00</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-23T15:56:39.172992+03:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1053</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description>ד'גקכברהענ</Description>
+    <Adress>Soroka Hospital, Beer Sheva</Adress>
+    <Longitude>34.800933082673104</Longitude>
+    <Latitude>31.2582113</Latitude>
+    <TimeOfOpen>2025-06-23T15:00:22.8963944+03:00</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-27T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1022</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>Jabotinsky, Kiryat Gat</Adress>
+    <Longitude>34.8703</Longitude>
+    <Latitude>32.1847</Latitude>
+    <TimeOfOpen>2025-01-01T00:00:00</TimeOfOpen>
+    <MaxTimeToFinish>2026-01-03T00:00:00</MaxTimeToFinish>
   </Call>
 </ArrayOfCall>

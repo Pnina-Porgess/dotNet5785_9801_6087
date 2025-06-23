@@ -1,16 +1,14 @@
 ﻿using BlApi;
 using BO;
-using Microsoft.VisualBasic;
 using System.Collections.Generic;
-using System.ComponentModel; // נדרש עבור INotifyPropertyChanged
+using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices; // נדרש עבור [CallerMemberName]
+using System.Runtime.CompilerServices;
 using System.Windows;
-//using static BO.Enums;
 
 namespace PL
 {
-    public partial class VolunteerHistoryWindow : Window
+    public partial class VolunteerHistoryWindow : Window, INotifyPropertyChanged
     {
         private static readonly IBl s_bl = Factory.Get();
 
@@ -23,8 +21,6 @@ namespace PL
         }
 
         public int VolunteerId { get; set; }
-        public IEnumerable<CallType> CallTypeCollection => Enum.GetValues(typeof(CallType)).Cast<CallType>();
-        public IEnumerable<string> SortOptions => new[] { "Finish Time", "Type", "ID" };
 
         private BO.TypeOfReading _selectedCallType = BO.TypeOfReading.None;
         public BO.TypeOfReading SelectedCallType
@@ -33,31 +29,31 @@ namespace PL
             set
             {
                 _selectedCallType = value;
-                OnPropertyChanged(nameof(ClosedCalls));
-            QueryClosedCalls(); // רענון הרשימה בעת שינוי
+                OnPropertyChanged();
+                QueryClosedCalls();
             }
         }
 
-        private string _selectedSortOption = "Finish Time";
-        public string SelectedSortOption
+        private BO.ClosedCallField _selectedSortOption = BO.ClosedCallField.EndType;
+        public BO.ClosedCallField SelectedSortOption
         {
             get => _selectedSortOption;
             set
             {
                 _selectedSortOption = value;
-                OnPropertyChanged(nameof(ClosedCalls));
-              QueryClosedCalls(); // רענון הרשימה בעת שינוי
+                OnPropertyChanged();
+                QueryClosedCalls();
             }
         }
 
-        private IEnumerable<ClosedCallInList> _closedCalls;
+        private IEnumerable<ClosedCallInList> _closedCalls = Enumerable.Empty<ClosedCallInList>();
         public IEnumerable<ClosedCallInList> ClosedCalls
         {
             get => _closedCalls;
             set
             {
                 _closedCalls = value;
-                OnPropertyChanged(nameof(ClosedCalls));
+                OnPropertyChanged();
             }
         }
 
@@ -65,25 +61,15 @@ namespace PL
         {
             var calls = s_bl.Call.GetClosedCallsByVolunteer(
                 volunteerId: VolunteerId,
-               SelectedCallType ==  BO.TypeOfReading.None? null : SelectedCallType,
-                sortField: SelectedSortOption == "Finish Time" ? BO.ClosedCallField.EndType :
-                           SelectedSortOption == "Type" ? BO.ClosedCallField.CallType :
-                           BO.ClosedCallField.Id
+                SelectedCallType == BO.TypeOfReading.None ? null : SelectedCallType,
+                sortField: SelectedSortOption
             );
 
             ClosedCalls = calls.ToList();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        //private void OnPropertyChanged(string propertyName)
-        //{
-        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
-
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

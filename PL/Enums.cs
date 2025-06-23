@@ -27,6 +27,14 @@ internal class OpenCallFieldCollection : IEnumerable
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }
 
+
+internal class CloseCallFieldCollection : IEnumerable
+{
+    static readonly IEnumerable<BO.ClosedCallField> s_enums =
+        (System.Enum.GetValues(typeof(BO.ClosedCallField)) as IEnumerable<BO.ClosedCallField>)!;
+
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}
 internal class CallStatusCollection : IEnumerable
 {
     public BO.CallStatus Status { get; set; } = BO.CallStatus.Open;

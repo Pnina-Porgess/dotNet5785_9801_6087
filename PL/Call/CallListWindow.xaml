@@ -104,7 +104,13 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Left" Height="50" Width="100" Margin="102,438,0,10"/>
+        <Button Content="Add"
+        Grid.Row="2"
+        HorizontalAlignment="Left"
+        Height="50"
+        Width="100"
+        Margin="102,438,0,10"
+        Click="AddButton_Click"/>
     </Grid>
 
 </Window>
