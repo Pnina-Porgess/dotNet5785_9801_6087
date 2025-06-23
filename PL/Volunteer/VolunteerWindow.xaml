@@ -47,7 +47,7 @@
         <Label Grid.Row="0" Grid.Column="0" Content="Volunteer ID:"/>
         <TextBox Grid.Row="0" Grid.Column="1"
                  Text="{Binding CurrentVolunteer.Id,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  IsReadOnly="True"/>
+                  />
 
         <!-- FullName -->
         <Label Grid.Row="1" Grid.Column="0" Content="Full Name:"/>

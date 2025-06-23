@@ -63,7 +63,7 @@ namespace BlApi
         /// <param name="filterStatus">Optional filter for the status of the open calls.</param>
         /// <param name="sortField">Optional sorting field for the open calls list.</param>
         /// <returns>An enumerable list of open calls available for the volunteer to choose from.</returns>
-        IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, CallStatus? filterStatus, OpenCallField? sortField);
+        IEnumerable<OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, TypeOfReading? filterStatus, OpenCallField? sortField);
 
         /// <summary>
         /// Marks the treatment for a call as completed.

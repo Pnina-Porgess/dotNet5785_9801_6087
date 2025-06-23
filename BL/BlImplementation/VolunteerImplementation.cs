@@ -108,7 +108,7 @@ internal class VolunteerImplementation : IVolunteer
             var volunteerDO = _dal.Volunteer.Read(volunteerId) ??
                 throw new BO.BlNotFoundException($"Volunteer with ID={volunteerId} does not exist.");
 
-            var currentAssignment = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && (BO.TypeOfEndTime)a.TypeOfEndTime ==BO.TypeOfEndTime.treated).FirstOrDefault();
+            var currentAssignment = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a?.TypeOfEndTime == null).FirstOrDefault();
 
             BO.CallInProgress? callInProgress = null;
             if (currentAssignment != null)

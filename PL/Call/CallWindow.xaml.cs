@@ -1,24 +1,33 @@
-﻿using System;
+﻿using BlApi;
+using BO;
+using PL.Volunteer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
-using BlApi;
-using BO;
 
 namespace PL.Call
 {
     public partial class CallWindow : Window
     {
         private static readonly IBl s_bl = BlApi.Factory.Get();
+        public BO.Call Call { get; set; }
+       
+        public static readonly DependencyProperty CurrentCallProperty =
+            DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(CallWindow), new PropertyMetadata(null));
+
         public CallWindow(int callId)
         {
             InitializeComponent();
             Call = s_bl.Call.GetCallDetails(callId);
+            DataContext = this;
+
         }
-        public BO.Call Call { get; set; }
+
         // Properties for UI logic
-     
-  
+
+
+
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {

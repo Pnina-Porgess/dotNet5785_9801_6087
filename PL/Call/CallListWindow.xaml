@@ -31,7 +31,11 @@
                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" SelectionChanged="ComboBox_SelectionChanged"/>
         </Grid>
         <ListView Margin="5,5,5,65" 
-                 Grid.Row="1"  ItemsSource="{Binding Path=CallList}" SelectedItem="{Binding SelectedCall}" Background="White"
+                 Grid.Row="1"  ItemsSource="{Binding Path=CallList}"  
+                  SelectedItem="{Binding SelectedCall}" 
+                  MouseDoubleClick="ListView_MouseDoubleClick"
+                  Background="White"
+                  
                BorderThickness="1" Grid.RowSpan="2">
             <ListView.View>
                 <GridView>

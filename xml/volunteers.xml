@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
-    <Id>322692183</Id>
+    <Id>222415602</Id>
     <Name>Shlomo</Name>
     <Phone>05321234565</Phone>
     <Email>Shlomo@gmail.com</Email>
     <Role>Manager</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>49</MaximumDistance>
+    <MaximumDistance>17</MaximumDistance>
     <Password>NEY4aYTa55AOa6jScsyQpB2npR+Tt68Uz10+bGUzoXM=</Password>
     <Address>Tel Aviv</Address>
     <Latitude>32.0853</Latitude>
     <Longitude>34.7818</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>328216783</Id>
+    <Name>Sari</Name>
+    <Phone>0503214571</Phone>
+    <Email>Sari@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>17</MaximumDistance>
+    <Password>W0L901Ef0CpoM8WZnO9jgCpL00vT+V/vhdOrpr0y8iw=</Password>
+    <Address>Jerusalem, King George St.</Address>
+    <Latitude>35.2137</Latitude>
+    <Longitude>31.7683</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
@@ -23,7 +38,7 @@
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>40</MaximumDistance>
+    <MaximumDistance>25</MaximumDistance>
     <Password>n9/A36VjqhHJiUu3xEigt0DueVWXkmr5fTSWujtPDa8=</Password>
     <Address>Haifa, Carmel Beach</Address>
     <Latitude>34.9896</Latitude>
@@ -38,26 +53,11 @@
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>29</MaximumDistance>
+    <MaximumDistance>26</MaximumDistance>
     <Password>NAG6mu5oFUd+/z+oIXJg7nK6dZvA7iQPATad8AvEsBc=</Password>
     <Address>Beer Sheva, Ben Gurion Blvd.</Address>
     <Latitude>34.7913</Latitude>
     <Longitude>31.2518</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
-    <Id>329236087</Id>
-    <Name>Yosi</Name>
-    <Phone>0557896521</Phone>
-    <Email>Yosi@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>10</MaximumDistance>
-    <Password>ZPuQOxxxIk8qVe4Cq06Hw8e0TsD59b4YvbbVYdBKm4E=</Password>
-    <Address>Ashdod, HaShalom St.</Address>
-    <Latitude>34.6553</Latitude>
-    <Longitude>31.8044</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
@@ -68,7 +68,7 @@
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>18</MaximumDistance>
+    <MaximumDistance>35</MaximumDistance>
     <Password>wngSko9cvCmRMu6+RUEX3/p6Z4XvMKRFa2wMXqqZKtg=</Password>
     <Address>Rishon LeZion, Neot Afeka St.</Address>
     <Latitude>34.7925</Latitude>
@@ -83,7 +83,7 @@
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>15</MaximumDistance>
+    <MaximumDistance>5</MaximumDistance>
     <Password>LxofeaOaJs8R37DF/lghchwPMYNjd9GEd7YNDJc/D5g=</Password>
     <Address>Petah Tikva, HaSharon St.</Address>
     <Latitude>34.8878</Latitude>
@@ -98,11 +98,26 @@
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>10</MaximumDistance>
+    <MaximumDistance>13</MaximumDistance>
     <Password>ROLlsrRq2Hw3AtRWTByuHmlF1IrrtpESEIM5g64dbLg=</Password>
     <Address>Holon, Jabotinsky St.</Address>
     <Latitude>34.7874</Latitude>
     <Longitude>32.0158</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>328301940</Id>
+    <Name>Chana</Name>
+    <Phone>0556549872</Phone>
+    <Email>Chana@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>40</MaximumDistance>
+    <Password>2nsTFe4nx6Tlz6f34VtGFVR6ovl1+GSWthN5sEij7FE=</Password>
+    <Address>Bnei Brak, Rabbi Akiva St.</Address>
+    <Latitude>34.8333</Latitude>
+    <Longitude>32.0809</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
@@ -113,7 +128,7 @@
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>44</MaximumDistance>
+    <MaximumDistance>35</MaximumDistance>
     <Password>9Fwa9b+Tjrq4jI+Psr7Vd5Wqi3pViBbfyJ0AlSuODjs=</Password>
     <Address>Rehovot, Herzl St.</Address>
     <Latitude>34.8093</Latitude>
@@ -121,14 +136,14 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>328306436</Id>
+    <Id>214751885</Id>
     <Name>Chaim</Name>
     <Phone>0501256789</Phone>
     <Email>Chaim@gmail.com</Email>
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>21</MaximumDistance>
+    <MaximumDistance>22</MaximumDistance>
     <Password>4H08l5Mlc/rWwsnek8DA99JSFzTJeLCQrVQv64xsA/0=</Password>
     <Address>Bat Yam, Ben Gurion Blvd.</Address>
     <Latitude>34.7502</Latitude>
@@ -136,14 +151,14 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>328159801</Id>
+    <Id>214606170</Id>
     <Name>Shani</Name>
     <Phone>0524567890</Phone>
     <Email>Shani@gmail.com</Email>
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>28</MaximumDistance>
+    <MaximumDistance>10</MaximumDistance>
     <Password>4RuzNBMLIbCO4JSGy6bXvQozBgJ4InmIoztxDnpyqqQ=</Password>
     <Address>Herzliya, Sokolov St.</Address>
     <Latitude>34.8436</Latitude>
@@ -158,7 +173,7 @@
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>40</MaximumDistance>
+    <MaximumDistance>17</MaximumDistance>
     <Password>NsdyKRJ1nU7xRVlNBlFRQm9B4GTMcr2nl6G9vVix7yY=</Password>
     <Address>Hadera, HaSharon Blvd.</Address>
     <Latitude>34.9196</Latitude>
@@ -173,7 +188,7 @@
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>46</MaximumDistance>
+    <MaximumDistance>16</MaximumDistance>
     <Password>Rn0chuIVa14xX365ycVMS3+HSSYHUhXyE4T0YUX3rk0=</Password>
     <Address>Eilat, HaTmarim St.</Address>
     <Latitude>34.9482</Latitude>
@@ -181,14 +196,14 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>328227442</Id>
+    <Id>329236087</Id>
     <Name>Pnina</Name>
-    <Phone>0528976524</Phone>
-    <Email>Pnina@gmail.com</Email>
-    <Role>Volunteer</Role>
+    <Phone>1234567654</Phone>
+    <Email>1@gmail.com</Email>
+    <Role>Manager</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>27</MaximumDistance>
+    <MaximumDistance>1234</MaximumDistance>
     <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
     <Address>Tel Aviv, Rothschild Blvd.</Address>
     <Latitude>32.071428</Latitude>
@@ -203,7 +218,7 @@
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>38</MaximumDistance>
+    <MaximumDistance>46</MaximumDistance>
     <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
     <Address>Netanya, Herzl St.</Address>
     <Latitude>32.289866</Latitude>
@@ -211,33 +226,18 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>328216783</Id>
-    <Name>Sari</Name>
-    <Phone>0503214571</Phone>
-    <Email>Sari@gmail.com</Email>
-    <Role>Volunteer</Role>
+    <Id>214786725</Id>
+    <Name>Yosi</Name>
+    <Phone>0557896521</Phone>
+    <Email>Yosi@gmail.com</Email>
+    <Role>Manager</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>15</MaximumDistance>
+    <MaximumDistance>45</MaximumDistance>
     <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
-    <Address>Jerusalem, King George St.</Address>
-    <Latitude>-31.897354</Latitude>
-    <Longitude>115.792619</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
-    <Id>328301940</Id>
-    <Name>Chana</Name>
-    <Phone>0556549872</Phone>
-    <Email>Chana@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>false</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>19</MaximumDistance>
-    <Password>47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=</Password>
-    <Address>Bnei Brak, Rabbi Akiva St.</Address>
-    <Latitude>31.946619</Latitude>
-    <Longitude>34.82793</Longitude>
+    <Address>Ashdod, HaShalom St.</Address>
+    <Latitude>32.455103</Latitude>
+    <Longitude>34.906222</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
 </ArrayOfVolunteer>

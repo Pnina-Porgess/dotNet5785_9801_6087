@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BlApi;
+using Microsoft.VisualBasic;
+using PL.Volunteer;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using BlApi;
-using Microsoft.VisualBasic;
 
 namespace PL.Call
 {
@@ -14,6 +15,7 @@ namespace PL.Call
     public partial class CallListWindow : Window
     {
         static readonly IBl s_bl = BlApi.Factory.Get();
+        public BO.CallInList? SelectedCall { get; set; }
         public CallListWindow()
         {
             InitializeComponent();
@@ -47,7 +49,14 @@ private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             queryCallList();
         }
-
+        private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (SelectedCall != null)
+            {
+                var window = new CallWindow(SelectedCall.CallId);
+                window.Show();
+            }
+        }
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             if ((sender as FrameworkElement)?.DataContext is BO.CallInList call)

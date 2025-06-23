@@ -19,3 +19,18 @@ internal class VolunteerFieldCollection : IEnumerable
 }
 
 
+internal class OpenCallFieldCollection : IEnumerable
+{
+    public BO.OpenCallField SortField { get; set; } = BO.OpenCallField.Id;
+    static readonly IEnumerable<BO.OpenCallField> s_enums =
+        (Enum.GetValues(typeof(BO.OpenCallField)) as IEnumerable<BO.OpenCallField>)!;
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}
+
+internal class CallStatusCollection : IEnumerable
+{
+    public BO.CallStatus Status { get; set; } = BO.CallStatus.Open;
+    static readonly IEnumerable<BO.CallStatus> s_enums =
+        (Enum.GetValues(typeof(BO.CallStatus)) as IEnumerable<BO.CallStatus>)!;
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}

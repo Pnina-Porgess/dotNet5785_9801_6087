@@ -14,11 +14,11 @@ public record Assignment
     int Id,
     int CallId,
     int VolunteerId,
-    TypeOfEndTime TypeOfEndTime,
+    TypeOfEndTime? TypeOfEndTime,
     DateTime EntryTime,
     DateTime? EndTime=null
 )
 
 {
-public Assignment() : this(0,0 , 0 , TypeOfEndTime.treated, DateTime.Now) { }
+public Assignment() : this(0,0 , 0 ,null, DateTime.Now) { }
 }

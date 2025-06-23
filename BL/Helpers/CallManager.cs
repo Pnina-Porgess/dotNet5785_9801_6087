@@ -85,8 +85,8 @@ internal static class CallManager
                     return BO.CallStatus.Expired;
 
                 // Check if call is at risk (less than 30 minutes to expiration)
-                var timeToExpiration = call.MaxTimeToFinish - AdminManager.Now;
-                if (timeToExpiration?.TotalMinutes <= 30)
+                TimeSpan timeToExpiration = (DateTime)call.MaxTimeToFinish -AdminManager.Now;
+                if (timeToExpiration <= AdminManager.RiskRange)
                     return BO.CallStatus.OpenAtRisk;
 
                 return BO.CallStatus.Open;
@@ -102,8 +102,8 @@ internal static class CallManager
                 return successfulAssignment ? BO.CallStatus.Closed : BO.CallStatus.Open;
             }
             // There is an active assignment - check if it's at risk
-            var remainingTime = call.MaxTimeToFinish - AdminManager.Now;
-            if (remainingTime?.TotalMinutes <= 30)
+            var remainingTime = (DateTime)call.MaxTimeToFinish - AdminManager.Now;
+            if (remainingTime <= AdminManager.RiskRange)
                 return BO.CallStatus.InProgressAtRisk;
 
             return BO.CallStatus.InProgress;
