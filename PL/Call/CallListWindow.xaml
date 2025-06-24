@@ -31,50 +31,17 @@
                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" SelectionChanged="ComboBox_SelectionChanged"/>
         </Grid>
         <ListView Margin="5,5,5,65" 
-                 Grid.Row="1"  ItemsSource="{Binding Path=CallList}" SelectedItem="{Binding SelectedCall}" Background="White"
+                 Grid.Row="1"  ItemsSource="{Binding Path=CallList}"  
+                  SelectedItem="{Binding SelectedCall}" 
+                  MouseDoubleClick="ListView_MouseDoubleClick"
+                  Background="White"
+                  
                BorderThickness="1" Grid.RowSpan="2">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="AssignmentId" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock Text="" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{Binding AssignmentId}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="CallId" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock Text="" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{Binding CallId}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="CallType" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock Text="" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{Binding CallType}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="OpeningTime" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock Text="" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{Binding OpeningTime}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+             
+                 
+             
                     <GridViewColumn Header="RemainingTime" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -125,10 +92,25 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+                    <GridViewColumn Header="מחק🗑️" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="🗑️"
+                                Click="DeleteButton_Click"
+                              />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Left" Height="50" Width="100" Margin="102,438,0,10"/>
+        <Button Content="Add"
+        Grid.Row="2"
+        HorizontalAlignment="Left"
+        Height="50"
+        Width="100"
+        Margin="102,438,0,10"
+        Click="AddButton_Click"/>
     </Grid>
 
 </Window>

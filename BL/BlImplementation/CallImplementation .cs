@@ -248,9 +248,9 @@ namespace BlImplementation
                 var updatedAssignment = assignment with
                 {
                     EndTime = DateTime.Now,
-                    TypeOfEndTime = assignment.VolunteerId == requesterId
-                    ? DO.TypeOfEndTime.CancelingAnAdministrator
-                    : DO.TypeOfEndTime.SelfCancellation
+                    TypeOfEndTime = (assignment.VolunteerId == requesterId)
+                    ? DO.TypeOfEndTime.SelfCancellation
+                    : DO.TypeOfEndTime.CancelingAnAdministrator
                 };
 
                 _dal.Assignment.Update(updatedAssignment);
@@ -294,7 +294,7 @@ namespace BlImplementation
                     Id: 0, // מזהה ההקצאה יתעדכן אוטומטית
                     CallId: callId,
                     VolunteerId: volunteerId,
-                    TypeOfEndTime: DO.TypeOfEndTime.treated, // סוג הטיפול נשאר כ-Treated עד לסיום
+                    TypeOfEndTime: null, // סוג הטיפול נשאר כ-Treated עד לסיום
                     EntryTime: DateTime.Now // זמן כניסת המתנדב לטיפול
                 );
 
@@ -347,7 +347,7 @@ namespace BlImplementation
             }
         }
        
-        public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallStatus? filterStatus, BO.OpenCallField? sortField)
+        public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.TypeOfReading? filterType = null, BO.OpenCallField? sortField=null)
         {
             try
             {
@@ -366,6 +366,10 @@ namespace BlImplementation
                         MaxEndTime = c.MaxTimeToFinish, // זמן סיום משוער
                         DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!,volunteer.Longitude!, c.Latitude, c.Longitude)
                     });
+                if (filterType.HasValue)
+                {
+                    openCalls = openCalls.Where(c => (BO.TypeOfReading)c.Type == filterType.Value);
+                }
 
                 return sortField switch
                 {

@@ -1,0 +1,60 @@
+﻿<Window x:Class="PL.Call.OpenCallsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:PL"
+        Title="קריאות פתוחות" Height="600" Width="800">
+
+
+    <StackPanel>
+
+        <!-- סינון ומיון -->
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <TextBlock Text="סינון לפי סוג קריאה:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerFieldCollection}}"
+                      SelectedItem="{Binding FilterStatus, Mode=TwoWay}"
+                      Width="150"
+                      Margin="0,0,20,0"
+                      SelectionChanged="FilterOrSort_Changed"/>
+
+            <TextBlock Text="מיון לפי:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource OpenCallFieldCollection}}"
+                      SelectedItem="{Binding SortField, Mode=TwoWay}"
+                      Width="150"
+                      SelectionChanged="FilterOrSort_Changed"/>
+        </StackPanel>
+
+        <!-- טבלת קריאות -->
+        <DataGrid ItemsSource="{Binding OpenCalls}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  SelectedItem="{Binding SelectedCall, Mode=TwoWay}"
+                  SelectionChanged="DataGrid_SelectionChanged"
+                  Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="מזהה" Binding="{Binding Id}" Width="80"/>
+                <DataGridTextColumn Header="סוג" Binding="{Binding Type}" Width="120"/>
+                <DataGridTextColumn Header="כתובת" Binding="{Binding FullAddress}" Width="200"/>
+                <DataGridTextColumn Header="סוג הקריאה" Binding="{Binding Type}" Width="100"/>
+                <DataGridTextColumn Header="מרחק (ק״מ)" Binding="{Binding DistanceFromVolunteer}" Width="100"/>
+
+                <DataGridTemplateColumn Header="פעולה" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="בחר" Click="SelectCall_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- תיאור קריאה נבחרת -->
+        <Border Margin="10" Padding="10" Background="#FFEFEFEF" CornerRadius="8"
+                Visibility="{Binding SelectedCall, Converter={StaticResource NotNullToVisible}}">
+            <StackPanel>
+                <TextBlock Text="תיאור הקריאה שנבחרה:" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock Text="{Binding SelectedDescription}" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+    </StackPanel>
+</Window>

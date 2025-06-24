@@ -3,95 +3,99 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:PL.Volunteer"
         xmlns:bo="clr-namespace:BO;assembly=BL"
-        Title="Volunteer" Height="450" Width="400"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+        Title="Volunteer" Height="650" Width="450"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        WindowStartupLocation="CenterScreen">
+
     <Window.Resources>
-        <!-- מקור לאנום Role -->
         <ObjectDataProvider x:Key="RoleValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="bo:Role"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <!-- מקור לאנום DistanceType -->
+
         <ObjectDataProvider x:Key="DistanceTypeValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="bo:DistanceType"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <!-- Id -->
-        <Label Grid.Row="0" Grid.Column="0" Content="Volunteer ID:"/>
-        <TextBox Grid.Row="0" Grid.Column="1"
-                 Text="{Binding CurrentVolunteer.Id,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 />
+    <ScrollViewer>
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Volunteer Details -->
+                <RowDefinition Height="Auto"/>
+                <!-- Current Call -->
+                <RowDefinition Height="Auto"/>
+                <!-- Button -->
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- FullName -->
-        <Label Grid.Row="1" Grid.Column="0" Content="Full Name:"/>
-        <TextBox Grid.Row="1" Grid.Column="1"
-                 Text="{Binding CurrentVolunteer.FullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <!-- פרטי מתנדב -->
+            <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
+                <Label Grid.Row="0" Grid.Column="0" Content="Volunteer ID:"/>
+                <TextBox Grid.Row="0" Grid.Column="1"
+         Text="{Binding CurrentVolunteer.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+         IsEnabled="{Binding ButtonText, Converter={StaticResource UpdateModeToBoolConverter}}"/>
 
-        <!-- Phone -->
-        <Label Grid.Row="2" Grid.Column="0" Content="Phone:"/>
-        <TextBox Grid.Row="2" Grid.Column="1"
-                 Text="{Binding CurrentVolunteer.Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="Full Name:"/>
+                <TextBox Text="{Binding CurrentVolunteer.FullName, Mode=TwoWay}"/>
 
-        <!-- Email -->
-        <Label Grid.Row="3" Grid.Column="0" Content="Email:"/>
-        <TextBox Grid.Row="3" Grid.Column="1"
-                 Text="{Binding CurrentVolunteer.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="Phone:"/>
+                <TextBox Text="{Binding CurrentVolunteer.Phone, Mode=TwoWay}"/>
 
-        <!-- Password -->
-        <Label Grid.Row="4" Grid.Column="0" Content="Password:"/>
-        <TextBox Grid.Row="4" Grid.Column="1"
-                 Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="Email:"/>
+                <TextBox Text="{Binding CurrentVolunteer.Email, Mode=TwoWay}"/>
 
-        <!-- Address -->
-        <Label Grid.Row="5" Grid.Column="0" Content="Address:"/>
-        <TextBox Grid.Row="5" Grid.Column="1"
-                 Text="{Binding CurrentVolunteer.CurrentAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="Password:"/>
+                <TextBox Text="{Binding CurrentVolunteer.Password, Mode=TwoWay}"/>
 
-        <!-- IsActive -->
-        <Label Grid.Row="6" Grid.Column="0" Content="Is Active:"/>
-        <CheckBox Grid.Row="6" Grid.Column="1"
-                  IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay}"/>
+                <Label Content="Address:"/>
+                <TextBox Text="{Binding CurrentVolunteer.CurrentAddress, Mode=TwoWay}"/>
 
-        <!-- Role -->
-        <Label Grid.Row="7" Grid.Column="0" Content="Role:"/>
-        <ComboBox Grid.Row="7" Grid.Column="1"
-                  ItemsSource="{Binding Source={StaticResource RoleValues}}"
-                  SelectedItem="{Binding CurrentVolunteer.Role, Mode=TwoWay}"/>
+                <Label Content="Is Active:"/>
+                <CheckBox IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay}"/>
 
-        <!-- DistanceType -->
-        <Label Grid.Row="8" Grid.Column="0" Content="Distance Type:"/>
-        <ComboBox Grid.Row="8" Grid.Column="1"
-                  ItemsSource="{Binding Source={StaticResource DistanceTypeValues}}"
-                  SelectedItem="{Binding CurrentVolunteer.DistanceType, Mode=TwoWay}"/>
+                <Label Content="Role:"/>
+                <ComboBox ItemsSource="{Binding Source={StaticResource RoleValues}}"
+                          SelectedItem="{Binding CurrentVolunteer.Role, Mode=TwoWay}"/>
 
-        <!-- MaxDistance -->
-        <Label Grid.Row="9" Grid.Column="0" Content="Max Distance:"/>
-        <TextBox Grid.Row="9" Grid.Column="1"
-                 Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="Distance Type:"/>
+                <ComboBox ItemsSource="{Binding Source={StaticResource DistanceTypeValues}}"
+                          SelectedItem="{Binding CurrentVolunteer.DistanceType, Mode=TwoWay}"/>
 
-        <!-- Add/Update Button -->
-        <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,90,0,0"
-                Content="{Binding ButtonText}" Click="btnAddUpdate_Click"/>
-    </Grid>
+                <Label Content="Max Distance:"/>
+                <TextBox Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay}"/>
+            </StackPanel>
+
+            <!-- תצוגת קריאה בטיפול -->
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,20,0,0"
+                        Visibility="{Binding CurrentVolunteer.CurrentCall, Converter={StaticResource NotNullToVisible}}">
+                <GroupBox Header="קריאה בטיפול">
+                    <StackPanel>
+                        <TextBlock Text="תיאור:" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Description}" TextWrapping="Wrap" Margin="0,5"/>
+                        <TextBlock Text="כתובת:" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Address}" />
+                        <TextBlock Text="מרחק:" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.DistanceFromVolunteer}" />
+                        <TextBlock Text="סטטוס:" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Status}" />
+                        <TextBlock Text="שעת התחלה:" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.StartTime}" />
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+
+            <!-- כפתור הוספה / עדכון -->
+            <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="0,30,0,0"
+                    Content="{Binding ButtonText}" Click="btnAddUpdate_Click"
+                    HorizontalAlignment="Center" Width="150" Height="40"/>
+        </Grid>
+    </ScrollViewer>
 </Window>

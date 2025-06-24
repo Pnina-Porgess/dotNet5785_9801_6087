@@ -18,7 +18,7 @@ internal class AssignmentImplementation : IAssignment
             Id = a.ToIntNullable("Id") ?? throw new FormatException("Can't convert Id"),
             CallId = a.ToIntNullable("CallId") ?? throw new FormatException("Can't convert CallId"),
             VolunteerId = a.ToIntNullable("VolunteerId") ?? throw new FormatException("Can't convert VolunteerId"),
-            TypeOfEndTime = a.ToEnumNullable<TypeOfEndTime>("TypeOfEndTime") ?? throw new FormatException("Can't convert TypeOfEndTime"),
+            TypeOfEndTime = a.ToEnumNullable<TypeOfEndTime>("TypeOfEndTime"),
             EntryTime = a.ToDateTimeNullable("EntryTime") ?? throw new FormatException("Can't convert EntryTime"),
             EndTime = a.ToDateTimeNullable("EndTime") ?? null
         };

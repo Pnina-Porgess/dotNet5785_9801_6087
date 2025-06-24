@@ -24,6 +24,7 @@ namespace PL.Login
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
+        
         {
             ErrorMessage = "";
             if (!int.TryParse(UserId, out int id))
@@ -52,14 +53,14 @@ namespace PL.Login
                     }
                     else if (result == MessageBoxResult.No)
                     {
-                        var volunteerWindow = new Volunteer.VolunteerWindow(id);
-                        volunteerWindow.Show();
+                        var volunteerSelfWindow = new Volunteer.VolunteerSelfWindow(id);
+                        volunteerSelfWindow.Show();
                     }
                 }
                 else
                 {
-                    var volunteerWindow = new Volunteer.VolunteerWindow(id);
-                    volunteerWindow.Show();
+                    var volunteerSelfWindow = new Volunteer.VolunteerSelfWindow(id);
+                    volunteerSelfWindow.Show();
                 }
             }
             catch (System.Exception ex)
