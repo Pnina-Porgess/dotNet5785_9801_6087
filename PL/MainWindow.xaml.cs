@@ -24,7 +24,7 @@ public partial class MainWindow : Window
         this.Loaded += MainWindow_Loaded;
         this.Closed += MainWindow_Closed;
 
-
+        
     }
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
