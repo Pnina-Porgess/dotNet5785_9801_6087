@@ -725,13 +725,13 @@ internal class Program
         Console.Write("Enter volunteer ID: ");
         if (int.TryParse(Console.ReadLine(), out int volunteerId))
         {
-            foreach (var status in Enum.GetValues(typeof(BO.CallStatus)))
+            foreach (var status in Enum.GetValues(typeof(BO.TypeOfReading)))
             {
                 Console.Write($"{(int)status}: {status}  ");
             }
-            BO.CallStatus? CallFilter = null;
+            BO.TypeOfReading? CallFilter = null;
             if (int.TryParse(Console.ReadLine(), out int CallField) && CallField > 0 && CallField <= 3)
-                CallFilter = (BO.CallStatus)CallField;
+                CallFilter = (BO.TypeOfReading)CallField;
             foreach (var field in Enum.GetValues(typeof(BO.OpenCallField)))
             {
                 Console.Write($"{(int)field}: {field}  ");
