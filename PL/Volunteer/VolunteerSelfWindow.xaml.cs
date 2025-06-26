@@ -1,7 +1,9 @@
-﻿using BlApi;
+﻿
+using BlApi;
 using PL;
 using System.ComponentModel;
 using System.Windows;
+using Microsoft.Web.WebView2.Core;
 
 namespace PL.Volunteer
 {
@@ -27,6 +29,8 @@ namespace PL.Volunteer
             DataContext = this;
         }
 
+      
+
         private void Update_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -36,6 +40,7 @@ namespace PL.Volunteer
             }
             catch (Exception ex)
             {
+
                 MessageBox.Show("שגיאה: " + ex.Message);
             }
         }

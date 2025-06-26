@@ -2,9 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:PL"
+
         Title="פרטי מתנדב" Height="650" Width="500"
         WindowStartupLocation="CenterScreen">
-
 
     <StackPanel Margin="20" DataContext="{Binding}">
         <!-- פרטי מתנדב -->
@@ -18,8 +18,8 @@
             <TextBlock Text="מייל:"/>
             <TextBox Text="{Binding Volunteer.Email}" />
 
-            <TextBlock Text="כתובת נוכחית:"/>
-            <TextBox Text="{Binding Volunteer.CurrentAddress}" />
+            <TextBlock Text="סיסמא:"/>
+            <TextBox Text="{Binding Volunteer.Password}" />
 
             <TextBlock Text="מרחק מקסימלי:"/>
             <TextBox Text="{Binding Volunteer.MaxDistance}" />

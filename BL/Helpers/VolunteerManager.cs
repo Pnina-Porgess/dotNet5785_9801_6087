@@ -173,7 +173,7 @@ internal static class VolunteerManager
             boVolunteer.IsActive,
             (DO.DistanceType)boVolunteer.DistanceType,
             boVolunteer.MaxDistance,
-            EncryptPassword(boVolunteer.Password!),
+            boVolunteer.Password!,
             boVolunteer.CurrentAddress,
             boVolunteer.Latitude,
             boVolunteer.Longitude
@@ -228,13 +228,12 @@ internal static class VolunteerManager
     /// Calculates the status of a call based on the time remaining.
     /// </summary>
     /// <param name="call">The call object.</param>
-    /// <param name="riskThreshold">The threshold in minutes for at-risk status.</param>
     /// <returns>The status of the call.</returns>
-    public static BO.CallStatusInProgress CalculateStatus(DO.Call call, int riskThreshold = 30)
+    public static BO.CallStatusInProgress CalculateStatus(DO.Call call)
     {
 
-        var timeToEnd = call.MaxTimeToFinish - AdminManager.Now;
-        if (timeToEnd?.TotalMinutes <= riskThreshold)
+        TimeSpan timeToEnd = (TimeSpan)(call.MaxTimeToFinish - AdminManager.Now)!;
+        if (timeToEnd <= AdminManager.RiskRange)
         {
             return BO.CallStatusInProgress.AtRisk;
         }

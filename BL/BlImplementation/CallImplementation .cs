@@ -107,7 +107,8 @@ namespace BlImplementation
                 Longitude = dalCall.Longitude,
                 OpeningTime = dalCall.TimeOfOpen,
                 MaxEndTime = dalCall.MaxTimeToFinish,
-                Assignments = assignmentsList
+                Assignments = assignmentsList,
+                Status= CallManager.CalculateCallStatus(dalCall.Id) // Calculate the status of the call
             };
         }
 
@@ -122,9 +123,9 @@ namespace BlImplementation
 
                 if (filterField.HasValue && filterValue != null)
                 {
-                    callList = callList.Where(c =>c.GetType().GetProperty(filterField.ToString()!)?.GetValue(c)?.Equals(filterValue)==true);
+                    callList = callList.Where(c => c.GetType().GetProperty(filterField.ToString()!)?.GetValue(c)?.Equals(filterValue) == true);
                 }
-          
+
                 return sortField switch
                 {
                     CallField.AssignmentId => callList.OrderBy(c => c.AssignmentId),
@@ -136,7 +137,7 @@ namespace BlImplementation
                     CallField.CompletionTime => callList.OrderBy(c => c.CompletionTime),
                     CallField.CallStatus => callList.OrderBy(c => c.CallStatus),
                     CallField.TotalAssignments => callList.OrderBy(c => c.TotalAssignments),
-                    _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
+                    _ =>  callList.OrderBy(c => c.CallId)
                 };
             }
             catch (Exception ex)
@@ -219,7 +220,7 @@ namespace BlImplementation
                 var assignment = _dal.Assignment.Read(assignmentId);
                 var volunteer = _dal.Volunteer.Read(requesterId);
 
-                if (assignment.VolunteerId != requesterId && volunteer is null)
+                if (assignment!.VolunteerId != requesterId && volunteer is null)
                 {
                     throw new BO.BlInvalidInputException("Requester does not have permission to cancel this treatment.");
                 }
@@ -254,6 +255,10 @@ namespace BlImplementation
                 };
 
                 _dal.Assignment.Update(updatedAssignment);
+                if (assignment.VolunteerId != requesterId)
+                { 
+                    volunteer = _dal.Volunteer.Read(assignment.VolunteerId); 
+                }
                 CallManager.SendEmailToVolunteer(volunteer!, assignment);
             }
            
@@ -353,19 +358,20 @@ namespace BlImplementation
             {
                 var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BlNotFoundException($"Volunteer with ID={volunteerId} does not exist.");
                 var openCalls = _dal.Call.ReadAll()
-                    .Where(c =>
-                    // מחשבים סטטוס של כל קריאה
-                    (CallManager.CalculateCallStatus(c.Id) == BO.CallStatus.Open || CallManager.CalculateCallStatus(c.Id) == BO.CallStatus.OpenAtRisk)) // הפשטת הבדיקה
-                    .Select(c => new BO.OpenCallInList
-                    {
-                        Id = c.Id, // ת.ז של המתנדב
-                        Type = (BO.TypeOfReading)c.TypeOfReading, // סוג הקריאה
-                        Description = c.Description!, // תיאור מילולי
-                        FullAddress = c.Adress, // כתובת הקריאה
-                        OpenTime = c.TimeOfOpen, // זמן פתיחת הקריאה
-                        MaxEndTime = c.MaxTimeToFinish, // זמן סיום משוער
-                        DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!,volunteer.Longitude!, c.Latitude, c.Longitude)
-                    });
+       .Where(c =>
+           CallManager.CalculateCallStatus(c.Id) == BO.CallStatus.Open ||
+           CallManager.CalculateCallStatus(c.Id) == BO.CallStatus.OpenAtRisk)
+       .Select(c => new BO.OpenCallInList
+       {
+           Id = c.Id,
+           Type = (BO.TypeOfReading)c.TypeOfReading,
+           Description = c.Description!,
+           FullAddress = c.Adress,
+           OpenTime = c.TimeOfOpen,
+           MaxEndTime = c.MaxTimeToFinish,
+           DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!, volunteer.Longitude!, c.Latitude, c.Longitude)
+       })
+       .Where(c => c.DistanceFromVolunteer <volunteer.MaximumDistance);
                 if (filterType.HasValue)
                 {
                     openCalls = openCalls.Where(c => (BO.TypeOfReading)c.Type == filterType.Value);
@@ -382,7 +388,6 @@ namespace BlImplementation
                     OpenCallField.DistanceFromVolunteer => openCalls.OrderBy(c => c.DistanceFromVolunteer),
                     _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
                 };
-
             }
          
         

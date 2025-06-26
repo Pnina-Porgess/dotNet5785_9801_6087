@@ -11,7 +11,7 @@
         /// <param name="username">The volunteer's username.</param>
         /// <param name="password">The volunteer's password.</param>
         /// <returns>The role assigned to the volunteer upon successful login.</returns>
-        BO.Role Login(string username, string password);
+        BO.Role Login(int id, string password);
 
         /// <summary>
         /// Gets a list of volunteers, optionally filtered by their activity status and sorted by a specific field.

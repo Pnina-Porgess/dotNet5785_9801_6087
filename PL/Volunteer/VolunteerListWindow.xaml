@@ -1,6 +1,7 @@
 ﻿<Window x:Class="PL.Volunteer.VolunteerListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:PL"
         Title="Volunteer List"
         Height="700" Width="850"
         Background="White"
@@ -28,6 +29,9 @@
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="Background" Value="{StaticResource OrangeBrush}"/>
         </Style>
+
+        <local:VolunteerSortByCollection x:Key="VolunteerSortByCollection"/>
+        <local:TypeOfReadingCollection x:Key="VolunteerFieldCollection"/>
     </Window.Resources>
 
     <Grid Margin="30">
@@ -45,28 +49,28 @@
                        FontSize="28"
                        FontWeight="Bold"/>
         </StackPanel>
+
         <!-- מיון -->
         <Border Background="#F5F5F5" Padding="12,6" CornerRadius="8">
             <StackPanel Orientation="Horizontal">
-                <Label Content="מיון לפי סוג קריאה:"
-                           Foreground="{StaticResource GreenBrush}"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center"
-                           FontSize="15"/>
-                <ComboBox SelectedItem="{Binding SortByReading, Mode=TwoWay}"
-                              ItemsSource="{Binding Source={StaticResource VolunteerFieldCollection}}"
-                              Width="180"
-                              Margin="10,0,0,0"
-                              Background="{StaticResource LightBlueBrush}"
-                              Foreground="#0D3F59"
-                              BorderThickness="0"
-                              Height="32"
-                              VerticalAlignment="Center"
-                              SelectionChanged="ComboBox_SelectionChanged"/>
+                <Label Content="מיון לפי:"
+                       Foreground="{StaticResource GreenBrush}"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       FontSize="15"/>
+                <ComboBox SelectedItem="{Binding SortBy, Mode=TwoWay}"
+                          ItemsSource="{Binding Source={StaticResource VolunteerSortByCollection}}"
+                          Width="180"
+                          Margin="10,0,0,0"
+                          Background="{StaticResource LightBlueBrush}"
+                          Foreground="#0D3F59"
+                          BorderThickness="0"
+                          Height="32"
+                          VerticalAlignment="Center"
+                          SelectionChanged="ComboBox_SelectionChanged"/>
             </StackPanel>
         </Border>
 
- 
         <!-- סינון -->
         <Border Grid.Row="1"
                 Margin="0,0,0,20"
@@ -105,82 +109,73 @@
                   Margin="0,0,0,20">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="🆔" Width="60"
-                                    HeaderContainerStyle="{StaticResource HeaderStyle}">
+                    <!-- עמודות רשימה -->
+                    <GridViewColumn Header="🆔" Width="60" HeaderContainerStyle="{StaticResource HeaderStyle}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Id}" Foreground="{StaticResource TextBlueBrush}" FontWeight="Bold" HorizontalAlignment="Center"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="✅ פעיל" Width="60"
-                                    HeaderContainerStyle="{StaticResource HeaderStyle}">
+                    <GridViewColumn Header="✅ פעיל" Width="60" HeaderContainerStyle="{StaticResource HeaderStyle}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding IsActive}" Foreground="{StaticResource TextBlueBrush}" HorizontalAlignment="Center"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="👤 שם מלא" Width="140"
-                                    HeaderContainerStyle="{StaticResource HeaderStyle}">
+                    <GridViewColumn Header="👤 שם מלא" Width="140" HeaderContainerStyle="{StaticResource HeaderStyle}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding FullName}" Foreground="{StaticResource TextBlueBrush}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="📞 שיחות טופלו" Width="100"
-                                    HeaderContainerStyle="{StaticResource HeaderStyle}">
+                    <GridViewColumn Header="📞 שיחות טופלו" Width="100" HeaderContainerStyle="{StaticResource HeaderStyle}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding TotalHandledCalls}" Foreground="{StaticResource TextBlueBrush}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="❌ שיחות בוטלו" Width="100"
-                                    HeaderContainerStyle="{StaticResource HeaderStyle}">
+                    <GridViewColumn Header="❌ שיחות בוטלו" Width="100" HeaderContainerStyle="{StaticResource HeaderStyle}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding TotalCancelledCalls}" Foreground="{StaticResource TextBlueBrush}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="⏰ שיחות שפגו" Width="100"
-                                    HeaderContainerStyle="{StaticResource HeaderStyle}">
+                    <GridViewColumn Header="⏰ שיחות שפגו" Width="100" HeaderContainerStyle="{StaticResource HeaderStyle}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding TotalExpiredCalls}" Foreground="{StaticResource TextBlueBrush}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="☎️ מס' שיחה" Width="80"
-                                    HeaderContainerStyle="{StaticResource HeaderStyle}">
+                    <GridViewColumn Header="☎️ מס' שיחה" Width="80" HeaderContainerStyle="{StaticResource HeaderStyle}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding CurrentCallId}" Foreground="{StaticResource TextBlueBrush}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="📚 סוג קריאה" Width="100"
-                                    HeaderContainerStyle="{StaticResource HeaderStyle}">
+                    <GridViewColumn Header="📚 סוג קריאה" Width="100" HeaderContainerStyle="{StaticResource HeaderStyle}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding CurrentCallType}" Foreground="{StaticResource TextBlueBrush}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <!-- עמודת מחיקה לכל שורה -->
-                    <GridViewColumn Header="מחק🗑️" Width="80"
-                                    HeaderContainerStyle="{StaticResource HeaderStyle}">
+                    <GridViewColumn Header="מחק🗑️" Width="80" HeaderContainerStyle="{StaticResource HeaderStyle}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Content="🗑️"
-                    Click="DeleteButton_Click"
-                    Foreground="{StaticResource TextBlueBrush}"
-                    FontWeight="Bold"
-                    BorderThickness="0"
-                    Cursor="Hand"
-                    Padding="4,2"/>
+                                        Click="DeleteButton_Click"
+                                        Foreground="{StaticResource TextBlueBrush}"
+                                        FontWeight="Bold"
+                                        BorderThickness="0"
+                                        Cursor="Hand"
+                                        Padding="4,2"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -188,7 +183,7 @@
             </ListView.View>
         </ListView>
 
-        <!-- כפתור הוספה בלבד -->
+        <!-- כפתור הוספה -->
         <Button Content="➕ הוספת מתנדב"
                 Grid.Row="3"
                 Width="200"
@@ -204,10 +199,8 @@
                 Click="AddButton_Click">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" 
-                            CornerRadius="22">
-                        <ContentPresenter HorizontalAlignment="Center" 
-                                          VerticalAlignment="Center"/>
+                    <Border Background="{TemplateBinding Background}" CornerRadius="22">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </ControlTemplate>
             </Button.Template>

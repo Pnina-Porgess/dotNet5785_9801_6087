@@ -64,10 +64,22 @@ namespace PL.Call
             }
         }
 
+        private string _currentAddress;
+        public string CurrentAddress
+        {
+            get => _currentAddress;
+            set
+            {
+                _currentAddress = value;
+                OnPropertyChanged(nameof(CurrentAddress));
+            }
+        }
+
         public OpenCallsWindow(BO.Volunteer volunteer)
         {
             InitializeComponent();
             CurrentVolunteer = volunteer;
+            CurrentAddress = volunteer.CurrentAddress;
             DataContext = this;
             LoadOpenCalls();
         }
@@ -115,9 +127,23 @@ namespace PL.Call
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // עדכון תיאור כבר קורה בפרופרטי SelectedCall, אז זה מספיק
             if (SelectedCall != null)
                 SelectedDescription = SelectedCall.Description ?? string.Empty;
+        }
+
+        private void UpdateAddress_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                CurrentVolunteer.CurrentAddress = CurrentAddress;
+                bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer.Id, CurrentVolunteer);
+                MessageBox.Show("הכתובת עודכנה בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadOpenCalls(); // לרענן מרחקים
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("שגיאה בעדכון כתובת: " + ex.Message, "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
