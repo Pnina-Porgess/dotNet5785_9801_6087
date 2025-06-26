@@ -8,15 +8,16 @@ namespace PL
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(int volunteerId)
         {
+             id= volunteerId;
             InitializeComponent();
             this.Loaded += MainWindow_Loaded;
             this.Closed += MainWindow_Closed;
         }
 
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-
+        public int id { get; set; } // מזהה המתנדב המחובר
         // שדות סטטיים למעקב אחר חלונות פתוחים
         private static CallListWindow? callWindow;
         private static VolunteerListWindow? volunteerWindow;
@@ -84,7 +85,7 @@ namespace PL
         {
             if (callWindow == null || !callWindow.IsVisible)
             {
-                callWindow = new CallListWindow();
+                callWindow = new CallListWindow(id);
                 callWindow.Closed += (s, args) => callWindow = null;
                 callWindow.Show();
             }

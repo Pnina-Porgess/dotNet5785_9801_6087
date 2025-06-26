@@ -10,7 +10,7 @@ internal class CallFieldCollection : IEnumerable
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }
 
-internal class VolunteerFieldCollection : IEnumerable
+internal class TypeOfReadingCollection : IEnumerable
 {
     public BO.TypeOfReading TypeOfReading { get; set; } = BO.TypeOfReading.None;
     static readonly IEnumerable<BO.TypeOfReading> s_enums =
@@ -40,5 +40,12 @@ internal class CallStatusCollection : IEnumerable
     public BO.CallStatus Status { get; set; } = BO.CallStatus.Open;
     static readonly IEnumerable<BO.CallStatus> s_enums =
         (Enum.GetValues(typeof(BO.CallStatus)) as IEnumerable<BO.CallStatus>)!;
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}
+internal class VolunteerSortByCollection : IEnumerable
+{
+    public BO.VolunteerSortBy VolunteerSortBy { get; set; } = BO.VolunteerSortBy.id;
+    static readonly IEnumerable<BO.VolunteerSortBy> s_enums =
+        (Enum.GetValues(typeof(BO.VolunteerSortBy)) as IEnumerable<BO.VolunteerSortBy>)!;
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }

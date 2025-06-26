@@ -1,5 +1,4 @@
-﻿// VolunteerListWindow.xaml.cs
-using BlApi;
+﻿using BlApi;
 using BO;
 using System;
 using System.Collections.Generic;
@@ -29,26 +28,18 @@ namespace PL.Volunteer
             DependencyProperty.Register("VolunteerList", typeof(IEnumerable<BO.VolunteerInList>), typeof(VolunteerListWindow), new PropertyMetadata(null));
 
         public BO.TypeOfReading TypeOfReading { get; set; } = BO.TypeOfReading.None;
-        public BO.TypeOfReading SortByReading { get; set; } = BO.TypeOfReading.None;
+        public BO.VolunteerSortBy SortBy { get; set; } = BO.VolunteerSortBy.id;
         public BO.VolunteerInList? SelectedVolunteer { get; set; }
 
         private void queryVolunteerList()
         {
             var list = (TypeOfReading == BO.TypeOfReading.None)
-                ? s_bl?.Volunteer.GetVolunteersList()
-                : s_bl?.Volunteer.GetVolunteersList(null, null, TypeOfReading);
-
-            if (SortByReading != BO.TypeOfReading.None)
-            {
-                list = list?.OrderBy(v => v.CurrentCallType != null && v.CurrentCallType == SortByReading ? 0 : 1)
-                             .ThenBy(v => v.CurrentCallType);
-            }
-
+                ? s_bl?.Volunteer.GetVolunteersList(null, SortBy, null)
+                : s_bl?.Volunteer.GetVolunteersList(null, SortBy, TypeOfReading);
             VolunteerList = list!;
         }
 
-        private void VolunteerListObserver()
-            => queryVolunteerList();
+        private void VolunteerListObserver() => queryVolunteerList();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

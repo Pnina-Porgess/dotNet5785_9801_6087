@@ -12,12 +12,11 @@
             <Label Content="תיאור:" />
             <TextBox Text="{Binding CurrentCall.Description, Mode=TwoWay}" />
 
+            <Label Content="סוג הקריאה:" />
+
             <ComboBox SelectedItem="{Binding CurrentCall.Type, Mode=TwoWay}"
           ItemsSource="{StaticResource VolunteerFieldCollection}" />
 
-
-            <ComboBox SelectedItem="{Binding CurrentCall.Status, Mode=TwoWay}"
-          ItemsSource="{StaticResource CallStatusCollection}" />
 
 
 

@@ -27,6 +27,8 @@ internal class VolunteerImplementation : IVolunteer
             VolunteerManager.ValidateInputFormat(volunteer);
      
             (volunteer.Latitude, volunteer.Longitude) = Tools.GetCoordinatesFromAddress(volunteer.CurrentAddress!);
+            var password=VolunteerManager.EncryptPassword(volunteer.Password!);
+            volunteer.Password = password;
             DO.Volunteer doVolunteer = (VolunteerManager.CreateDoVolunteer(volunteer));
             VolunteerManager.ValidatePassword(volunteer);
             _dal.Volunteer.Create(doVolunteer);
@@ -75,14 +77,14 @@ internal class VolunteerImplementation : IVolunteer
     /// <param name="password">The password to verify.</param>
     /// <returns>The role of the logged-in volunteer.</returns>
     /// <exception cref="BO.BlNotFoundException">Thrown if the username or password is incorrect.</exception>
-    public BO.Role Login(string username, string password)
+    public BO.Role Login(int id, string password)
     {
         try
         {
-            var volunteer = _dal.Volunteer.ReadAll().FirstOrDefault(v => v.Name == username)
+            var volunteer = _dal.Volunteer.ReadAll().FirstOrDefault(v => v.Id == id)
                 ?? throw new BO.BlNotFoundException("Username or password is not correct.");
-
-            if (!(VolunteerManager.EncryptPassword(password) == volunteer.Password))
+            var pass = VolunteerManager.EncryptPassword(password);
+            if (!(pass == volunteer.Password))
             {
                 throw new BO.BlNotFoundException("Username or password is not correct.");
             }
@@ -91,7 +93,7 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlNotFoundException($"Volunteer with ID={username} was not found in the database.", ex);
+            throw new BO.BlNotFoundException($"Volunteer with ID={id} was not found in the database.", ex);
         }
     }
 
@@ -127,7 +129,7 @@ internal class VolunteerImplementation : IVolunteer
                         MaxEndTime = callDetails.MaxTimeToFinish,
                         StartTime = currentAssignment.EntryTime,
                         DistanceFromVolunteer = Tools.CalculateDistance(volunteerDO.Latitude!, volunteerDO.Longitude!, callDetails.Latitude, callDetails.Longitude),
-                        Status = VolunteerManager.CalculateStatus(callDetails, 30)
+                        Status = VolunteerManager.CalculateStatus(callDetails)
                     };
                 }
             }
@@ -169,9 +171,7 @@ internal class VolunteerImplementation : IVolunteer
         {
             VolunteerManager.ValidatePermissions(requesterId, volunteerToUpdate);
             VolunteerManager.ValidateInputFormat(volunteerToUpdate);
-            if(volunteerToUpdate.Password != "") {
-                VolunteerManager.ValidatePassword(volunteerToUpdate);
-            }
+      
             (volunteerToUpdate.Latitude, volunteerToUpdate.Longitude) = VolunteerManager.LogicalChecking(volunteerToUpdate);
 
             var existingVolunteer = _dal.Volunteer.Read(volunteerToUpdate.Id)
@@ -179,10 +179,21 @@ internal class VolunteerImplementation : IVolunteer
 
             var volunteerRequester = _dal.Volunteer.Read(requesterId);
 
-            if (!VolunteerManager.CanUpdateFields(existingVolunteer!, volunteerRequester))
+            if (!VolunteerManager.CanUpdateFields(existingVolunteer!, volunteerRequester!))
                 throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
             if(volunteerToUpdate.IsActive==false && volunteerToUpdate.CurrentCall != null)
                 throw new BO.BlInvalidInputException("Cannot set volunteer to inactive while they have an active call.");
+            if (string.IsNullOrEmpty(volunteerToUpdate.Password))
+            {
+                volunteerToUpdate.Password = existingVolunteer.Password;
+            }
+            else
+            {
+                VolunteerManager.ValidatePassword(volunteerToUpdate);
+                var hashPassword=VolunteerManager.EncryptPassword(volunteerToUpdate.Password);
+                volunteerToUpdate.Password=hashPassword;
+            }
+
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteerToUpdate);
             _dal.Volunteer.Update(doVolunteer);
             VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.Id);  //stage 5

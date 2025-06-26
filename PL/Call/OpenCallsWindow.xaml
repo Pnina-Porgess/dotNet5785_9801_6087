@@ -4,8 +4,14 @@
         xmlns:local="clr-namespace:PL"
         Title="קריאות פתוחות" Height="600" Width="800">
 
-
     <StackPanel>
+
+        <!-- עריכת כתובת נוכחית של המתנדב -->
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <TextBlock Text="הכתובת הנוכחית שלך:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBox Text="{Binding CurrentAddress, Mode=TwoWay}" Width="250" Margin="0,0,10,0"/>
+            <Button Content="עדכן כתובת" Click="UpdateAddress_Click" />
+        </StackPanel>
 
         <!-- סינון ומיון -->
         <StackPanel Orientation="Horizontal" Margin="10">

@@ -17,7 +17,8 @@ namespace PL.Call
             {
                 CurrentCall = new BO.Call
                 {
-                    OpeningTime = DateTime.Now // זמן התחלה = עכשיו
+                    Status= BO.CallStatus.Open,
+                    OpeningTime = s_bl.Admin.GetClock()  // זמן התחלה = עכשיו
                 };
             }
             else

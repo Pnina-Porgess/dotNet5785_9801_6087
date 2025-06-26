@@ -6,7 +6,7 @@
              StartupUri="Login/LoginWindow.xaml">
     <Application.Resources>
         <local:CallFieldCollection x:Key="CallFieldCollectionKey" />
-        <local:VolunteerFieldCollection x:Key="VolunteerFieldCollection" />
+        <local:TypeOfReadingCollection x:Key="VolunteerFieldCollection" />
         <local:CloseCallFieldCollection x:Key="CloseCallFieldCollection" />
         <local:OpenCallFieldCollection x:Key="OpenCallFieldCollection"/>
         <local:CallStatusCollection x:Key="CallStatusCollection"/>

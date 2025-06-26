@@ -24,21 +24,21 @@ namespace PL.Login
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
-        
         {
-            ErrorMessage = "";
-            if (!int.TryParse(UserId, out int id))
-            {
-                
-                ErrorMessage = "Invalid ID";
-                OnPropertyChanged(nameof(ErrorMessage));
-                return;
-            }
-
             try
             {
-                var volunteer = s_bl.Volunteer.GetVolunteerDetails(id);
-                var role = s_bl.Volunteer.Login(volunteer.FullName, Password);
+                ErrorMessage = "";
+                OnPropertyChanged(nameof(ErrorMessage));
+
+                if (!int.TryParse(UserId, out int id))
+                {
+                    ErrorMessage = "תעודת זהות לא תקינה - נא להזין מספר בלבד.";
+                    OnPropertyChanged(nameof(ErrorMessage));
+                    MessageBox.Show(ErrorMessage, "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var role = s_bl.Volunteer.Login(id, Password);
 
                 if (role == BO.Role.Manager)
                 {
@@ -48,7 +48,7 @@ namespace PL.Login
 
                     if (result == MessageBoxResult.Yes)
                     {
-                        var adminWindow = new MainWindow(); // שנה לחלון הניהול שלך
+                        var adminWindow = new MainWindow(id); // שנה לחלון הניהול שלך
                         adminWindow.Show();
                     }
                     else if (result == MessageBoxResult.No)
@@ -65,10 +65,12 @@ namespace PL.Login
             }
             catch (System.Exception ex)
             {
-                ErrorMessage = ex.Message;
+                ErrorMessage = "אירעה שגיאה: " + ex.Message;
+                OnPropertyChanged(nameof(ErrorMessage));
+                MessageBox.Show(ErrorMessage, "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            OnPropertyChanged(nameof(ErrorMessage));
         }
+
 
         // INotifyPropertyChanged למען ה-Binding
         public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
