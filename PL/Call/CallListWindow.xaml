@@ -5,68 +5,201 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Call"
         mc:Ignorable="d"
-        Title="CallListWindow" Height="640" Width="800"
+        Title="Call List"
+        Height="700" Width="900"
+        Background="White"
         Loaded="Window_Loaded" Closed="Window_Closed"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
-    <Grid>
+    <Window.Resources>
+        <!-- Color scheme matching VolunteerListWindow -->
+        <Color x:Key="TextBlueColor">#0D3F59</Color>
+        <Color x:Key="OrangeColor">#FDB53B</Color>
+        <Color x:Key="PinkColor">#CF5BA4</Color>
+        <Color x:Key="GreenColor">#B3D36B</Color>
+        <Color x:Key="LightBlueColor">#32A7DD</Color>
+
+        <SolidColorBrush x:Key="TextBlueBrush" Color="{StaticResource TextBlueColor}" />
+        <SolidColorBrush x:Key="OrangeBrush" Color="{StaticResource OrangeColor}" />
+        <SolidColorBrush x:Key="PinkBrush" Color="{StaticResource PinkColor}" />
+        <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource GreenColor}" />
+        <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlueColor}" />
+
+        <!-- Header style for GridView columns -->
+        <Style x:Key="HeaderStyle" TargetType="GridViewColumnHeader">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{StaticResource OrangeBrush}"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="30">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Filter Row -->
-        <Grid Grid.Row="0" Margin="10">
+        <!-- Main title -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,20">
+            <TextBlock Text="Call List"
+                       Foreground="{StaticResource OrangeBrush}"
+                       FontSize="28"
+                       FontWeight="Bold"/>
+        </StackPanel>
+
+        <!-- Filter section -->
+        <Grid Grid.Row="1" Margin="0,0,0,20">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="🧩 Field:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-            <ComboBox Grid.Column="1"
-                      ItemsSource="{Binding Source={StaticResource CallFieldCollectionKey}}"
-                      SelectedItem="{Binding SelectedField, Mode=TwoWay}"
-                      VerticalAlignment="Center"/>
+            <!-- Field filter -->
+            <Border Grid.Column="0"
+                    Background="#F5F5F5" 
+                    Padding="12,6" 
+                    CornerRadius="8">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="🧩" FontSize="18" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                    <Label Content="Field:"
+                           Foreground="{StaticResource GreenBrush}"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           FontSize="15"/>
+                    <ComboBox SelectedItem="{Binding SelectedField, Mode=TwoWay}"
+                              ItemsSource="{Binding Source={StaticResource CallFieldCollectionKey}}"
+                              Width="200"
+                              Margin="10,0,0,0"
+                              Background="{StaticResource LightBlueBrush}"
+                              Foreground="#0D3F59"
+                              BorderThickness="0"
+                              Height="32"
+                              VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
 
-
-
-            <TextBlock Text="🛑 Status:" Grid.Column="4" Margin="15,0,5,0" VerticalAlignment="Center"/>
-            <ComboBox Grid.Column="5"
-                      ItemsSource="{Binding Source={StaticResource CallStatusCollection}}"
-                      SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"
-                      VerticalAlignment="Center"/>
+            <!-- Status filter -->
+            <Border Grid.Column="2"
+                    Background="#F5F5F5" 
+                    Padding="12,6" 
+                    CornerRadius="8">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="🛑" FontSize="18" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                    <Label Content="Status:"
+                           Foreground="{StaticResource PinkBrush}"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           FontSize="15"/>
+                    <ComboBox SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"
+                              ItemsSource="{Binding Source={StaticResource CallStatusCollection}}"
+                              Width="200"
+                              Margin="10,0,0,0"
+                              Background="{StaticResource LightBlueBrush}"
+                              Foreground="#0D3F59"
+                              BorderThickness="0"
+                              Height="32"
+                              VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
         </Grid>
 
-        <!-- ListView -->
-        <ListView Grid.Row="1" Margin="10"
+        <!-- Call list -->
+        <ListView Grid.Row="2"
                   ItemsSource="{Binding CallList}"
                   SelectedItem="{Binding SelectedCall}"
-                  MouseDoubleClick="ListView_MouseDoubleClick">
+                  MouseDoubleClick="ListView_MouseDoubleClick"
+                  Background="#FFF"
+                  BorderBrush="{StaticResource LightBlueBrush}"
+                  BorderThickness="1"
+                  Margin="0,0,0,20">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="CallId" DisplayMemberBinding="{Binding CallId}" Width="80"/>
-                    <GridViewColumn Header="CallType" DisplayMemberBinding="{Binding CallType}" Width="80"/>
-                    <GridViewColumn Header="RemainingTime" DisplayMemberBinding="{Binding RemainingTime}" Width="80"/>
-                    <GridViewColumn Header="LastVolunteerName" DisplayMemberBinding="{Binding LastVolunteerName}" Width="120"/>
-                    <GridViewColumn Header="CompletionTime" DisplayMemberBinding="{Binding CompletionTime}" Width="100"/>
-                    <GridViewColumn Header="CallStatus" DisplayMemberBinding="{Binding CallStatus}" Width="80"/>
-                    <GridViewColumn Header="TotalAssignments" DisplayMemberBinding="{Binding TotalAssignments}" Width="100"/>
-                    <GridViewColumn Header="🗑️" Width="60">
+                    <!-- List columns -->
+                    <GridViewColumn Header="🆔 Call ID" Width="90" HeaderContainerStyle="{StaticResource HeaderStyle}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="🗑️" Click="DeleteButton_Click"/>
+                                <TextBlock Text="{Binding CallId}" Foreground="{StaticResource TextBlueBrush}" FontWeight="Bold" HorizontalAlignment="Center"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="בטל" Width="80">
+
+                    <GridViewColumn Header="📚 Call Type" Width="100" HeaderContainerStyle="{StaticResource HeaderStyle}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="בטל" Click="UnassignButton_Click"/>
+                                <TextBlock Text="{Binding CallType}" Foreground="{StaticResource TextBlueBrush}" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="⏰ Remaining Time" Width="110" HeaderContainerStyle="{StaticResource HeaderStyle}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding RemainingTime}" Foreground="{StaticResource TextBlueBrush}" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="👤 Last Volunteer" Width="130" HeaderContainerStyle="{StaticResource HeaderStyle}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding LastVolunteerName}" Foreground="{StaticResource TextBlueBrush}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="✅ Completion Time" Width="120" HeaderContainerStyle="{StaticResource HeaderStyle}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding CompletionTime}" Foreground="{StaticResource TextBlueBrush}" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="🔄 Status" Width="80" HeaderContainerStyle="{StaticResource HeaderStyle}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding CallStatus}" Foreground="{StaticResource TextBlueBrush}" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="📊 Assignments" Width="90" HeaderContainerStyle="{StaticResource HeaderStyle}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding TotalAssignments}" Foreground="{StaticResource TextBlueBrush}" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="Delete🗑️" Width="70" HeaderContainerStyle="{StaticResource HeaderStyle}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="🗑️"
+                                        Click="DeleteButton_Click"
+                                        Foreground="{StaticResource TextBlueBrush}"
+                                        FontWeight="Bold"
+                                        BorderThickness="0"
+                                        Cursor="Hand"
+                                        Padding="4,2"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="Cancel🚫" Width="80" HeaderContainerStyle="{StaticResource HeaderStyle}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="🚫"
+                                        Click="UnassignButton_Click"
+                                        Foreground="{StaticResource PinkBrush}"
+                                        FontWeight="Bold"
+                                        BorderThickness="0"
+                                        Cursor="Hand"
+                                        Padding="4,2"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -74,7 +207,27 @@
             </ListView.View>
         </ListView>
 
-        <!-- Add Button -->
-        <Button Content="הוסף קריאה" Grid.Row="2" Height="40" Width="120" Margin="10" Click="AddButton_Click"/>
+        <!-- Add button -->
+        <Button Content="➕ Add Call"
+                Grid.Row="3"
+                Width="200"
+                Height="45"
+                Background="{StaticResource OrangeBrush}"
+                Foreground="{StaticResource TextBlueBrush}"
+                FontWeight="Bold"
+                FontSize="16"
+                BorderThickness="0"
+                Margin="0,0,0,10"
+                HorizontalAlignment="Center"
+                Cursor="Hand"
+                Click="AddButton_Click">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="22">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
     </Grid>
 </Window>
