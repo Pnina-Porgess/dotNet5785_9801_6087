@@ -48,7 +48,7 @@ namespace PL.Login
 
                     if (result == MessageBoxResult.Yes)
                     {
-                        var adminWindow = new MainWindow(id); // שנה לחלון הניהול שלך
+                        var adminWindow = new MainWindow(id);
                         adminWindow.Show();
                     }
                     else if (result == MessageBoxResult.No)

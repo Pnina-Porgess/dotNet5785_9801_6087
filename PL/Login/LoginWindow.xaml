@@ -1,32 +1,209 @@
 ﻿<Window x:Class="PL.Login.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Login" Height="250" Width="350"
+        Title="Login - Yedidim Helper System" 
+        Height="500" Width="400"
+        Background="White"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" Content="User ID:"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Margin="5"
-                 Text="{Binding UserId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+    <Window.Resources>
+        <!-- Color scheme matching the other windows -->
+        <Color x:Key="TextBlueColor">#0D3F59</Color>
+        <Color x:Key="OrangeColor">#FDB53B</Color>
+        <Color x:Key="PinkColor">#CF5BA4</Color>
+        <Color x:Key="GreenColor">#B3D36B</Color>
+        <Color x:Key="LightBlueColor">#32A7DD</Color>
+        <Color x:Key="DarkBlueColor">#1B4B66</Color>
 
-        <Label Grid.Row="1" Grid.Column="0" Content="Password:"/>
-        <PasswordBox Grid.Row="1" Grid.Column="1" Margin="5"
-                     PasswordChanged="PasswordBox_PasswordChanged"/>
+        <SolidColorBrush x:Key="TextBlueBrush" Color="{StaticResource TextBlueColor}" />
+        <SolidColorBrush x:Key="OrangeBrush" Color="{StaticResource OrangeColor}" />
+        <SolidColorBrush x:Key="PinkBrush" Color="{StaticResource PinkColor}" />
+        <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource GreenColor}" />
+        <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlueColor}" />
+        <SolidColorBrush x:Key="DarkBlueBrush" Color="{StaticResource DarkBlueColor}" />
 
-        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,15,0,0"
-                Content="Login" Click="LoginButton_Click"/>
-        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red"
-                   Text="{Binding ErrorMessage}" Margin="0,10,0,0"/>
+        <!-- Style for input fields -->
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CaretBrush" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="SelectionBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+
+        <!-- Style for password box -->
+        <Style x:Key="ModernPasswordBox" TargetType="PasswordBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CaretBrush" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="SelectionBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+
+        <!-- Style for labels -->
+        <Style x:Key="ModernLabel" TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+    </Window.Resources>
+
+    <!-- Main background with gradient -->
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#1B4B66" Offset="0"/>
+                <GradientStop Color="#0D3F59" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Login card -->
+        <Border Background="White" 
+                CornerRadius="15" 
+                Width="320"
+                Height="450"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" 
+                                Direction="270" 
+                                ShadowDepth="8" 
+                                BlurRadius="20" 
+                                Opacity="0.3"/>
+            </Border.Effect>
+
+            <Grid Margin="30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Logo section -->
+                <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+                    <!-- Logo placeholder - replace with actual logo -->
+                    <Border Background="{StaticResource DarkBlueBrush}" 
+                            Width="80" Height="80" 
+                            CornerRadius="15"
+                            Margin="0,0,0,10">
+                        <Grid>
+                            <!-- Colorful squares representing the logo -->
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Grid.Row="0" Grid.Column="0" Fill="{StaticResource OrangeBrush}" Margin="8,8,2,2" RadiusX="4" RadiusY="4"/>
+                            <Rectangle Grid.Row="0" Grid.Column="1" Fill="{StaticResource PinkBrush}" Margin="2,8,8,2" RadiusX="4" RadiusY="4"/>
+                            <Rectangle Grid.Row="1" Grid.Column="0" Fill="{StaticResource GreenBrush}" Margin="8,2,2,8" RadiusX="4" RadiusY="4"/>
+                            <Rectangle Grid.Row="1" Grid.Column="1" Fill="{StaticResource LightBlueBrush}" Margin="2,2,8,8" RadiusX="4" RadiusY="4"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Title -->
+                    <TextBlock Text="ידידים"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextBlueBrush}"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Helper System Login"
+                               FontSize="14"
+                               Foreground="{StaticResource LightBlueBrush}"
+                               HorizontalAlignment="Center"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+
+                <!-- User ID field -->
+                <StackPanel Grid.Row="2">
+                    <Label Content="👤 User ID" Style="{StaticResource ModernLabel}"/>
+                    <TextBox Style="{StaticResource ModernTextBox}"
+                             Text="{Binding UserId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                <!-- Password field -->
+                <StackPanel Grid.Row="4">
+                    <Label Content="🔒 Password" Style="{StaticResource ModernLabel}"/>
+                    <PasswordBox Style="{StaticResource ModernPasswordBox}"
+                                 PasswordChanged="PasswordBox_PasswordChanged"/>
+                </StackPanel>
+
+                <!-- Login button -->
+                <Button Grid.Row="6"
+                        Content="🚀 Login"
+                        Height="45"
+                        Background="{StaticResource OrangeBrush}"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        FontSize="16"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="LoginButton_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                    CornerRadius="22"
+                                    x:Name="ButtonBorder">
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="ButtonBorder" Property="Background" Value="#E6A332"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="ButtonBorder" Property="Background" Value="#CC9129"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Error message -->
+                <Border Grid.Row="8" 
+                        Background="#FFE6E6" 
+                        BorderBrush="{StaticResource PinkBrush}" 
+                        BorderThickness="1" 
+                        CornerRadius="6"
+                        Padding="10">
+                    <TextBlock Text="{Binding ErrorMessage}" 
+                               Foreground="{StaticResource PinkBrush}"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"/>
+                </Border>
+
+                <!-- Footer -->
+                <TextBlock Grid.Row="10"
+                           Text="© 2024 Yedidim Helper System"
+                           FontSize="10"
+                           Foreground="{StaticResource LightBlueBrush}"
+                           HorizontalAlignment="Center"
+                           Opacity="0.7"/>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
-
