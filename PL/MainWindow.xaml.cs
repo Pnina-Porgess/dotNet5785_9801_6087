@@ -8,6 +8,14 @@ namespace PL
 {
     public partial class MainWindow : Window
     {
+        public MainWindow() : this(0) // מפעיל את הבנאי הקיים עם volunteerId=0
+        {
+          
+
+            InitializeComponent();
+            this.Loaded += MainWindow_Loaded;
+            this.Closed += MainWindow_Closed;
+        }
         public MainWindow(int volunteerId)
         {
              id= volunteerId;

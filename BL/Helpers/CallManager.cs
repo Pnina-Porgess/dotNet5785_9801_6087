@@ -76,14 +76,13 @@ internal static class CallManager
             var assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
             if (assignments == null)
                 throw new ArgumentException($"Call with ID={callId} does not has assignment.");
-
+          
             // If there are no assignments at all
             if (!assignments.Any())
             {
                 // Check if call has expired
                 if (AdminManager.Now > call.MaxTimeToFinish)
                     return BO.CallStatus.Expired;
-
                 // Check if call is at risk (less than 30 minutes to expiration)
                 TimeSpan timeToExpiration = (DateTime)call.MaxTimeToFinish -AdminManager.Now;
                 if (timeToExpiration <= AdminManager.RiskRange)
@@ -101,6 +100,9 @@ internal static class CallManager
                 var successfulAssignment = assignments.Any(a => a.TypeOfEndTime == DO.TypeOfEndTime.treated);
                 return successfulAssignment ? BO.CallStatus.Closed : BO.CallStatus.Open;
             }
+            // Check if call has expired
+            if (AdminManager.Now > call.MaxTimeToFinish)
+                return BO.CallStatus.Expired;
             // There is an active assignment - check if it's at risk
             var remainingTime = (DateTime)call.MaxTimeToFinish - AdminManager.Now;
             if (remainingTime <= AdminManager.RiskRange)
@@ -203,20 +205,18 @@ internal static class CallManager
     /// <returns>A collection of BO.ClosedCallInList objects.</returns>
     public static IEnumerable<BO.ClosedCallInList> CreateClosedCallList(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments)
     {
-        return calls.Select(call =>
-        {
-            var assignment = assignments.First(a => a.CallId == call.Id);
-            return new BO.ClosedCallInList
-            {
-                Id = call.Id,
-                CallType = (BO.TypeOfReading)call.TypeOfReading,
-                OpenTime = call.TimeOfOpen,
-                FullAddress = call.Adress,
-                ActualEndTime = assignment.EndTime,
-                AssignmentEntryTime = assignment.EntryTime,
-                EndType = (BO.TypeOfEndTime)assignment.TypeOfEndTime
-            };
-        });
+        return calls.SelectMany(call =>
+            assignments.Where(a => a.CallId == call.Id)
+                       .Select(assignment => new BO.ClosedCallInList
+                       {
+                           Id = call.Id,
+                           CallType = (BO.TypeOfReading)call.TypeOfReading,
+                           OpenTime = call.TimeOfOpen,
+                           FullAddress = call.Adress,
+                           ActualEndTime = assignment.EndTime,
+                           AssignmentEntryTime = assignment.EntryTime,
+                           EndType = (BO.TypeOfEndTime)assignment.TypeOfEndTime
+                       }));
     }
 
     /// <summary>

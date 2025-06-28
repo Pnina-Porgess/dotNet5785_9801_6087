@@ -121,11 +121,21 @@ namespace BlImplementation
                 var volunteers = _dal.Volunteer.ReadAll().ToDictionary(v => v.Id, v => v.Name);
                 var callList = calls.Select(call => CallManager.CreateCallInList(call, assignments, volunteers));
 
+                // סינון לפי שדה ספציפי וערך
                 if (filterField.HasValue && filterValue != null)
                 {
-                    callList = callList.Where(c => c.GetType().GetProperty(filterField.ToString()!)?.GetValue(c)?.Equals(filterValue) == true);
+                    var property = typeof(BO.CallInList).GetProperty(filterField.ToString()!);
+                    if (property != null)
+                    {
+                        callList = callList.Where(c =>
+                        {
+                            var val = property.GetValue(c);
+                            return val != null && val.Equals(filterValue);
+                        });
+                    }
                 }
 
+                // מיון
                 return sortField switch
                 {
                     CallField.AssignmentId => callList.OrderBy(c => c.AssignmentId),
@@ -137,7 +147,7 @@ namespace BlImplementation
                     CallField.CompletionTime => callList.OrderBy(c => c.CompletionTime),
                     CallField.CallStatus => callList.OrderBy(c => c.CallStatus),
                     CallField.TotalAssignments => callList.OrderBy(c => c.TotalAssignments),
-                    _ =>  callList.OrderBy(c => c.CallId)
+                    _ => callList.OrderBy(c => c.CallId)
                 };
             }
             catch (Exception ex)

@@ -10,9 +10,12 @@
         <local:CloseCallFieldCollection x:Key="CloseCallFieldCollection" />
         <local:OpenCallFieldCollection x:Key="OpenCallFieldCollection"/>
         <local:CallStatusCollection x:Key="CallStatusCollection"/>
+        <vol:CanDeleteCallConverter x:Key="CanDeleteCallConverter" />
         <vol:BooleanToVisibilityConverter x:Key="BoolToVis" />
         <vol:NullToVisibilityConverter x:Key="NotNullToVisible" Invert="True"/>
         <vol:NullToVisibilityConverter x:Key="NullToVisible" />
         <vol:UpdateModeToBoolConverter x:Key="UpdateModeToBoolConverter"/>
+
+
     </Application.Resources>
 </Application>

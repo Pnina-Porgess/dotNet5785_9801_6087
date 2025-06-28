@@ -340,17 +340,23 @@ internal class Program
     {
         while (true)
         {
-            Console.Write("Username: ");
-            string? username = Console.ReadLine();
+            Console.Write("id: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.WriteLine("Invalid ID. Please enter a valid integer.");
+                continue;
+            }
+
             Console.Write("Password: ");
             string? password = Console.ReadLine();
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(password))
             {
-                Console.WriteLine("Username and password cannot be empty!");
+                Console.WriteLine("Password cannot be empty!");
                 continue;
             }
-            Console.Write("successfully, role: " + s_bl.Volunteer.Login(username, password));
+
+            Console.WriteLine("Successfully logged in, role: " + s_bl.Volunteer.Login(id, password));
             break;
         }
     }
