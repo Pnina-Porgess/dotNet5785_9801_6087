@@ -58,9 +58,9 @@ namespace PL.Call
             BO.CallField? filterField = SelectedField;
             BO.CallField? sortField = SelectedField;
 
-            IEnumerable<BO.CallInList> list = s_bl?.Call.GetCalls(filterField, SelectedStatus, sortField)!;
+            IEnumerable<BO.CallInList> list = s_bl?.Call.GetCalls(filterField, (SelectedStatus== BO.CallStatus.None) ?null: SelectedStatus, sortField)!;
 
-            if (SelectedStatus != null)
+            if (SelectedStatus != null&& SelectedStatus != BO.CallStatus.None)
                 list = list.Where(c => c.CallStatus == SelectedStatus);
 
             CallList = list;

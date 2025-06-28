@@ -89,11 +89,11 @@ internal static class CallManager
                 if (timeToExpiration <= AdminManager.RiskRange)
                     return BO.CallStatus.OpenAtRisk;
 
-                return BO.CallStatus.Open;
+               return BO.CallStatus.Open;
             }
 
             // Get the latest active assignment (no EndTime)
-            var activeAssignment = assignments.FirstOrDefault(a => a.EndTime == null);
+            var activeAssignment = assignments.FirstOrDefault(a => a.EndTime == null&&a.TypeOfEndTime==null);
             // If there's no active assignment but there are completed assignments
             if (activeAssignment == null)
             {

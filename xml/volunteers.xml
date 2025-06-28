@@ -136,21 +136,6 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>328279427</Id>
-    <Name>Moshe</Name>
-    <Phone>0523126578</Phone>
-    <Email>Moshe@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>35</MaximumDistance>
-    <Password>ROLlsrRq2Hw3AtRWTByuHmlF1IrrtpESEIM5g64dbLg=</Password>
-    <Address>Holon, Jabotinsky St.</Address>
-    <Latitude>34.7874</Latitude>
-    <Longitude>32.0158</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
     <Id>328301940</Id>
     <Name>Chana</Name>
     <Phone>0556549872</Phone>
@@ -253,6 +238,21 @@
     <Address>Tel Aviv</Address>
     <Latitude>32.0852997</Latitude>
     <Longitude>34.7818064</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>328279427</Id>
+    <Name>Moshe</Name>
+    <Phone>0523126578</Phone>
+    <Email>Moshe@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>false</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>35</MaximumDistance>
+    <Password>ROLlsrRq2Hw3AtRWTByuHmlF1IrrtpESEIM5g64dbLg=</Password>
+    <Address>Holon, Jabotinsky St.</Address>
+    <Latitude>32.32251</Latitude>
+    <Longitude>34.848945</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
 </ArrayOfVolunteer>
