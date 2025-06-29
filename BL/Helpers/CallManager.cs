@@ -64,19 +64,24 @@ internal static class CallManager
     /// <returns>The calculated call status.</returns>
     /// <exception cref="ArgumentException">Thrown if the call does not exist or has no assignments.</exception>
     internal static BO.CallStatus CalculateCallStatus(int callId)
+
     {
         try
         {
             // Get the call from database
-            var call = _dal.Call.Read(callId);
-            if (call == null)
-                throw new ArgumentException($"Call with ID={callId} does not exist.");
+            DO.Call call;
+            IEnumerable<DO.Assignment> assignments;
+            lock (AdminManager.BlMutex)
+            {
+                 call = _dal.Call.Read(callId)!;
+                if (call == null)
+                    throw new ArgumentException($"Call with ID={callId} does not exist.");
 
-            // Get all assignments for this call
-            var assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
-            if (assignments == null)
-                throw new ArgumentException($"Call with ID={callId} does not has assignment.");
-          
+                // Get all assignments for this call
+                 assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
+                if (assignments == null)
+                    throw new ArgumentException($"Call with ID={callId} does not has assignment.");
+            }
             // If there are no assignments at all
             if (!assignments.Any())
             {
@@ -126,18 +131,22 @@ internal static class CallManager
     {
         try
         {
-            // First verify the call exists
-            var call = _dal.Call.Read(callId);
-            if (call == null)
+            IEnumerable<DO.Assignment> assignments;
+            lock (AdminManager.BlMutex)
             {
-                throw new ArgumentException($"Call with ID={callId} does not exist.");
+                // First verify the call exists
+                var call = _dal.Call.Read(callId);
+                if (call == null)
+                {
+                    throw new ArgumentException($"Call with ID={callId} does not exist.");
+                }
+
+                // Check if there are any assignments for this call
+                 assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
             }
-
-            // Check if there are any assignments for this call
-            var assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
-
-            // The call was never assigned if there are no assignments at all
-            return assignments.Any();
+                // The call was never assigned if there are no assignments at all
+                return assignments.Any();
+            
         }
         catch (Exception ex)
         {
@@ -228,7 +237,9 @@ internal static class CallManager
     {
         try
         {
-            _dal.Call.ReadAll(c => c.MaxTimeToFinish > AdminManager.Now).ToList().ForEach(call =>
+            lock (AdminManager.BlMutex)
+            {
+                _dal.Call.ReadAll(c => c.MaxTimeToFinish > AdminManager.Now).ToList().ForEach(call =>
             {
                 List<DO.Assignment> allAssignmentsCall = _dal.Assignment.ReadAll(a => a.CallId == call.Id && a.EndTime == null).ToList();
 
@@ -243,6 +254,7 @@ internal static class CallManager
                     _dal.Assignment.Update(updatedAssignment with { EndTime = AdminManager.Now, TypeOfEndTime = DO.TypeOfEndTime.CancellationHasExpired });
                 }
             });
+            }
         }
         catch (BO.BlInvalidInputException e)
         {
@@ -256,7 +268,9 @@ internal static class CallManager
     /// <param name="call">The call object that was opened.</param>
     internal static void SendEmailWhenCalOpened(BO.Call call)
     {
-        var volunteer = _dal.Volunteer.ReadAll();
+  
+   
+            var volunteer = _dal.Volunteer.ReadAll();
         foreach (var item in volunteer)
         {
 

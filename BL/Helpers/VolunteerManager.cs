@@ -20,25 +20,31 @@ internal static class VolunteerManager
 
         try
         {
-            var volunteerInList = volunteers.Select(static v =>
+          
+                var volunteerInList = volunteers.Select(static v =>
           {
-              var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
-              var assignedResponseId = volunteerAssignments.FirstOrDefault()?.CallId;
-              return new BO.VolunteerInList
+              lock (AdminManager.BlMutex)
               {
-                  Id = v.Id,
-                  FullName = v.Name,
-                  IsActive = v.IsActive,
-                  TotalHandledCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.treated), // חישוב מספר השיחות שנפגעו
-                  TotalCancelledCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.SelfCancellation),  // חישוב מספר השיחות שבוטלו
-                  TotalExpiredCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.CancellationHasExpired),  // חישוב מספר השיחות שזמן ההגשה שלהן פג
-                  CurrentCallId = assignedResponseId,
-                  CurrentCallType = (BO.TypeOfReading)(assignedResponseId.HasValue
-                        ? (BO.TypeOfReading)(s_dal.Call.Read(assignedResponseId.Value)?.TypeOfReading)!
-                        : BO.TypeOfReading.None)
-              };
+                  var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
+                  var assignedResponseId = volunteerAssignments.FirstOrDefault()?.CallId;
+                  return new BO.VolunteerInList
+                  {
+                      Id = v.Id,
+                      FullName = v.Name,
+                      IsActive = v.IsActive,
+                      TotalHandledCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.treated), // חישוב מספר השיחות שנפגעו
+                      TotalCancelledCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.SelfCancellation),  // חישוב מספר השיחות שבוטלו
+                      TotalExpiredCalls = volunteerAssignments.Count(a => a.TypeOfEndTime == DO.TypeOfEndTime.CancellationHasExpired),  // חישוב מספר השיחות שזמן ההגשה שלהן פג
+                      CurrentCallId = assignedResponseId,
+                      CurrentCallType = (BO.TypeOfReading)(assignedResponseId.HasValue
+                            ? (BO.TypeOfReading)(s_dal.Call.Read(assignedResponseId.Value)?.TypeOfReading)!
+                            : BO.TypeOfReading.None)
+                  };
+              }
           }).ToList();
-            return volunteerInList;
+
+                return volunteerInList;
+            
         }
 
         catch (Exception ex)
@@ -328,5 +334,5 @@ internal static class VolunteerManager
 
 /*   a => a?.EntryTime == null   */
 
-}
+
 

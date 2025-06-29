@@ -60,17 +60,18 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
+            DO.Volunteer volunteer;
             lock (AdminManager.BlMutex)
             {
-                var volunteer = _dal.Volunteer.ReadAll().FirstOrDefault(v => v.Id == id)
+                 volunteer = _dal.Volunteer.ReadAll().FirstOrDefault(v => v.Id == id)
                     ?? throw new BO.BlNotFoundException("Username or password is not correct.");
-
-                var pass = VolunteerManager.EncryptPassword(password);
+            }
+            var pass = VolunteerManager.EncryptPassword(password);
                 if (pass != volunteer.Password)
                     throw new BO.BlNotFoundException("Username or password is not correct.");
 
                 return (BO.Role)volunteer.Role;
-            }
+          
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -184,12 +185,13 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
+            IEnumerable<BO.VolunteerInList>  volunteerList;
             lock (AdminManager.BlMutex)
             {
                 IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => !isActive.HasValue || v.IsActive == isActive.Value);
-                var volunteerList = VolunteerManager.GetVolunteerList(volunteers);
+                volunteerList = VolunteerManager.GetVolunteerList(volunteers);
                 volunteerList = volunteerList.Where(vol => !filterField.HasValue || vol.CurrentCallType == filterField);
-
+            }
                 volunteerList = sortBy.HasValue ? sortBy.Value switch
                 {
                     BO.VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
@@ -200,7 +202,7 @@ internal class VolunteerImplementation : IVolunteer
                 } : volunteerList.OrderBy(v => v.Id).ToList();
 
                 return volunteerList;
-            }
+            
         }
         catch (DO.DalDoesNotExistException ex)
         {
