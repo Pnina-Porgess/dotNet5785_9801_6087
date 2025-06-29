@@ -19,6 +19,8 @@ namespace PL.Call
         {
             VolunteerId = volunteerId;
             InitializeComponent();
+
+            _clockObserver = () => Dispatcher.Invoke(queryCallList);
         }
 
         public IEnumerable<BO.CallInList> CallList
@@ -36,8 +38,6 @@ namespace PL.Call
         }
         public static readonly DependencyProperty SelectedFieldProperty =
             DependencyProperty.Register("SelectedField", typeof(BO.CallField?), typeof(CallListWindow), new PropertyMetadata(null, OnFilterChanged));
-
-   
 
         public BO.CallStatus? SelectedStatus
         {
@@ -58,9 +58,9 @@ namespace PL.Call
             BO.CallField? filterField = SelectedField;
             BO.CallField? sortField = SelectedField;
 
-            IEnumerable<BO.CallInList> list = s_bl?.Call.GetCalls(filterField, SelectedStatus, sortField)!;
+            IEnumerable<BO.CallInList> list = s_bl?.Call.GetCalls(filterField, (SelectedStatus == BO.CallStatus.None) ? null : SelectedStatus, sortField)!;
 
-            if (SelectedStatus != null)
+            if (SelectedStatus != null && SelectedStatus != BO.CallStatus.None)
                 list = list.Where(c => c.CallStatus == SelectedStatus);
 
             CallList = list;
@@ -68,15 +68,19 @@ namespace PL.Call
 
         private void callListObserver() => queryCallList();
 
+        private readonly Action _clockObserver;
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             s_bl.Call.AddObserver(callListObserver);
+            s_bl.Admin.AddClockObserver(_clockObserver);
             queryCallList();
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             s_bl.Call.RemoveObserver(callListObserver);
+            s_bl.Admin.RemoveClockObserver(_clockObserver);
         }
 
         private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -92,24 +96,24 @@ namespace PL.Call
         {
             if ((sender as FrameworkElement)?.DataContext is BO.CallInList call)
             {
-                var result = MessageBox.Show($"Are you sure you want to delete call #{call.CallId}?",
-                    "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                var result = MessageBox.Show($"האם אתה בטוח שברצונך למחוק את הקריאה #{call.CallId}?",
+                    "אישור מחיקה", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                 if (result == MessageBoxResult.Yes)
                 {
                     try
                     {
                         s_bl.Call.DeleteCall(call.CallId);
-                        MessageBox.Show("Call deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show("הקריאה נמחקה בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
                         queryCallList();
                     }
                     catch (BO.BlNotFoundException ex)
                     {
-                        MessageBox.Show($"Cannot delete call: {ex.Message}", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show($"לא ניתן למחוק את הקריאה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show($"שגיאה לא צפויה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }

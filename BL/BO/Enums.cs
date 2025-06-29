@@ -61,7 +61,8 @@ public enum CallStatus
     Closed,
     Expired,
     OpenAtRisk,
-    InProgressAtRisk
+    InProgressAtRisk,
+    None
 }
 
 /// <summary>

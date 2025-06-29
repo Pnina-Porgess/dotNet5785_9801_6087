@@ -1,5 +1,6 @@
 ﻿using BlApi;
 using BO;
+using DO;
 using Helpers;
 
 namespace BlImplementation
@@ -121,11 +122,21 @@ namespace BlImplementation
                 var volunteers = _dal.Volunteer.ReadAll().ToDictionary(v => v.Id, v => v.Name);
                 var callList = calls.Select(call => CallManager.CreateCallInList(call, assignments, volunteers));
 
+                // סינון לפי שדה ספציפי וערך
                 if (filterField.HasValue && filterValue != null)
                 {
-                    callList = callList.Where(c => c.GetType().GetProperty(filterField.ToString()!)?.GetValue(c)?.Equals(filterValue) == true);
+                    var property = typeof(BO.CallInList).GetProperty(filterField.ToString()!);
+                    if (property != null)
+                    {
+                        callList = callList.Where(c =>
+                        {
+                            var val = property.GetValue(c);
+                            return val != null && val.Equals(filterValue);
+                        });
+                    }
                 }
 
+                // מיון
                 return sortField switch
                 {
                     CallField.AssignmentId => callList.OrderBy(c => c.AssignmentId),
@@ -137,7 +148,7 @@ namespace BlImplementation
                     CallField.CompletionTime => callList.OrderBy(c => c.CompletionTime),
                     CallField.CallStatus => callList.OrderBy(c => c.CallStatus),
                     CallField.TotalAssignments => callList.OrderBy(c => c.TotalAssignments),
-                    _ =>  callList.OrderBy(c => c.CallId)
+                    _ => callList.OrderBy(c => c.CallId)
                 };
             }
             catch (Exception ex)
@@ -202,6 +213,9 @@ namespace BlImplementation
                 };
 
                 _dal.Assignment.Update(updatedAssignment);
+                CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(volunteerId);
+
             }
             catch (DO.DalAlreadyExistsException ex)
             {
@@ -259,7 +273,11 @@ namespace BlImplementation
                 { 
                     volunteer = _dal.Volunteer.Read(assignment.VolunteerId); 
                 }
+                CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(requesterId);
+
                 CallManager.SendEmailToVolunteer(volunteer!, assignment);
+
             }
            
             catch (Exception ex)
@@ -305,6 +323,9 @@ namespace BlImplementation
 
                 // 5. הוספת ההקצאה לשכבת הנתונים
                 _dal.Assignment.Create(assignment);
+                CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(volunteerId);
+
             }
             catch (Exception ex)
             {

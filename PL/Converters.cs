@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BO;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -68,4 +69,20 @@ namespace PL.Converter;  // Converter: if ButtonText is "Update" => true
             throw new NotImplementedException();
         }
     }
+public class CanDeleteCallConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is CallInList call)
+        {
+            return (call.CallStatus == CallStatus.Open && call.AssignmentId == null)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+        return Visibility.Collapsed;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
 
