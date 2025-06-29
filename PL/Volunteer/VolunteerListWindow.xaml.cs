@@ -2,7 +2,6 @@
 using BO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,6 +15,7 @@ namespace PL.Volunteer
         public VolunteerListWindow()
         {
             InitializeComponent();
+            DeleteVolunteerCommand = new RelayCommand<BO.VolunteerInList>(DeleteVolunteer);
         }
 
         public IEnumerable<BO.VolunteerInList> VolunteerList
@@ -30,6 +30,8 @@ namespace PL.Volunteer
         public BO.TypeOfReading TypeOfReading { get; set; } = BO.TypeOfReading.None;
         public BO.VolunteerSortBy SortBy { get; set; } = BO.VolunteerSortBy.id;
         public BO.VolunteerInList? SelectedVolunteer { get; set; }
+
+        public ICommand DeleteVolunteerCommand { get; }
 
         private void queryVolunteerList()
         {
@@ -59,42 +61,39 @@ namespace PL.Volunteer
         {
             if (SelectedVolunteer != null)
             {
-                var window = new VolunteerWindow(SelectedVolunteer.Id);
-                window.Show();
+                new VolunteerWindow(SelectedVolunteer.Id).Show();
             }
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            var window = new VolunteerWindow();
-            window.Show();
+            new VolunteerWindow().Show();
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private void DeleteVolunteer(BO.VolunteerInList volunteer)
         {
-            if ((sender as FrameworkElement)?.DataContext is BO.VolunteerInList volunteer)
-            {
-                var result = MessageBox.Show(
-                    $"Are you sure you want to delete volunteer #{volunteer.Id} ({volunteer.FullName})?",
-                    "Confirm Deletion",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
+            if (volunteer == null) return;
 
-                if (result == MessageBoxResult.Yes)
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete volunteer #{volunteer.Id} ({volunteer.FullName})?",
+                "Confirm Deletion",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
                 {
-                    try
-                    {
-                        s_bl.Volunteer.DeleteVolunteer(volunteer.Id);
-                        MessageBox.Show("Volunteer deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    catch (BO.BlNotFoundException ex)
-                    {
-                        MessageBox.Show($"Cannot delete volunteer: {ex.Message}", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    s_bl.Volunteer.DeleteVolunteer(volunteer.Id);
+                    MessageBox.Show("Volunteer deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (BO.BlNotFoundException ex)
+                {
+                    MessageBox.Show($"Cannot delete volunteer: {ex.Message}", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

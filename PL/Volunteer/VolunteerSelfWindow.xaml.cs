@@ -41,14 +41,49 @@ namespace PL.Volunteer
         {
             try
             {
-                _bl.Volunteer.UpdateVolunteerDetails(Volunteer.Id, Volunteer);
-                MessageBox.Show("עודכן בהצלחה!");
+                if (Volunteer == null)
+                    throw new Exception("Volunteer details failed to load.");
+
+                if (string.IsNullOrWhiteSpace(Volunteer.FullName))
+                    throw new Exception("Please enter full name.");
+
+                if (string.IsNullOrWhiteSpace(Volunteer.Phone))
+                    throw new Exception("Please enter phone number.");
+
+                if (string.IsNullOrWhiteSpace(Volunteer.Email))
+                    throw new Exception("Please enter email address.");
+
+                if (string.IsNullOrWhiteSpace(Volunteer.Password))
+                    throw new Exception("Please enter a password.");
+
+                if (Volunteer.MaxDistance <= 0)
+                    throw new Exception("Please enter a valid maximum distance (must be a positive number).");
+
+                if (!System.Text.RegularExpressions.Regex.IsMatch(Volunteer.Phone, @"^0\d{9}$"))
+                    throw new Exception("Invalid phone number. It must be 10 digits, e.g. 0501234567.");
+
+                if (!System.Text.RegularExpressions.Regex.IsMatch(Volunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                    throw new Exception("Invalid email address.");
+
+                if (string.IsNullOrWhiteSpace(Volunteer.Password) || Volunteer.Password.Length < 8 ||
+                    !System.Text.RegularExpressions.Regex.IsMatch(Volunteer.Password, @"[A-Z]") ||  // upper case
+                    !System.Text.RegularExpressions.Regex.IsMatch(Volunteer.Password, @"[a-z]") ||  // lower case
+                    !System.Text.RegularExpressions.Regex.IsMatch(Volunteer.Password, @"\d") ||     // digit
+                    !System.Text.RegularExpressions.Regex.IsMatch(Volunteer.Password, @"[\W_]"))    // special char
+                {
+                    throw new Exception("Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a digit, and a special character.");
+                }
+
+                // שליחת העדכון ל־BL
+                _bl.Volunteer.UpdateVolunteerDetails(Volunteer.Id,Volunteer);
+                MessageBox.Show("הפרטים עודכנו בהצלחה!");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("שגיאה: " + ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
+
 
         private void btnHistory_Click(object sender, RoutedEventArgs e)
         {

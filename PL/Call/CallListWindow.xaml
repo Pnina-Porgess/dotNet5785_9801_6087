@@ -180,13 +180,15 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Content="🗑️ מחק"
-                               Foreground="{StaticResource TextBlueBrush}"
-                               FontWeight="Bold"
-                               BorderThickness="0"
-                               Cursor="Hand"
-                               Padding="4,2"
-                            Click="DeleteButton_Click"
-                            Visibility="{Binding Converter={StaticResource CanDeleteCallConverter}}" />
+        Command="{Binding DataContext.DeleteCallCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+        CommandParameter="{Binding}"
+        Foreground="{StaticResource TextBlueBrush}"
+        FontWeight="Bold"
+        BorderThickness="0"
+        Cursor="Hand"
+        Padding="4,2"
+        Visibility="{Binding Converter={StaticResource CanDeleteCallConverter}}" />
+
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -195,12 +197,14 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Content="🚫"
-                                        Click="UnassignButton_Click"
-                                        Foreground="{StaticResource PinkBrush}"
-                                        FontWeight="Bold"
-                                        BorderThickness="0"
-                                        Cursor="Hand"
-                                        Padding="4,2"/>
+        Command="{Binding DataContext.UnassignCallCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+        CommandParameter="{Binding}"
+        Foreground="{StaticResource PinkBrush}"
+        FontWeight="Bold"
+        BorderThickness="0"
+        Cursor="Hand"
+        Padding="4,2"/>
+
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

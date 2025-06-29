@@ -105,20 +105,23 @@ namespace PL.Call
 
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.DataContext is OpenCallInList call)
+            if (SelectedCall == null)
+                return;
+
+            try
             {
-                try
-                {
-                    bl.Call.SelectCallForTreatment(CurrentVolunteer.Id, call.Id);
-                    OpenCalls.Remove(call);
-                    MessageBox.Show("הקריאה נבחרה לטיפול!", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"שגיאה בבחירת קריאה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                bl.Call.SelectCallForTreatment(CurrentVolunteer.Id, SelectedCall.Id);
+                OpenCalls.Remove(SelectedCall);
+                SelectedCall = null;
+                MessageBox.Show("הקריאה נבחרה לטיפול!", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"שגיאה בבחירת קריאה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void FilterOrSort_Changed(object sender, SelectionChangedEventArgs e)
         {
