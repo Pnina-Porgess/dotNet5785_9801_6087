@@ -531,6 +531,16 @@
     <MaxTimeToFinish>2025-08-20T00:00:00</MaxTimeToFinish>
   </Call>
   <Call>
+    <Id>1054</Id>
+    <TypeOfReading>FlatTire</TypeOfReading>
+    <Description>dwefv</Description>
+    <Adress>Tel aviv</Adress>
+    <Longitude>34.7818064</Longitude>
+    <Latitude>32.0852997</Latitude>
+    <TimeOfOpen>2025-06-30T00:04:28</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-10T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
     <Id>1003</Id>
     <TypeOfReading>DeadBattery</TypeOfReading>
     <Description />

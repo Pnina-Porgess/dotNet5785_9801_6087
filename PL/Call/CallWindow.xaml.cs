@@ -41,7 +41,7 @@ namespace PL.Call
                     s_bl.Call.RemoveObserver(CurrentCall.Id, CallObserver);
             };
 
-            DataContext = this;
+            //DataContext = this;
         }
 
         public BO.Call? CurrentCall
@@ -65,16 +65,29 @@ namespace PL.Call
         {
             try
             {
+
+                if (CurrentCall?.Type == null)
+                    throw new Exception("יש לבחור סוג קריאה.");
+
+                if (string.IsNullOrWhiteSpace(CurrentCall?.Address))
+                    throw new Exception("יש להזין כתובת.");
+
+                if (CurrentCall?.MaxEndTime == null)
+                    throw new Exception("יש לבחור זמן מקסימלי לסיום.");
+
+                if (CurrentCall.MaxEndTime <= CurrentCall.OpeningTime)
+                    throw new Exception("זמן הסיום חייב להיות לאחר זמן הפתיחה.");
+
+                // הוספה או עדכון
                 if (ButtonText == "Add")
                 {
-
                     s_bl.Call.AddCall(CurrentCall!);
-                    MessageBox.Show("Call added successfully!");
+                    MessageBox.Show("הקריאה נוספה בהצלחה!");
                 }
                 else
                 {
                     s_bl.Call.UpdateCall(CurrentCall!);
-                    MessageBox.Show("Call updated successfully!");
+                    MessageBox.Show("הקריאה עודכנה בהצלחה!");
                 }
 
                 Close();
@@ -84,5 +97,6 @@ namespace PL.Call
                 MessageBox.Show(ex.Message);
             }
         }
+
     }
 }

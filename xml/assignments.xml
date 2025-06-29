@@ -488,4 +488,28 @@
     <EntryTime>2025-06-29T11:57:55.5807723+03:00</EntryTime>
     <EndTime>2025-06-29T11:58:12.3553492+03:00</EndTime>
   </Assignment>
+  <Assignment>
+    <Id>2061</Id>
+    <CallId>1003</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>SelfCancellation</TypeOfEndTime>
+    <EntryTime>2025-06-29T13:52:20.4559209+03:00</EntryTime>
+    <EndTime>2025-06-29T14:23:05.747445+03:00</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2062</Id>
+    <CallId>1003</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>SelfCancellation</TypeOfEndTime>
+    <EntryTime>2025-06-29T15:27:20.7757837+03:00</EntryTime>
+    <EndTime>2025-06-29T15:50:06.2818979+03:00</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2063</Id>
+    <CallId>1003</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime />
+    <EntryTime>2025-06-29T15:50:12.4401062+03:00</EntryTime>
+    <EndTime />
+  </Assignment>
 </Assignments>

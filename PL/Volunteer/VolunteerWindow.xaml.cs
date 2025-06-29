@@ -84,6 +84,50 @@ namespace PL.Volunteer
         {
             try
             {
+                if (CurrentVolunteer == null)
+                    throw new Exception("Volunteer object is not initialized.");
+
+                // בדיקות תקינות בסיסיות
+                if (string.IsNullOrWhiteSpace(CurrentVolunteer.FullName))
+                    throw new Exception("Please enter full name.");
+
+                if (string.IsNullOrWhiteSpace(CurrentVolunteer.Phone))
+                    throw new Exception("Please enter phone number.");
+
+                if (!System.Text.RegularExpressions.Regex.IsMatch(CurrentVolunteer.Phone, @"^0\d{9}$"))
+                    throw new Exception("Invalid phone number. It must be 10 digits, e.g. 0501234567.");
+
+                if (string.IsNullOrWhiteSpace(CurrentVolunteer.Email))
+                    throw new Exception("Please enter email address.");
+
+                if (!System.Text.RegularExpressions.Regex.IsMatch(CurrentVolunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                    throw new Exception("Invalid email format.");
+
+                if (string.IsNullOrWhiteSpace(CurrentVolunteer.Password))
+                    throw new Exception("Please enter a password.");
+
+                if (CurrentVolunteer.Password.Length < 8 ||
+                    !System.Text.RegularExpressions.Regex.IsMatch(CurrentVolunteer.Password, @"[A-Z]") ||
+                    !System.Text.RegularExpressions.Regex.IsMatch(CurrentVolunteer.Password, @"[a-z]") ||
+                    !System.Text.RegularExpressions.Regex.IsMatch(CurrentVolunteer.Password, @"\d") ||
+                    !System.Text.RegularExpressions.Regex.IsMatch(CurrentVolunteer.Password, @"[\W_]"))
+                {
+                    throw new Exception("Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.");
+                }
+
+                if (string.IsNullOrWhiteSpace(CurrentVolunteer.CurrentAddress))
+                    throw new Exception("Please enter address.");
+
+                if (CurrentVolunteer.Role == null)
+                    throw new Exception("Please select a role.");
+
+                if (CurrentVolunteer.DistanceType == null)
+                    throw new Exception("Please select distance type.");
+
+                if (CurrentVolunteer.MaxDistance <= 0)
+                    throw new Exception("Max distance must be a positive number.");
+
+                // קריאה ל־BL
                 if (ButtonText == "Add")
                 {
                     s_bl.Volunteer.AddVolunteer(CurrentVolunteer!);
@@ -102,5 +146,6 @@ namespace PL.Volunteer
                 MessageBox.Show(ex.Message);
             }
         }
+
     }
 }
