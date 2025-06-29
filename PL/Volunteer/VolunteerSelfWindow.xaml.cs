@@ -1,9 +1,7 @@
-﻿
-using BlApi;
+﻿using BlApi;
 using PL;
 using System.ComponentModel;
 using System.Windows;
-using Microsoft.Web.WebView2.Core;
 
 namespace PL.Volunteer
 {
@@ -27,9 +25,17 @@ namespace PL.Volunteer
             InitializeComponent();
             Volunteer = _bl.Volunteer.GetVolunteerDetails(volunteerId);
             DataContext = this;
+
+            // ✅ הוספת Observer לעדכון אוטומטי
+            _bl.Volunteer.AddObserver(volunteerId, RefreshVolunteer);
         }
 
-      
+        // ✅ הסרת Observer בסגירת החלון למניעת דליפות זיכרון
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            _bl.Volunteer.RemoveObserver(Volunteer.Id, RefreshVolunteer);
+        }
 
         private void Update_Click(object sender, RoutedEventArgs e)
         {
@@ -40,7 +46,6 @@ namespace PL.Volunteer
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show("שגיאה: " + ex.Message);
             }
         }
@@ -55,7 +60,7 @@ namespace PL.Volunteer
         {
             var openCalls = new PL.Call.OpenCallsWindow(Volunteer);
             openCalls.ShowDialog();
-            RefreshVolunteer();
+            RefreshVolunteer(); // ריענון לאחר בחירת קריאה
         }
 
         private void FinishCall_Click(object sender, RoutedEventArgs e)
@@ -64,7 +69,7 @@ namespace PL.Volunteer
             {
                 _bl.Call.CompleteCallTreatment(Volunteer.Id, Volunteer.CurrentCall.Id);
                 MessageBox.Show("הטיפול הסתיים בהצלחה.");
-                RefreshVolunteer();
+                RefreshVolunteer(); // ריענון מקומי, ו־Observer יעדכן אחרים
             }
             catch (Exception ex)
             {
@@ -78,7 +83,7 @@ namespace PL.Volunteer
             {
                 _bl.Call.CancelCallTreatment(Volunteer.Id, Volunteer.CurrentCall.Id);
                 MessageBox.Show("הטיפול בוטל.");
-                RefreshVolunteer();
+                RefreshVolunteer(); // ריענון מקומי, ו־Observer יעדכן אחרים
             }
             catch (Exception ex)
             {

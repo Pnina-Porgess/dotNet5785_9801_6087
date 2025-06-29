@@ -1,5 +1,6 @@
 ﻿using BlApi;
 using BO;
+using DO;
 using Helpers;
 
 namespace BlImplementation
@@ -212,6 +213,9 @@ namespace BlImplementation
                 };
 
                 _dal.Assignment.Update(updatedAssignment);
+                CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(volunteerId);
+
             }
             catch (DO.DalAlreadyExistsException ex)
             {
@@ -269,7 +273,11 @@ namespace BlImplementation
                 { 
                     volunteer = _dal.Volunteer.Read(assignment.VolunteerId); 
                 }
+                CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(requesterId);
+
                 CallManager.SendEmailToVolunteer(volunteer!, assignment);
+
             }
            
             catch (Exception ex)
@@ -315,6 +323,9 @@ namespace BlImplementation
 
                 // 5. הוספת ההקצאה לשכבת הנתונים
                 _dal.Assignment.Create(assignment);
+                CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(volunteerId);
+
             }
             catch (Exception ex)
             {

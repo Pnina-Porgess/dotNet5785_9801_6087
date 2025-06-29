@@ -91,21 +91,6 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>214942823</Id>
-    <Name>Beni</Name>
-    <Phone>0509871234</Phone>
-    <Email>Beni@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>25</MaximumDistance>
-    <Password>77sSb+VjVePwmD2tXHw87dSijN8C7nPsFx+Eqfj55E0=</Password>
-    <Address>Netanya, Herzl St.</Address>
-    <Latitude>34.8532</Latitude>
-    <Longitude>32.3215</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
     <Id>328276332</Id>
     <Name>Tamar</Name>
     <Phone>0541123345</Phone>
@@ -238,6 +223,21 @@
     <Address>Eilat, HaTmarim St.</Address>
     <Latitude>34.9482</Latitude>
     <Longitude>29.5581</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>214942823</Id>
+    <Name>Beni</Name>
+    <Phone>0509871234</Phone>
+    <Email>Beni@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>false</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>25</MaximumDistance>
+    <Password>77sSb+VjVePwmD2tXHw87dSijN8C7nPsFx+Eqfj55E0=</Password>
+    <Address>Netanya, Herzl St.</Address>
+    <Latitude>32.289866</Latitude>
+    <Longitude>34.86214</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
