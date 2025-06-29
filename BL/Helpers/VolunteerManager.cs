@@ -1,4 +1,5 @@
 ﻿
+using BlImplementation;
 using DalApi;
 using System.Security.Cryptography;
 using System.Text;
@@ -239,9 +240,10 @@ internal static class VolunteerManager
         }
         return BO.CallStatusInProgress.InProgress;
     }
-}
+
 
 
 /*   a => a?.EntryTime == null   */
 
+}
 

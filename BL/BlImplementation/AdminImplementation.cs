@@ -63,6 +63,7 @@
         public void InitializeDB()
         {
             AdminManager.InitializeDB();
+            CallManager.Observers.NotifyListUpdated();
         }
 
         /// <summary>
@@ -72,6 +73,7 @@
         public void ResetDB()
         {
             AdminManager.ResetDB();
+            
         }
 
         #region Stage 5

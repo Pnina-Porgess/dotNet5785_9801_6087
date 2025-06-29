@@ -1,6 +1,7 @@
-﻿using System;
+﻿using BO;
+using System;
+using System.Text.RegularExpressions;
 using System.Windows;
-using BO;
 
 namespace PL.Volunteer
 {
@@ -103,16 +104,16 @@ namespace PL.Volunteer
                 if (!System.Text.RegularExpressions.Regex.IsMatch(CurrentVolunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
                     throw new Exception("Invalid email format.");
 
-                if (string.IsNullOrWhiteSpace(CurrentVolunteer.Password))
-                    throw new Exception("Please enter a password.");
-
-                if (CurrentVolunteer.Password.Length < 8 ||
-                    !System.Text.RegularExpressions.Regex.IsMatch(CurrentVolunteer.Password, @"[A-Z]") ||
-                    !System.Text.RegularExpressions.Regex.IsMatch(CurrentVolunteer.Password, @"[a-z]") ||
-                    !System.Text.RegularExpressions.Regex.IsMatch(CurrentVolunteer.Password, @"\d") ||
-                    !System.Text.RegularExpressions.Regex.IsMatch(CurrentVolunteer.Password, @"[\W_]"))
+                if (!string.IsNullOrWhiteSpace(CurrentVolunteer.Password))
                 {
-                    throw new Exception("Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.");
+                    if (CurrentVolunteer.Password.Length < 8 ||
+                        !Regex.IsMatch(CurrentVolunteer.Password, @"[A-Z]") ||
+                        !Regex.IsMatch(CurrentVolunteer.Password, @"[a-z]") ||
+                        !Regex.IsMatch(CurrentVolunteer.Password, @"\d") ||
+                        !Regex.IsMatch(CurrentVolunteer.Password, @"[\W_]"))
+                    {
+                        throw new Exception("Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a digit, and a special character.");
+                    }
                 }
 
                 if (string.IsNullOrWhiteSpace(CurrentVolunteer.CurrentAddress))
