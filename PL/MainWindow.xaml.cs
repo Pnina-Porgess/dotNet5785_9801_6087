@@ -18,15 +18,16 @@ namespace PL
         }
         public MainWindow(int volunteerId)
         {
-             id= volunteerId;
+            id = volunteerId;
             InitializeComponent();
             this.Loaded += MainWindow_Loaded;
             this.Closed += MainWindow_Closed;
         }
 
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        public int id { get; set; } // מזהה המתנדב המחובר
-        // שדות סטטיים למעקב אחר חלונות פתוחים
+        public int id { get; set; } // Connected volunteer ID
+
+        // Static fields for tracking open windows
         private static CallListWindow? callWindow;
         private static VolunteerListWindow? volunteerWindow;
 
@@ -46,6 +47,55 @@ namespace PL
         public static readonly DependencyProperty RiskRangeProperty =
             DependencyProperty.Register("RiskRange", typeof(TimeSpan), typeof(MainWindow));
 
+        // Call Statistics Properties
+        public int OpenCallsCount
+        {
+            get { return (int)GetValue(OpenCallsCountProperty); }
+            set { SetValue(OpenCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty OpenCallsCountProperty =
+            DependencyProperty.Register("OpenCallsCount", typeof(int), typeof(MainWindow));
+
+        public int InProgressCallsCount
+        {
+            get { return (int)GetValue(InProgressCallsCountProperty); }
+            set { SetValue(InProgressCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty InProgressCallsCountProperty =
+            DependencyProperty.Register("InProgressCallsCount", typeof(int), typeof(MainWindow));
+
+        public int ClosedCallsCount
+        {
+            get { return (int)GetValue(ClosedCallsCountProperty); }
+            set { SetValue(ClosedCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty ClosedCallsCountProperty =
+            DependencyProperty.Register("ClosedCallsCount", typeof(int), typeof(MainWindow));
+
+        public int ExpiredCallsCount
+        {
+            get { return (int)GetValue(ExpiredCallsCountProperty); }
+            set { SetValue(ExpiredCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty ExpiredCallsCountProperty =
+            DependencyProperty.Register("ExpiredCallsCount", typeof(int), typeof(MainWindow));
+
+        public int OpenAtRiskCallsCount
+        {
+            get { return (int)GetValue(OpenAtRiskCallsCountProperty); }
+            set { SetValue(OpenAtRiskCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty OpenAtRiskCallsCountProperty =
+            DependencyProperty.Register("OpenAtRiskCallsCount", typeof(int), typeof(MainWindow));
+
+        public int InProgressAtRiskCallsCount
+        {
+            get { return (int)GetValue(InProgressAtRiskCallsCountProperty); }
+            set { SetValue(InProgressAtRiskCallsCountProperty, value); }
+        }
+        public static readonly DependencyProperty InProgressAtRiskCallsCountProperty =
+            DependencyProperty.Register("InProgressAtRiskCallsCount", typeof(int), typeof(MainWindow));
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             try
@@ -54,10 +104,12 @@ namespace PL
                 RiskRange = s_bl.Admin.GetRiskRange();
                 s_bl.Admin.AddClockObserver(clockObserver);
                 s_bl.Admin.AddConfigObserver(configObserver);
+                s_bl.Call.AddObserver(callStatisticsObserver); // Add observer for call statistics
+                LoadCallStatistics(); // Load initial statistics
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת המסך: {ex.Message}", "שגיאה");
+                MessageBox.Show($"Error loading screen: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -65,22 +117,140 @@ namespace PL
         {
             s_bl.Admin.RemoveClockObserver(clockObserver);
             s_bl.Admin.RemoveConfigObserver(configObserver);
+            s_bl.Call.RemoveObserver(callStatisticsObserver);
         }
 
-        private void btnAddOneMinute_Click(object sender, RoutedEventArgs e) =>
-            s_bl.Admin.ForwardClock(BO.TimeUnit.Minute);
-        private void btnAddOneHour_Click(object sender, RoutedEventArgs e) =>
-            s_bl.Admin.ForwardClock(BO.TimeUnit.Hour);
-        private void btnAddOneDay_Click(object sender, RoutedEventArgs e) =>
-            s_bl.Admin.ForwardClock(BO.TimeUnit.Day);
-        private void btnAddOneMonth_Click(object sender, RoutedEventArgs e) =>
-            s_bl.Admin.ForwardClock(BO.TimeUnit.Month);
-        private void btnAddOneYear_Click(object sender, RoutedEventArgs e) =>
-            s_bl.Admin.ForwardClock(BO.TimeUnit.Year);
+        private void LoadCallStatistics()
+        {
+            try
+            {
+                var counts = s_bl.Call.GetCallCountsByStatus();
+                // Array indices correspond to CallStatus enum values:
+                // 0: Open, 1: InProgress, 2: Closed, 3: Expired, 4: OpenAtRisk, 5: InProgressAtRisk
+                OpenCallsCount = counts.Length > 0 ? counts[0] : 0;
+                InProgressCallsCount = counts.Length > 1 ? counts[1] : 0;
+                ClosedCallsCount = counts.Length > 2 ? counts[2] : 0;
+                ExpiredCallsCount = counts.Length > 3 ? counts[3] : 0;
+                OpenAtRiskCallsCount = counts.Length > 4 ? counts[4] : 0;
+                InProgressAtRiskCallsCount = counts.Length > 5 ? counts[5] : 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading call statistics: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void callStatisticsObserver() => LoadCallStatistics();
+
+        // Call Statistics Button Handlers
+        private void OpenCalls_Click(object sender, RoutedEventArgs e) => OpenCallListWithFilter(BO.CallStatus.Open);
+        private void InProgressCalls_Click(object sender, RoutedEventArgs e) => OpenCallListWithFilter(BO.CallStatus.InProgress);
+        private void ClosedCalls_Click(object sender, RoutedEventArgs e) => OpenCallListWithFilter(BO.CallStatus.Closed);
+        private void ExpiredCalls_Click(object sender, RoutedEventArgs e) => OpenCallListWithFilter(BO.CallStatus.Expired);
+        private void OpenAtRiskCalls_Click(object sender, RoutedEventArgs e) => OpenCallListWithFilter(BO.CallStatus.OpenAtRisk);
+        private void InProgressAtRiskCalls_Click(object sender, RoutedEventArgs e) => OpenCallListWithFilter(BO.CallStatus.InProgressAtRisk);
+
+        private void OpenCallListWithFilter(BO.CallStatus status)
+        {
+            try
+            {
+                if (callWindow == null || !callWindow.IsVisible)
+                {
+                    callWindow = new CallListWindow(id);
+                    callWindow.SelectedStatus = status; // Set the filter
+                    callWindow.Closed += (s, args) => callWindow = null;
+                    callWindow.Show();
+                }
+                else
+                {
+                    if (callWindow.WindowState == WindowState.Minimized)
+                        callWindow.WindowState = WindowState.Normal;
+                    callWindow.SelectedStatus = status; // Update the filter
+                    callWindow.Activate();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening call list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.ForwardClock(BO.TimeUnit.Minute);
+                MessageBox.Show("Time advanced by 1 minute successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error advancing time: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnAddOneHour_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.ForwardClock(BO.TimeUnit.Hour);
+                MessageBox.Show("Time advanced by 1 hour successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error advancing time: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.ForwardClock(BO.TimeUnit.Day);
+                MessageBox.Show("Time advanced by 1 day successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error advancing time: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnAddOneMonth_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.ForwardClock(BO.TimeUnit.Month);
+                MessageBox.Show("Time advanced by 1 month successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error advancing time: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnAddOneYear_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.ForwardClock(BO.TimeUnit.Year);
+                MessageBox.Show("Time advanced by 1 year successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error advancing time: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            s_bl.Admin.SetRiskRange(RiskRange);
+            try
+            {
+                s_bl.Admin.SetRiskRange(RiskRange);
+                MessageBox.Show("Risk range updated successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating risk range: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void clockObserver() =>
@@ -91,39 +261,53 @@ namespace PL
 
         private void OnHandleCallsButton_Click(object sender, RoutedEventArgs e)
         {
-            if (callWindow == null || !callWindow.IsVisible)
+            try
             {
-                callWindow = new CallListWindow(id);
-                callWindow.Closed += (s, args) => callWindow = null;
-                callWindow.Show();
+                if (callWindow == null || !callWindow.IsVisible)
+                {
+                    callWindow = new CallListWindow(id);
+                    callWindow.Closed += (s, args) => callWindow = null;
+                    callWindow.Show();
+                }
+                else
+                {
+                    if (callWindow.WindowState == WindowState.Minimized)
+                        callWindow.WindowState = WindowState.Normal;
+                    callWindow.Activate();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                if (callWindow.WindowState == WindowState.Minimized)
-                    callWindow.WindowState = WindowState.Normal;
-                callWindow.Activate();
+                MessageBox.Show($"Error opening call management window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void OnHandleVolunteersButton_Click(object sender, RoutedEventArgs e)
         {
-            if (volunteerWindow == null || !volunteerWindow.IsVisible)
+            try
             {
-                volunteerWindow = new VolunteerListWindow();
-                volunteerWindow.Closed += (s, args) => volunteerWindow = null;
-                volunteerWindow.Show();
+                if (volunteerWindow == null || !volunteerWindow.IsVisible)
+                {
+                    volunteerWindow = new VolunteerListWindow();
+                    volunteerWindow.Closed += (s, args) => volunteerWindow = null;
+                    volunteerWindow.Show();
+                }
+                else
+                {
+                    if (volunteerWindow.WindowState == WindowState.Minimized)
+                        volunteerWindow.WindowState = WindowState.Normal;
+                    volunteerWindow.Activate();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                if (volunteerWindow.WindowState == WindowState.Minimized)
-                    volunteerWindow.WindowState = WindowState.Normal;
-                volunteerWindow.Activate();
+                MessageBox.Show($"Error opening volunteer management window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void InitializeDatabase_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show("האם אתה בטוח שברצונך לאתחל את בסיס הנתונים?", "אישור אתחול", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = MessageBox.Show("Are you sure you want to initialize the database?", "Initialize Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result != MessageBoxResult.Yes)
                 return;
 
@@ -134,11 +318,11 @@ namespace PL
                     if (window != this) window.Close();
 
                 s_bl.Admin.InitializeDB();
-                MessageBox.Show("בסיס הנתונים אותחל בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Database initialized successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"אירעה שגיאה באתחול בסיס הנתונים: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error initializing database: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -148,7 +332,7 @@ namespace PL
 
         private void ResetDatabase_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show("האם אתה בטוח שברצונך לאפס את בסיס הנתונים?", "אישור איפוס", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = MessageBox.Show("Are you sure you want to reset the database?", "Reset Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result != MessageBoxResult.Yes)
                 return;
 
@@ -159,11 +343,11 @@ namespace PL
                     if (window != this) window.Close();
 
                 s_bl.Admin.ResetDB();
-                MessageBox.Show("בסיס הנתונים אופס בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Database reset successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"אירעה שגיאה באיפוס בסיס הנתונים: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error resetting database: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
