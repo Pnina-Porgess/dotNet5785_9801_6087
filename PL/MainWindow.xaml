@@ -45,16 +45,16 @@
             <GradientStop Color="#B14A8C" Offset="1"/>
         </LinearGradientBrush>
 
-        <!-- Advanced button style with animations -->
+        <!-- Modern button style with smaller size -->
         <Style x:Key="ModernButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource OrangeGradient}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="14"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Height" Value="50"/>
-            <Setter Property="Width" Value="200"/>
-            <Setter Property="Margin" Value="15"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="160"/>
+            <Setter Property="Margin" Value="10"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -62,7 +62,7 @@
                         <Grid>
                             <Border x:Name="MainBorder" 
                                     Background="{TemplateBinding Background}" 
-                                    CornerRadius="25"
+                                    CornerRadius="20"
                                     RenderTransformOrigin="0.5,0.5">
                                 <Border.RenderTransform>
                                     <ScaleTransform x:Name="ScaleTransform" ScaleX="1" ScaleY="1"/>
@@ -117,12 +117,12 @@
             </Setter>
         </Style>
 
-        <!-- Small modern button style -->
+        <!-- Small modern button style with smaller size -->
         <Style x:Key="SmallModernButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Width" Value="100"/>
-            <Setter Property="Margin" Value="8"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Margin" Value="5"/>
             <Setter Property="Background" Value="{StaticResource GreenGradient}"/>
         </Style>
 
@@ -239,101 +239,349 @@
 
             <!-- Main dashboard content -->
             <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="130"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                <!-- Time control panel -->
-                <Border Grid.Column="0" Style="{StaticResource GlassContainer}" Padding="20" MinHeight="500">
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
-                        <TextBlock Text="System Time Control" 
-                                   FontSize="18" 
+                <!-- Call Statistics Section -->
+                <Border Grid.Row="0" Style="{StaticResource GlassContainer}" Padding="15" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="Call Statistics" 
+                                   FontSize="16" 
                                    FontWeight="Bold" 
                                    Foreground="{StaticResource TextBlueBrush}" 
                                    HorizontalAlignment="Center"
-                                   Margin="0,10,0,20"/>
+                                   Margin="0,0,0,10"/>
 
-                        <!-- Digital clock display -->
-                        <Border Background="{StaticResource TextBlueBrush}" 
-                                CornerRadius="15" 
-                                Padding="20,12" 
-                                Margin="0,0,0,20">
-                            <Border.Effect>
-                                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="8" Opacity="0.3"/>
-                            </Border.Effect>
-                            <TextBlock Text="{Binding CurrentTime}" 
-                                       FontSize="20" 
-                                       FontWeight="Bold" 
-                                       Foreground="{StaticResource OrangeBrush}" 
-                                       HorizontalAlignment="Center"
-                                       FontFamily="Consolas"/>
-                        </Border>
+                        <!-- Statistics Grid - All in one row -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <!-- Open -->
+                            <Button Click="OpenCalls_Click" 
+                                    Width="90" Height="35" Margin="3"
+                                    BorderThickness="0" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="{StaticResource BlueGradient}"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            CornerRadius="8"
+                                                            x:Name="ButtonBorder">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.8"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel>
+                                    <TextBlock Text="Open" FontSize="9" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock Text="{Binding OpenCallsCount}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
 
-                        <!-- Time adjustment buttons -->
-                        <TextBlock Text="Time Controls" 
-                                   FontSize="14" 
-                                   Foreground="{StaticResource TextBlueBrush}" 
-                                   HorizontalAlignment="Center"
-                                   Margin="0,0,0,15"/>
+                            <!-- In Progress -->
+                            <Button Click="InProgressCalls_Click" 
+                                    Width="90" Height="35" Margin="3"
+                                    BorderThickness="0" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="{StaticResource BlueGradient}"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            CornerRadius="8"
+                                                            x:Name="ButtonBorder">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.8"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel>
+                                    <TextBlock Text="In Progress" FontSize="8" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock Text="{Binding InProgressCallsCount}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
 
-                        <StackPanel>
-                            <!-- All 5 time buttons in one row -->
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
-                                <Button Content="+Min" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneMinute_Click"/>
-                                <Button Content="+Hour" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneHour_Click"/>
-                                <Button Content="+Day" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneDay_Click"/>
-                                <Button Content="+Month" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneMonth_Click"/>
-                                <Button Content="+Year" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneYear_Click"/>
-                            </StackPanel>
+                            <!-- Closed -->
+                            <Button Click="ClosedCalls_Click" 
+                                    Width="90" Height="35" Margin="3"
+                                    BorderThickness="0" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="{StaticResource BlueGradient}"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            CornerRadius="8"
+                                                            x:Name="ButtonBorder">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.8"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel>
+                                    <TextBlock Text="Closed" FontSize="9" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock Text="{Binding ClosedCallsCount}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Expired -->
+                            <Button Click="ExpiredCalls_Click" 
+                                    Width="90" Height="35" Margin="3"
+                                    BorderThickness="0" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="{StaticResource BlueGradient}"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            CornerRadius="8"
+                                                            x:Name="ButtonBorder">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.8"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel>
+                                    <TextBlock Text="Expired" FontSize="9" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock Text="{Binding ExpiredCallsCount}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Open At Risk -->
+                            <Button Click="OpenAtRiskCalls_Click" 
+                                    Width="90" Height="35" Margin="3"
+                                    BorderThickness="0" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="{StaticResource BlueGradient}"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            CornerRadius="8"
+                                                            x:Name="ButtonBorder">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.8"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel>
+                                    <TextBlock Text="Open Risk" FontSize="8" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock Text="{Binding OpenAtRiskCallsCount}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Progress At Risk -->
+                            <Button Click="InProgressAtRiskCalls_Click" 
+                                    Width="90" Height="35" Margin="3"
+                                    BorderThickness="0" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="{StaticResource BlueGradient}"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            CornerRadius="8"
+                                                            x:Name="ButtonBorder">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.8"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel>
+                                    <TextBlock Text="Progress Risk" FontSize="7" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock Text="{Binding InProgressAtRiskCallsCount}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <!-- System configuration panel -->
-                <Border Grid.Column="2" Style="{StaticResource GlassContainer}" Padding="20" MinHeight="500">
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
-                        <TextBlock Text="System Configuration" 
-                                   FontSize="18" 
-                                   FontWeight="Bold" 
-                                   Foreground="{StaticResource TextBlueBrush}" 
-                                   HorizontalAlignment="Center"
-                                   Margin="0,10,0,30"/>
+                <!-- Time and Configuration Panels -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                        <!-- Risk range setting -->
-                        <Border Background="White" 
-                                CornerRadius="15" 
-                                Padding="20" 
-                                Margin="0,0,0,20"
-                                BorderBrush="{StaticResource LightBlueBrush}"
-                                BorderThickness="1">
-                            <Border.Effect>
-                                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" BlurRadius="6" Opacity="0.1"/>
-                            </Border.Effect>
-                            <StackPanel>
-                                <TextBlock Text="Risk Range Configuration" 
-                                           FontSize="14" 
-                                           Foreground="{StaticResource TextBlueBrush}" 
+                    <!-- Time control panel -->
+                    <Border Grid.Column="0" Style="{StaticResource GlassContainer}" Padding="20" MinHeight="250">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+                            <TextBlock Text="System Time Control" 
+                                       FontSize="16" 
+                                       FontWeight="Bold" 
+                                       Foreground="{StaticResource TextBlueBrush}" 
+                                       HorizontalAlignment="Center"
+                                       Margin="0,5,0,15"/>
+
+                            <!-- Digital clock display -->
+                            <Border Background="{StaticResource TextBlueBrush}" 
+                                    CornerRadius="15" 
+                                    Padding="15,10" 
+                                    Margin="0,0,0,15">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="8" Opacity="0.3"/>
+                                </Border.Effect>
+                                <TextBlock Text="{Binding CurrentTime}" 
+                                           FontSize="18" 
+                                           FontWeight="Bold" 
+                                           Foreground="{StaticResource OrangeBrush}" 
                                            HorizontalAlignment="Center"
-                                           Margin="0,0,0,15"/>
-                                <TextBox Text="{Binding RiskRange}" 
-                                         Style="{StaticResource ModernTextBox}"
-                                         Margin="0,0,0,15"/>
-                                <Button Content="Update Settings" 
-                                        Style="{StaticResource ModernButtonStyle}" 
-                                        Background="{StaticResource BlueGradient}" 
-                                        Width="160"
-                                        Height="40"
-                                        Click="UpdateButton_Click"/>
+                                           FontFamily="Consolas"/>
+                            </Border>
+
+                            <!-- Time adjustment buttons -->
+                            <TextBlock Text="Time Controls" 
+                                       FontSize="12" 
+                                       Foreground="{StaticResource TextBlueBrush}" 
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,10"/>
+
+                            <StackPanel>
+                                <!-- All 5 time buttons in one row -->
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,15">
+                                    <Button Content="+Min" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneMinute_Click"/>
+                                    <Button Content="+Hour" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneHour_Click"/>
+                                    <Button Content="+Day" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneDay_Click"/>
+                                    <Button Content="+Month" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneMonth_Click"/>
+                                    <Button Content="+Year" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneYear_Click"/>
+                                </StackPanel>
                             </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- System configuration panel -->
+                    <Border Grid.Column="2" Style="{StaticResource GlassContainer}" Padding="20" MinHeight="250">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+                            <TextBlock Text="System Configuration" 
+                                       FontSize="16" 
+                                       FontWeight="Bold" 
+                                       Foreground="{StaticResource TextBlueBrush}" 
+                                       HorizontalAlignment="Center"
+                                       Margin="0,5,0,20"/>
+
+                            <!-- Risk range setting -->
+                            <Border Background="White" 
+                                    CornerRadius="15" 
+                                    Padding="15" 
+                                    Margin="0,0,0,15"
+                                    BorderBrush="{StaticResource LightBlueBrush}"
+                                    BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" BlurRadius="6" Opacity="0.1"/>
+                                </Border.Effect>
+                                <StackPanel>
+                                    <TextBlock Text="Risk Range Configuration" 
+                                               FontSize="12" 
+                                               Foreground="{StaticResource TextBlueBrush}" 
+                                               HorizontalAlignment="Center"
+                                               Margin="0,0,0,10"/>
+                                    <TextBox Text="{Binding RiskRange}" 
+                                             Style="{StaticResource ModernTextBox}"
+                                             Margin="0,0,0,10"/>
+                                    <Button Content="Update Settings" 
+                                            Style="{StaticResource ModernButtonStyle}" 
+                                            Background="{StaticResource BlueGradient}" 
+                                            Width="140"
+                                            Height="35"
+                                            Click="UpdateButton_Click"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <!-- System configuration panel -->
+                    <Border Grid.Column="2" Style="{StaticResource GlassContainer}" Padding="20" MinHeight="250">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+                            <TextBlock Text="System Configuration" 
+                                       FontSize="16" 
+                                       FontWeight="Bold" 
+                                       Foreground="{StaticResource TextBlueBrush}" 
+                                       HorizontalAlignment="Center"
+                                       Margin="0,5,0,20"/>
+
+                            <!-- Risk range setting -->
+                            <Border Background="White" 
+                                    CornerRadius="15" 
+                                    Padding="15" 
+                                    Margin="0,0,0,15"
+                                    BorderBrush="{StaticResource LightBlueBrush}"
+                                    BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" BlurRadius="6" Opacity="0.1"/>
+                                </Border.Effect>
+                                <StackPanel>
+                                    <TextBlock Text="Risk Range Configuration" 
+                                               FontSize="12" 
+                                               Foreground="{StaticResource TextBlueBrush}" 
+                                               HorizontalAlignment="Center"
+                                               Margin="0,0,0,10"/>
+                                    <TextBox Text="{Binding RiskRange}" 
+                                             Style="{StaticResource ModernTextBox}"
+                                             Margin="0,0,0,10"/>
+                                    <Button Content="Update Settings" 
+                                            Style="{StaticResource ModernButtonStyle}" 
+                                            Background="{StaticResource BlueGradient}" 
+                                            Width="140"
+                                            Height="35"
+                                            Click="UpdateButton_Click"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Grid>
 
             <!-- All buttons in one row -->
-            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,25,0,20">
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,15">
                 <Button Content="Initialize Database" 
                         Style="{StaticResource ModernButtonStyle}" 
                         Background="{StaticResource BlueGradient}" 
