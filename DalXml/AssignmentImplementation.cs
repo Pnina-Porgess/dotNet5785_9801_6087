@@ -4,6 +4,7 @@ using DO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 internal class AssignmentImplementation : IAssignment
@@ -11,6 +12,8 @@ internal class AssignmentImplementation : IAssignment
     /// <summary>
     /// Converts an XElement to an Assignment object.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     static Assignment GetAssignment(XElement a)
     {
         return new DO.Assignment
@@ -27,6 +30,8 @@ internal class AssignmentImplementation : IAssignment
     /// <summary>
     /// Creates an XElement from an Assignment object.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     private static XElement CreateAssignmentElement(Assignment item)
     {
         return new XElement("Assignment",
@@ -42,6 +47,8 @@ internal class AssignmentImplementation : IAssignment
     /// <summary>
     /// Adds a new Assignment to the XML file.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void Create(Assignment item)
     {
         XElement assignmentsRoot = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
@@ -55,6 +62,8 @@ internal class AssignmentImplementation : IAssignment
     /// <summary>
     /// Reads an Assignment by ID from the XML file.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public Assignment? Read(int id)
     {
         XElement? assignmentElement = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml)
@@ -66,6 +75,8 @@ internal class AssignmentImplementation : IAssignment
     /// <summary>
     /// Reads the first Assignment matching a filter.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public Assignment? Read(Func<Assignment, bool> filter)
     {
         return XMLTools.LoadListFromXMLElement(Config.s_assignments_xml).Elements()
@@ -75,6 +86,8 @@ internal class AssignmentImplementation : IAssignment
     /// <summary>
     /// Reads all Assignments, optionally filtered by a predicate.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
     {
         var assignments = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml)
@@ -86,6 +99,8 @@ internal class AssignmentImplementation : IAssignment
     /// <summary>
     /// Updates an existing Assignment in the XML file.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void Update(Assignment item)
     {
         XElement assignmentsRoot = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
@@ -100,6 +115,8 @@ internal class AssignmentImplementation : IAssignment
     /// <summary>
     /// Deletes an Assignment by ID from the XML file.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void Delete(int id)
     {
         XElement assignmentsRoot = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
@@ -113,6 +130,8 @@ internal class AssignmentImplementation : IAssignment
     /// <summary>
     /// Deletes all Assignments from the XML file.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void DeleteAll()
     {
         XMLTools.SaveListToXMLElement(new XElement("Assignments"), Config.s_assignments_xml);

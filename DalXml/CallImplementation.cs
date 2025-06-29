@@ -3,12 +3,15 @@ using DalApi;
 using DO;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 internal class CallImplementation : ICall
 {
     /// <summary>
     /// Adds a new Call to the XML file with a unique ID.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void Create(Call item)
     {
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
@@ -21,6 +24,8 @@ internal class CallImplementation : ICall
     /// <summary>
     /// Updates an existing Call in the XML file.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void Update(Call item)
     {
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
@@ -33,6 +38,8 @@ internal class CallImplementation : ICall
     /// <summary>
     /// Deletes a Call by ID from the XML file.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void Delete(int id)
     {
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
@@ -44,6 +51,8 @@ internal class CallImplementation : ICall
     /// <summary>
     /// Deletes all Calls from the XML file.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void DeleteAll()
     {
         XMLTools.SaveListToXMLSerializer(new List<Call>(), Config.s_calls_xml);
@@ -52,6 +61,8 @@ internal class CallImplementation : ICall
     /// <summary>
     /// Reads a Call by ID from the XML file.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public Call? Read(int id)
     {
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
@@ -61,6 +72,8 @@ internal class CallImplementation : ICall
     /// <summary>
     /// Reads the first Call matching a filter.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public Call? Read(Func<Call, bool> filter)
     {
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
@@ -70,6 +83,8 @@ internal class CallImplementation : ICall
     /// <summary>
     /// Reads all Calls, optionally filtered by a predicate.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
     {
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
@@ -79,6 +94,8 @@ internal class CallImplementation : ICall
     /// <summary>
     /// Reads all Volunteers matching a filter (not implemented).
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public IEnumerable<Volunteer> ReadAll(Func<Assignment, bool>? filter = null)
     {
         throw new NotImplementedException();

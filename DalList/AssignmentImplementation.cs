@@ -4,6 +4,8 @@ namespace Dal;
 using DalApi;
 using DO;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+
 /// <summary>
 /// Implements IAssignment with CRUD operations for Assignments.
 /// </summary>
@@ -11,6 +13,8 @@ public class AssignmentImplementation : IAssignment
 {
 
     ///  Adds a new Assignment.
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void Create(Assignment item)
     {
         int id = Config.NextAssignmentId;
@@ -18,6 +22,8 @@ public class AssignmentImplementation : IAssignment
         DataSource.Assignments.Add(copy);
     }
     /// Deletes an Assignment by ID.
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void Delete(int id)
     {
         int removeCount=DataSource.Assignments.RemoveAll(a=>a?.Id==id);
@@ -25,12 +31,16 @@ public class AssignmentImplementation : IAssignment
         throw new DalDoesNotExistException($"Assignment faild,Volunteer with ID={id} not exists");
     }
     /// <summary> Deletes all Assignments. </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void DeleteAll()
     {
        DataSource.Assignments.Clear();
     }
 
     /// <summary> Reads an Assignment by ID. </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public Assignment? Read(int id)
     {
         return DataSource.Assignments.FirstOrDefault(a=>a.Id==id);
@@ -44,6 +54,8 @@ public class AssignmentImplementation : IAssignment
 
 
     /// <summary> Updates an existing Assignment. </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public void Update(Assignment item)
     {
      var assignment =Read(item.Id);
@@ -54,6 +66,8 @@ public class AssignmentImplementation : IAssignment
     }
 
     /// <summary> Reads the first Assignment matching a condition. </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+
     public Assignment? Read(Func<Assignment, bool> filter)
     {
         return DataSource.Assignments.FirstOrDefault(filter);

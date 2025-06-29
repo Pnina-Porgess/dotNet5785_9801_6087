@@ -1,4 +1,5 @@
 ﻿
+using BlImplementation;
 using DalApi;
 using System.Security.Cryptography;
 using System.Text;
@@ -39,13 +40,13 @@ internal static class VolunteerManager
           }).ToList();
             return volunteerInList;
         }
-      
+
         catch (Exception ex)
         {
             throw new BO.BlDatabaseException("An error occurred while retrieving closed calls", ex);
         }
 
-     
+
     }
 
     /// <summary>
@@ -177,7 +178,7 @@ internal static class VolunteerManager
             boVolunteer.CurrentAddress,
             boVolunteer.Latitude,
             boVolunteer.Longitude
-    
+
 
         );
     }
@@ -193,7 +194,7 @@ internal static class VolunteerManager
         if (!IsValidId(boVolunteer.Id))
             throw new BO.BlLogicalException("The ID is not correct");
         (double? r, double? w) = Tools.GetCoordinatesFromAddress(boVolunteer.CurrentAddress!);
-        return (r,w);
+        return (r, w);
     }
 
     /// <summary>
@@ -238,6 +239,89 @@ internal static class VolunteerManager
             return BO.CallStatusInProgress.AtRisk;
         }
         return BO.CallStatusInProgress.InProgress;
+    }
+
+    internal static void SimulateVolunteerAssignmentsAndCallHandling()
+    {
+        Thread.CurrentThread.Name = $"Simulator{Thread.CurrentThread.ManagedThreadId}";
+
+        List<int> updatedVolunteerIds = new();
+        List<int> updatedCallIds = new();
+
+        List<DO.Volunteer> activeVolunteers;
+        lock (AdminManager.BlMutex)
+            activeVolunteers = DalApi.Factory.Get.Volunteer.ReadAll(v => v.IsActive).ToList();
+
+        foreach (var volunteer in activeVolunteers)
+        {
+            DO.Assignment? currentAssignment;
+
+            lock (AdminManager.BlMutex)
+            {
+                currentAssignment = DalApi.Factory.Get.Assignment
+                    .ReadAll(a => a.VolunteerId == volunteer.Id && a.EndTime == null)
+                    .FirstOrDefault();
+            }
+
+            if (currentAssignment == null)
+            {
+                // ללא הקצאה - בחירת קריאה רנדומלית
+                List<BO.OpenCallInList> openCalls;
+                lock (AdminManager.BlMutex)
+                    openCalls = (List<BO.OpenCallInList>)new CallImplementation().GetOpenCallsForVolunteer(volunteer.Id);
+
+                if (!openCalls.Any() || Random.Shared.NextDouble() > 0.2) continue; // רק 20% סיכוי לבחור קריאה
+
+                var selectedCall = openCalls[Random.Shared.Next(openCalls.Count)];
+                try
+                {
+                    new CallImplementation().SelectCallForTreatment(volunteer.Id, selectedCall.Id);
+                    updatedVolunteerIds.Add(volunteer.Id);
+                    updatedCallIds.Add(selectedCall.Id);
+                }
+                catch { continue; } // במקרה של בעיה עם הקריאה
+            }
+            else
+            {
+                DO.Call? call;
+                lock (AdminManager.BlMutex)
+                    call = DalApi.Factory.Get.Call.Read(currentAssignment.CallId);
+
+                if (call is null) continue;
+
+                double distance = Tools.CalculateDistance(volunteer.Latitude!, volunteer.Longitude!, call.Latitude, call.Longitude);
+                TimeSpan baseTime = TimeSpan.FromMinutes(distance * 2); // 2 דקות לק"מ לדוגמה
+                TimeSpan extra = TimeSpan.FromMinutes(Random.Shared.Next(1, 5));
+                TimeSpan totalNeeded = baseTime + extra;
+                TimeSpan actual = AdminManager.Now - currentAssignment.EntryTime;
+
+                if (actual >= totalNeeded)
+                {
+                    try
+                    {
+                        new CallImplementation().CompleteCallTreatment(volunteer.Id, currentAssignment.Id);
+                        updatedVolunteerIds.Add(volunteer.Id);
+                        updatedCallIds.Add(call.Id);
+                    }
+                    catch { continue; }
+                }
+                else if (Random.Shared.NextDouble() < 0.1) // 10% סיכוי לביטול מוקדם
+                {
+                    try
+                    {
+                        new CallImplementation().CancelCallTreatment(volunteer.Id, currentAssignment.Id);
+                        updatedVolunteerIds.Add(volunteer.Id);
+                        updatedCallIds.Add(call.Id);
+                    }
+                    catch { continue; }
+                }
+            }
+        }
+
+        foreach (var id in updatedVolunteerIds.Distinct())
+            VolunteerManager.Observers.NotifyItemUpdated(id);
+        foreach (var id in updatedCallIds.Distinct())
+            CallManager.Observers.NotifyItemUpdated(id);
     }
 }
 

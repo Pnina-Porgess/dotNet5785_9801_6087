@@ -88,3 +88,13 @@ public class BlGeneralException : Exception
     public BlGeneralException(string message) : base(message) { }
     public BlGeneralException(string message, Exception innerException) : base(message, innerException) { }
 }
+/// <summary>
+/// Exception thrown when a temporary condition prevents operation (e.g., simulator is running).
+/// </summary>
+[Serializable]
+public class BLTemporaryNotAvailableException : Exception
+{
+    public BLTemporaryNotAvailableException(string message) : base(message) { }
+
+    public BLTemporaryNotAvailableException(string message, Exception innerException) : base(message, innerException) { }
+}

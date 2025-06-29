@@ -27,6 +27,7 @@
         /// <exception cref="NotImplementedException">Thrown if an invalid time unit is provided.</exception>
         public void ForwardClock(BO.TimeUnit unit)
         {
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
             DateTime newTime = unit switch
             {
                 BO.TimeUnit.Minute => AdminManager.Now.AddMinutes(1),
@@ -44,7 +45,7 @@
         /// Retrieves the current risk range setting.
         /// </summary>
         /// <returns>The current risk range as a TimeSpan.</returns>
-      
+
         public TimeSpan GetRiskRange() => AdminManager.RiskRange;
 
 
@@ -53,7 +54,11 @@
         /// </summary>
         /// <param name="range">The new risk range to set.</param>
         /// <exception cref="BO.BlConfigException">Thrown if the update fails.</exception>
-        public void SetRiskRange (TimeSpan RiskRange) => AdminManager.RiskRange = RiskRange;
+        public void SetRiskRange(TimeSpan RiskRange)
+        {
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+            AdminManager.RiskRange = RiskRange;
+        }
 
 
         /// <summary>
@@ -62,7 +67,10 @@
         /// <exception cref="BO.BlConfigException">Thrown if the initialization fails.</exception>
         public void InitializeDB()
         {
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
             AdminManager.InitializeDB();
+            CallManager.Observers.NotifyListUpdated();
+
         }
 
         /// <summary>
@@ -71,7 +79,9 @@
         /// <exception cref="BO.BlConfigException">Thrown if the reset fails.</exception>
         public void ResetDB()
         {
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
             AdminManager.ResetDB();
+            CallManager.Observers.NotifyListUpdated();
         }
 
         #region Stage 5
@@ -84,6 +94,15 @@
         public void RemoveConfigObserver(Action configObserver) =>
         AdminManager.ConfigUpdatedObservers -= configObserver;
         #endregion Stage 5
+
+        public void StartSimulator(int interval)  //stage 7
+        {
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+            AdminManager.Start(interval); //stage 7
+        }
+
+        public void StopSimulator()
+    => AdminManager.Stop(); //stage 7
 
 
     }

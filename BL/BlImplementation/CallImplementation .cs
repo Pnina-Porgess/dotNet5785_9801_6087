@@ -10,6 +10,7 @@ namespace BlImplementation
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
         public void AddCall(BO.Call newCall)
         {
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
             CallManager.ValidateInputFormat(newCall);
             var (latitude, longitude) = CallManager.logicalChecking(newCall);
             newCall.Latitude = latitude;
@@ -24,6 +25,7 @@ namespace BlImplementation
         {
             try
             {
+                AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
                 CallManager.ValidateInputFormat(call);
                 var (latitude, longitude) = CallManager.logicalChecking(call);
                 call.Latitude = latitude;
@@ -48,6 +50,7 @@ namespace BlImplementation
         {
             try
             {
+                AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
                 if (CallManager.CalculateCallStatus(callId) != BO.CallStatus.Open || CallManager.WasNeverAssigned(callId))
                 {
                     // If the call is not open or has assignments, throw an exception
@@ -199,6 +202,8 @@ namespace BlImplementation
         {
             try
             {
+                AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
                 // Retrieve the assignment by ID
                 var assignment = _dal.Assignment.Read(assignmentId);
 
@@ -231,6 +236,8 @@ namespace BlImplementation
         {
             try
             {
+                AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
                 var assignment = _dal.Assignment.Read(assignmentId);
                 var volunteer = _dal.Volunteer.Read(requesterId);
 
@@ -291,6 +298,8 @@ namespace BlImplementation
         {
             try
             {
+                AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
                 // 1. קבלת הקריאה לפי מזהה הקריאה
                 var call = _dal.Call.Read(callId);
                 if (call == null)
