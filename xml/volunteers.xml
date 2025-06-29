@@ -173,7 +173,7 @@
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>47</MaximumDistance>
+    <MaximumDistance>48</MaximumDistance>
     <Password>9Fwa9b+Tjrq4jI+Psr7Vd5Wqi3pViBbfyJ0AlSuODjs=</Password>
     <Address>Rehovot, Herzl St.</Address>
     <Latitude>34.8093</Latitude>
@@ -181,10 +181,10 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>214751885</Id>
-    <Name>Chaim</Name>
-    <Phone>0501256789</Phone>
-    <Email>Chaim@gmail.com</Email>
+    <Id>214606170</Id>
+    <Name>Shani</Name>
+    <Phone>0524567890</Phone>
+    <Email>Shani@gmail.com</Email>
     <Role>Volunteer</Role>
     <IsActive>true</IsActive>
     <DistanceType>AerialDistance</DistanceType>

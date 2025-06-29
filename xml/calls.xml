@@ -2,7 +2,7 @@
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
     <Id>1000</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
+    <TypeOfReading>None</TypeOfReading>
     <Description />
     <Adress>Highway 2, Central Israel</Adress>
     <Longitude>34.8697</Longitude>
@@ -62,7 +62,7 @@
   </Call>
   <Call>
     <Id>1006</Id>
-    <TypeOfReading>None</TypeOfReading>
+    <TypeOfReading>FlatTire</TypeOfReading>
     <Description />
     <Adress>Rothschild Blvd, Tel Aviv</Adress>
     <Longitude>35.4732</Longitude>
@@ -112,7 +112,7 @@
   </Call>
   <Call>
     <Id>1011</Id>
-    <TypeOfReading>None</TypeOfReading>
+    <TypeOfReading>FlatTire</TypeOfReading>
     <Description />
     <Adress>Port Road, Ashdod</Adress>
     <Longitude>35.5312</Longitude>
@@ -152,7 +152,7 @@
   </Call>
   <Call>
     <Id>1015</Id>
-    <TypeOfReading>FlatTire</TypeOfReading>
+    <TypeOfReading>EngineFailure</TypeOfReading>
     <Description />
     <Adress>Shderot HaMeginim, Acre (Akko)</Adress>
     <Longitude>34.85</Longitude>
@@ -172,7 +172,7 @@
   </Call>
   <Call>
     <Id>1017</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
+    <TypeOfReading>DeadBattery</TypeOfReading>
     <Description />
     <Adress>Weizmann Institute, Rehovot</Adress>
     <Longitude>34.8447</Longitude>
@@ -182,7 +182,7 @@
   </Call>
   <Call>
     <Id>1018</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
+    <TypeOfReading>None</TypeOfReading>
     <Description />
     <Adress>Haatzmaut, Arad</Adress>
     <Longitude>34.8111</Longitude>
@@ -242,7 +242,7 @@
   </Call>
   <Call>
     <Id>1024</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
+    <TypeOfReading>None</TypeOfReading>
     <Description />
     <Adress>Ze'ev Jabotinsky, Modiin</Adress>
     <Longitude>35.5683</Longitude>
@@ -272,7 +272,7 @@
   </Call>
   <Call>
     <Id>1027</Id>
-    <TypeOfReading>None</TypeOfReading>
+    <TypeOfReading>DeadBattery</TypeOfReading>
     <Description />
     <Adress>HaTomer, Dimona</Adress>
     <Longitude>35.5773</Longitude>
@@ -312,7 +312,7 @@
   </Call>
   <Call>
     <Id>1031</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
+    <TypeOfReading>EngineFailure</TypeOfReading>
     <Description />
     <Adress>Herzl, Kfar Saba</Adress>
     <Longitude>34.8248</Longitude>
@@ -392,7 +392,7 @@
   </Call>
   <Call>
     <Id>1039</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
+    <TypeOfReading>FlatTire</TypeOfReading>
     <Description />
     <Adress>Ginosar, Sea of Galilee</Adress>
     <Longitude>35.7496</Longitude>

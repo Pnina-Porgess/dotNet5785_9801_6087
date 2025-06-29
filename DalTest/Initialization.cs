@@ -73,7 +73,7 @@ public static class Initialization
     (31.8948, 34.8093), (32.0236, 34.7502), (32.1663, 34.8436), (32.4340, 34.9196),(29.5581, 34.9482) 
 };
 
-        s_dal!.Volunteer.Create(new Volunteer(s_rand.Next(MIN_ID, MAX_ID), "Shlomo", "05321234565", "Shlomo@gmail.com", Role.Manager, true, DistanceType.AerialDistance, s_rand.Next(5, 50), EncryptPassword("Shlomo23A56"), "Tel Aviv", 32.0853, 34.7818));
+        s_dal!.Volunteer.Create(new Volunteer(329236087, "Pnina", "05321234565", "Shlomo@gmail.com", Role.Manager, true, DistanceType.AerialDistance, s_rand.Next(5, 50), EncryptPassword("1234@Aaa"), "Tel Aviv", 32.0853, 34.7818));
         for (int i = 0; i < 15; i++)
 
         {

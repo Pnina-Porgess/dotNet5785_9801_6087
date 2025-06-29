@@ -5,7 +5,7 @@ using Helpers;
 
 namespace BlImplementation
 {
-    public class CallImplementation : ICall
+    internal class CallImplementation : ICall
     {
         private readonly DalApi.IDal _dal = DalApi.Factory.Get;
         public void AddCall(BO.Call newCall)

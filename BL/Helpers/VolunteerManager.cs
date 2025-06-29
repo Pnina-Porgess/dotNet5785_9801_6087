@@ -328,4 +328,5 @@ internal static class VolunteerManager
 
 /*   a => a?.EntryTime == null   */
 
+}
 
