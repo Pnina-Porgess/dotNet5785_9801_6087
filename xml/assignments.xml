@@ -480,4 +480,12 @@
     <EntryTime>2025-06-29T02:52:25.2277607+03:00</EntryTime>
     <EndTime>2025-06-29T02:54:55.3245246+03:00</EndTime>
   </Assignment>
+  <Assignment>
+    <Id>2060</Id>
+    <CallId>1003</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>SelfCancellation</TypeOfEndTime>
+    <EntryTime>2025-06-29T11:57:55.5807723+03:00</EntryTime>
+    <EndTime>2025-06-29T11:58:12.3553492+03:00</EndTime>
+  </Assignment>
 </Assignments>

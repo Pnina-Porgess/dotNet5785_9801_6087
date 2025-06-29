@@ -246,7 +246,7 @@
     <Phone>0551237894</Phone>
     <Email>P3225096@gmail.com</Email>
     <Role>Manager</Role>
-    <IsActive>true</IsActive>
+    <IsActive>false</IsActive>
     <DistanceType>AerialDistance</DistanceType>
     <MaximumDistance>200</MaximumDistance>
     <Password>ir3Y4/oVAE27M1agrTKuPozV2LsYKj8GwcW1sJpzO80=</Password>
