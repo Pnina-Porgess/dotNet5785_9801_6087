@@ -114,6 +114,7 @@ namespace PL.Call
                 OpenCalls.Remove(SelectedCall);
                 SelectedCall = null;
                 MessageBox.Show("הקריאה נבחרה לטיפול!", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                Close();
             }
             catch (Exception ex)
             {

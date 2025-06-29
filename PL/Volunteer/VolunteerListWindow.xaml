@@ -170,7 +170,8 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Content="🗑️"
-                                        Click="DeleteButton_Click"
+                                        Command="{Binding DataContext.DeleteVolunteerCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"
                                         Foreground="{StaticResource TextBlueBrush}"
                                         FontWeight="Bold"
                                         BorderThickness="0"

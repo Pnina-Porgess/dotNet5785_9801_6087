@@ -61,21 +61,6 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>328265640</Id>
-    <Name>Chaya</Name>
-    <Phone>0535491235</Phone>
-    <Email>Chaya@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>38</MaximumDistance>
-    <Password>NAG6mu5oFUd+/z+oIXJg7nK6dZvA7iQPATad8AvEsBc=</Password>
-    <Address>Beer Sheva, Ben Gurion Blvd.</Address>
-    <Latitude>34.7913</Latitude>
-    <Longitude>31.2518</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
     <Id>214786725</Id>
     <Name>Yosi</Name>
     <Phone>0557896521</Phone>
@@ -136,21 +121,6 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>328301940</Id>
-    <Name>Chana</Name>
-    <Phone>0556549872</Phone>
-    <Email>Chana@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>21</MaximumDistance>
-    <Password>2nsTFe4nx6Tlz6f34VtGFVR6ovl1+GSWthN5sEij7FE=</Password>
-    <Address>Bnei Brak, Rabbi Akiva St.</Address>
-    <Latitude>34.8333</Latitude>
-    <Longitude>32.0809</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
     <Id>328304944</Id>
     <Name>Ari</Name>
     <Phone>0537892134</Phone>
@@ -178,21 +148,6 @@
     <Address>Bat Yam, Ben Gurion Blvd.</Address>
     <Latitude>34.7502</Latitude>
     <Longitude>32.0236</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
-    <Id>214606170</Id>
-    <Name>Shani</Name>
-    <Phone>0524567890</Phone>
-    <Email>Shani@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>24</MaximumDistance>
-    <Password>4RuzNBMLIbCO4JSGy6bXvQozBgJ4InmIoztxDnpyqqQ=</Password>
-    <Address>Herzliya, Sokolov St.</Address>
-    <Latitude>34.8436</Latitude>
-    <Longitude>32.1663</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>

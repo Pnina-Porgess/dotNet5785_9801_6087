@@ -137,7 +137,7 @@ internal static class CallManager
             var assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
 
             // The call was never assigned if there are no assignments at all
-            return !assignments.Any();
+            return assignments.Any();
         }
         catch (Exception ex)
         {

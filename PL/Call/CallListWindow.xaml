@@ -176,38 +176,38 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                 <!-- Delete Column -->
-<GridViewColumn Header="Delete 🗑️" Width="70" HeaderContainerStyle="{StaticResource HeaderStyle}">
-    <GridViewColumn.CellTemplate>
-        <DataTemplate>
-            <Button Content="🗑️ מחק"
-                    Command="{Binding DataContext.DeleteCallCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                    CommandParameter="{Binding}"
-                    Foreground="{StaticResource TextBlueBrush}"
-                    FontWeight="Bold"
-                    BorderThickness="0"
-                    Cursor="Hand"
-                    Padding="4,2" />
-        </DataTemplate>
-    </GridViewColumn.CellTemplate>
-</GridViewColumn>
+                    <GridViewColumn Header="Delete🗑️" Width="70" HeaderContainerStyle="{StaticResource HeaderStyle}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="🗑️ מחק"
+        Command="{Binding DataContext.DeleteCallCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+        CommandParameter="{Binding}"
+        Foreground="{StaticResource TextBlueBrush}"
+        FontWeight="Bold"
+        BorderThickness="0"
+        Cursor="Hand"
+        Padding="4,2"
+        Visibility="{Binding Converter={StaticResource CanDeleteCallConverter}}" />
 
-<!-- Unassign Column -->
-<GridViewColumn Header="Cancel 🚫" Width="80" HeaderContainerStyle="{StaticResource HeaderStyle}">
-    <GridViewColumn.CellTemplate>
-        <DataTemplate>
-            <Button Content="🚫"
-                    Command="{Binding DataContext.UnassignCallCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                    CommandParameter="{Binding}"
-                    Foreground="{StaticResource PinkBrush}"
-                    FontWeight="Bold"
-                    BorderThickness="0"
-                    Cursor="Hand"
-                    Padding="4,2" />
-        </DataTemplate>
-    </GridViewColumn.CellTemplate>
-</GridViewColumn>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
 
+                    <GridViewColumn Header="Cancel🚫" Width="80" HeaderContainerStyle="{StaticResource HeaderStyle}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="🚫"
+        Command="{Binding DataContext.UnassignCallCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+        CommandParameter="{Binding}"
+        Foreground="{StaticResource PinkBrush}"
+        FontWeight="Bold"
+        BorderThickness="0"
+        Cursor="Hand"
+        Padding="4,2"/>
+
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

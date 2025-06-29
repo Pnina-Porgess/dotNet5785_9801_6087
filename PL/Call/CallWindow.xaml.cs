@@ -7,18 +7,19 @@ namespace PL.Call
     public partial class CallWindow : Window
     {
         private readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        public string ButtonText { get; set; }
+
         public CallWindow(int id = 0)
         {
             InitializeComponent();
-            ButtonText = id == 0 ? "Add" : "Update";
+
+            SetCurrentValue(ButtonTextProperty, id == 0 ? "Add" : "Update");
 
             if (id == 0)
             {
                 CurrentCall = new BO.Call
                 {
-                    Status= BO.CallStatus.Open,
-                    OpeningTime = s_bl.Admin.GetClock()  // זמן התחלה = עכשיו
+                    Status = BO.CallStatus.Open,
+                    OpeningTime = s_bl.Admin.GetClock() // זמן התחלה = עכשיו
                 };
             }
             else
@@ -40,8 +41,6 @@ namespace PL.Call
                 if (CurrentCall != null && CurrentCall.Id != 0)
                     s_bl.Call.RemoveObserver(CurrentCall.Id, CallObserver);
             };
-
-            //DataContext = this;
         }
 
         public BO.Call? CurrentCall
@@ -52,6 +51,15 @@ namespace PL.Call
 
         public static readonly DependencyProperty CurrentCallProperty =
             DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(CallWindow), new PropertyMetadata(null));
+
+        public string ButtonText
+        {
+            get => (string)GetValue(ButtonTextProperty);
+            set => SetValue(ButtonTextProperty, value);
+        }
+
+        public static readonly DependencyProperty ButtonTextProperty =
+            DependencyProperty.Register("ButtonText", typeof(string), typeof(CallWindow), new PropertyMetadata("Update"));
 
         private void CallObserver()
         {
@@ -65,7 +73,6 @@ namespace PL.Call
         {
             try
             {
-
                 if (CurrentCall?.Type == null)
                     throw new Exception("יש לבחור סוג קריאה.");
 
@@ -78,7 +85,6 @@ namespace PL.Call
                 if (CurrentCall.MaxEndTime <= CurrentCall.OpeningTime)
                     throw new Exception("זמן הסיום חייב להיות לאחר זמן הפתיחה.");
 
-                // הוספה או עדכון
                 if (ButtonText == "Add")
                 {
                     s_bl.Call.AddCall(CurrentCall!);
@@ -97,6 +103,5 @@ namespace PL.Call
                 MessageBox.Show(ex.Message);
             }
         }
-
     }
 }

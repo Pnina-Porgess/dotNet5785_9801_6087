@@ -38,7 +38,7 @@
             <TextBlock Text="{Binding CurrentCall.OpeningTime}" />
 
             <!-- כפתור -->
-            <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click" Margin="0,20,0,0"/>
+            <Button    Content="{Binding ButtonText}" Click="btnAddUpdate_Click" Margin="0,20,0,0" Height="47"/>
         </StackPanel>
     </Grid>
 </Window>
