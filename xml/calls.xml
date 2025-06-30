@@ -7,58 +7,58 @@
     <Adress>Highway 2, Central Israel</Adress>
     <Longitude>34.8697</Longitude>
     <Latitude>32.3488</Latitude>
-    <TimeOfOpen>2025-06-10T20:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-27T20:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1001</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
-    <Description />
-    <Adress>Highway 6, Central Israel</Adress>
-    <Longitude>34.8951</Longitude>
-    <Latitude>31.9575</Latitude>
-    <TimeOfOpen>2025-06-06T06:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-13T03:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-11T00:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-12T09:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1002</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
+    <TypeOfReading>DeadBattery</TypeOfReading>
     <Description />
     <Adress>Begin Boulevard, Jerusalem</Adress>
     <Longitude>35.2105</Longitude>
     <Latitude>31.7781</Latitude>
-    <TimeOfOpen>2025-06-12T06:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-21T19:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-17T20:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-05T20:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1003</Id>
-    <TypeOfReading>None</TypeOfReading>
+    <TypeOfReading>EngineFailure</TypeOfReading>
     <Description />
     <Adress>Glilot Interchange, Tel Aviv</Adress>
     <Longitude>34.8048</Longitude>
     <Latitude>32.125</Latitude>
-    <TimeOfOpen>2025-06-06T18:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-13T13:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-22T02:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-24T07:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1004</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
+    <TypeOfReading>EngineFailure</TypeOfReading>
     <Description />
     <Adress>HaTmarim, Eilat</Adress>
     <Longitude>34.8708</Longitude>
     <Latitude>32.0004</Latitude>
-    <TimeOfOpen>2025-06-12T06:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-25T14:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-03T07:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-08T02:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1005</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
+    <TypeOfReading>FlatTire</TypeOfReading>
     <Description />
     <Adress>Ein Gedi, Dead Sea</Adress>
     <Longitude>34.9482</Longitude>
     <Latitude>29.558</Latitude>
-    <TimeOfOpen>2025-06-03T19:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-07T20:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-03T18:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-07T12:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1006</Id>
+    <TypeOfReading>FlatTire</TypeOfReading>
+    <Description />
+    <Adress>Rothschild Blvd, Tel Aviv</Adress>
+    <Longitude>35.4732</Longitude>
+    <Latitude>31.559</Latitude>
+    <TimeOfOpen>2025-06-02T12:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-23T08:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1007</Id>
@@ -67,8 +67,18 @@
     <Adress>Carmel Beach, Haifa</Adress>
     <Longitude>34.7746</Longitude>
     <Latitude>32.0628</Latitude>
-    <TimeOfOpen>2025-06-10T00:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-09T08:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-07T16:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-04T17:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1008</Id>
+    <TypeOfReading>DeadBattery</TypeOfReading>
+    <Description />
+    <Adress>Soroka Hospital, Beer Sheva</Adress>
+    <Longitude>34.964</Longitude>
+    <Latitude>32.798</Latitude>
+    <TimeOfOpen>2025-06-18T14:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-27T12:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1009</Id>
@@ -77,8 +87,8 @@
     <Adress>El-Rama, Nazareth</Adress>
     <Longitude>34.7915</Longitude>
     <Latitude>31.2525</Latitude>
-    <TimeOfOpen>2025-06-17T15:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-11T01:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-18T18:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-28T23:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1010</Id>
@@ -87,338 +97,68 @@
     <Adress>Kinneret, Tiberias</Adress>
     <Longitude>35.3035</Longitude>
     <Latitude>32.6996</Latitude>
-    <TimeOfOpen>2025-06-04T21:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-29T10:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1011</Id>
-    <TypeOfReading>None</TypeOfReading>
-    <Description />
-    <Adress>Port Road, Ashdod</Adress>
-    <Longitude>35.5312</Longitude>
-    <Latitude>32.7922</Latitude>
-    <TimeOfOpen>2025-06-28T02:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-06T02:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1012</Id>
-    <TypeOfReading>None</TypeOfReading>
-    <Description />
-    <Adress>Herzl, Ashkelon</Adress>
-    <Longitude>34.6499</Longitude>
-    <Latitude>31.8014</Latitude>
-    <TimeOfOpen>2025-06-06T01:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-08T09:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-01T13:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-25T07:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1013</Id>
-    <TypeOfReading>FlatTire</TypeOfReading>
+    <TypeOfReading>DeadBattery</TypeOfReading>
     <Description />
     <Adress>Jabotinsky, Rishon Lezion</Adress>
     <Longitude>34.5743</Longitude>
     <Latitude>31.6693</Latitude>
-    <TimeOfOpen>2025-06-19T13:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-27T08:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-21T12:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-24T16:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1014</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
+    <TypeOfReading>DeadBattery</TypeOfReading>
     <Description />
     <Adress>Ben Gurion, Netanya</Adress>
     <Longitude>34.8043</Longitude>
     <Latitude>31.9648</Latitude>
-    <TimeOfOpen>2025-06-30T14:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-22T13:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-13T11:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-15T12:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1015</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
+    <TypeOfReading>DeadBattery</TypeOfReading>
     <Description />
     <Adress>Shderot HaMeginim, Acre (Akko)</Adress>
     <Longitude>34.85</Longitude>
     <Latitude>32.3329</Latitude>
-    <TimeOfOpen>2025-06-19T22:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-28T21:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1016</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
-    <Description />
-    <Adress>Sokolov, Herzliya</Adress>
-    <Longitude>35.0738</Longitude>
-    <Latitude>32.9234</Latitude>
-    <TimeOfOpen>2025-06-25T00:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-07T13:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-09T07:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-18T01:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1017</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
+    <TypeOfReading>DeadBattery</TypeOfReading>
     <Description />
     <Adress>Weizmann Institute, Rehovot</Adress>
     <Longitude>34.8447</Longitude>
     <Latitude>32.1663</Latitude>
-    <TimeOfOpen>2025-06-04T01:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-18T18:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1018</Id>
-    <TypeOfReading>FlatTire</TypeOfReading>
-    <Description />
-    <Adress>Haatzmaut, Arad</Adress>
-    <Longitude>34.8111</Longitude>
-    <Latitude>31.8941</Latitude>
-    <TimeOfOpen>2025-06-17T18:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-19T17:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-04T07:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-09T05:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1019</Id>
-    <TypeOfReading>None</TypeOfReading>
+    <TypeOfReading>EngineFailure</TypeOfReading>
     <Description />
     <Adress>Jabotinsky, Caesarea</Adress>
     <Longitude>35.2137</Longitude>
     <Latitude>31.2586</Latitude>
-    <TimeOfOpen>2025-06-10T22:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-05T12:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-17T07:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-27T07:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1020</Id>
-    <TypeOfReading>None</TypeOfReading>
+    <TypeOfReading>FlatTire</TypeOfReading>
     <Description />
     <Adress>HaMeyasdim, Zikhron Ya'akov</Adress>
     <Longitude>34.8925</Longitude>
     <Latitude>32.5113</Latitude>
-    <TimeOfOpen>2025-06-17T01:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-10T19:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1022</Id>
-    <TypeOfReading>None</TypeOfReading>
-    <Description />
-    <Adress>Jabotinsky, Kiryat Gat</Adress>
-    <Longitude>34.8703</Longitude>
-    <Latitude>32.1847</Latitude>
-    <TimeOfOpen>2025-06-08T08:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-11T22:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1023</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
-    <Description />
-    <Adress>Golan, Kiryat Shmona</Adress>
-    <Longitude>34.764</Longitude>
-    <Latitude>31.6096</Latitude>
-    <TimeOfOpen>2025-06-13T13:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-08T21:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1025</Id>
-    <TypeOfReading>FlatTire</TypeOfReading>
-    <Description />
-    <Adress>HaRabbanim, Safed (Tzfat)</Adress>
-    <Longitude>35.0063</Longitude>
-    <Latitude>31.8996</Latitude>
-    <TimeOfOpen>2025-06-10T11:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-05T01:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1026</Id>
-    <TypeOfReading>None</TypeOfReading>
-    <Description />
-    <Adress>HaGalil, Metula</Adress>
-    <Longitude>35.496</Longitude>
-    <Latitude>32.9646</Latitude>
-    <TimeOfOpen>2025-06-21T19:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-18T08:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1027</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
-    <Description />
-    <Adress>HaTomer, Dimona</Adress>
-    <Longitude>35.5773</Longitude>
-    <Latitude>33.279</Latitude>
-    <TimeOfOpen>2025-06-18T04:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-19T22:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1028</Id>
-    <TypeOfReading>FlatTire</TypeOfReading>
-    <Description />
-    <Adress>HaGilboa, Yokneam</Adress>
-    <Longitude>35.0345</Longitude>
-    <Latitude>31.0707</Latitude>
-    <TimeOfOpen>2025-06-06T12:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-28T19:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1029</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
-    <Description />
-    <Adress>Ben Gurion, Bat Yam</Adress>
-    <Longitude>35.1047</Longitude>
-    <Latitude>32.6672</Latitude>
-    <TimeOfOpen>2025-06-05T02:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-26T13:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1030</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
-    <Description />
-    <Adress>Jabotinsky, Ramat Gan</Adress>
-    <Longitude>34.7443</Longitude>
-    <Latitude>32.0171</Latitude>
-    <TimeOfOpen>2025-06-29T17:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-25T21:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1031</Id>
-    <TypeOfReading>None</TypeOfReading>
-    <Description />
-    <Adress>Herzl, Kfar Saba</Adress>
-    <Longitude>34.8248</Longitude>
-    <Latitude>32.0684</Latitude>
-    <TimeOfOpen>2025-06-22T00:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-27T11:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1033</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
-    <Description />
-    <Adress>Shderot HaMeginim, Afula</Adress>
-    <Longitude>34.8878</Longitude>
-    <Latitude>32.084</Latitude>
-    <TimeOfOpen>2025-06-22T20:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-12T00:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1035</Id>
-    <TypeOfReading>None</TypeOfReading>
-    <Description />
-    <Adress>Eilat, Mitzpe Ramon</Adress>
-    <Longitude>34.9197</Longitude>
-    <Latitude>32.434</Latitude>
-    <TimeOfOpen>2025-06-10T11:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-03T21:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1036</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
-    <Description />
-    <Adress>Rabbi Akiva, Bnei Brak</Adress>
-    <Longitude>34.8019</Longitude>
-    <Latitude>30.61</Latitude>
-    <TimeOfOpen>2025-06-20T12:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-30T19:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1037</Id>
-    <TypeOfReading>None</TypeOfReading>
-    <Description />
-    <Adress>HaMeyasdim, Karmiel</Adress>
-    <Longitude>34.8383</Longitude>
-    <Latitude>32.0853</Latitude>
-    <TimeOfOpen>2025-06-25T18:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-09T12:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1039</Id>
-    <TypeOfReading>FlatTire</TypeOfReading>
-    <Description />
-    <Adress>Ginosar, Sea of Galilee</Adress>
-    <Longitude>35.7496</Longitude>
-    <Latitude>33.0622</Latitude>
-    <TimeOfOpen>2025-06-15T16:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-24T21:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1040</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
-    <Description />
-    <Adress>HaNegev, Maale Adumim</Adress>
-    <Longitude>35.5833</Longitude>
-    <Latitude>32.8333</Latitude>
-    <TimeOfOpen>2025-06-05T00:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-15T19:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1041</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
-    <Description />
-    <Adress>HaTamar, Qiryat Shemona</Adress>
-    <Longitude>35.294</Longitude>
-    <Latitude>31.7768</Latitude>
-    <TimeOfOpen>2025-06-12T19:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-05T00:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1043</Id>
-    <TypeOfReading>None</TypeOfReading>
-    <Description />
-    <Adress>Hachalutzim, Yavne</Adress>
-    <Longitude>35.0944</Longitude>
-    <Latitude>33.0044</Latitude>
-    <TimeOfOpen>2025-06-02T14:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-26T05:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1044</Id>
-    <TypeOfReading>FlatTire</TypeOfReading>
-    <Description />
-    <Adress>Ein Esariya, Jericho Area</Adress>
-    <Longitude>34.7383</Longitude>
-    <Latitude>31.8775</Latitude>
-    <TimeOfOpen>2025-06-07T05:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-08T23:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1046</Id>
-    <TypeOfReading>FlatTire</TypeOfReading>
-    <Description />
-    <Adress>Harish Boulevard, Harish</Adress>
-    <Longitude>34.7872</Longitude>
-    <Latitude>32.0158</Latitude>
-    <TimeOfOpen>2025-06-12T21:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-23T13:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1049</Id>
-    <TypeOfReading>FlatTire</TypeOfReading>
-    <Description />
-    <Adress>Geha Highway</Adress>
-    <Longitude>35.4545</Longitude>
-    <Latitude>32.4554</Latitude>
-    <TimeOfOpen>2025-06-15T19:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-05T22:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1047</Id>
-    <TypeOfReading>None</TypeOfReading>
-    <Description />
-    <Adress>Bar Ilan, Bnei Brak</Adress>
-    <Longitude>35.0247</Longitude>
-    <Latitude>32.4746</Latitude>
-    <TimeOfOpen>2025-06-21T04:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-08T14:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1034</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
-    <Description />
-    <Adress>HaBanim, Hadera</Adress>
-    <Longitude>35.2854</Longitude>
-    <Latitude>32.6082</Latitude>
-    <TimeOfOpen>2025-06-21T11:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-03T02:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1032</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
-    <Description />
-    <Adress>Rothschild Blvd, Petah Tikva</Adress>
-    <Longitude>34.9065</Longitude>
-    <Latitude>32.1782</Latitude>
-    <TimeOfOpen>2025-06-27T08:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-24T19:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-15T01:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-03T17:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1021</Id>
@@ -427,38 +167,18 @@
     <Adress>Ahuza, Raanana</Adress>
     <Longitude>34.9537</Longitude>
     <Latitude>32.5726</Latitude>
-    <TimeOfOpen>2025-06-21T12:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-11T02:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-19T22:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-30T07:46:03</MaxTimeToFinish>
   </Call>
   <Call>
-    <Id>1008</Id>
+    <Id>1023</Id>
     <TypeOfReading>None</TypeOfReading>
     <Description />
-    <Adress>Soroka Hospital, Beer Sheva</Adress>
-    <Longitude>34.964</Longitude>
-    <Latitude>32.798</Latitude>
-    <TimeOfOpen>2025-06-05T02:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-01T06:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1006</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
-    <Description />
-    <Adress>Rothschild Blvd, Tel Aviv</Adress>
-    <Longitude>35.4732</Longitude>
-    <Latitude>31.559</Latitude>
-    <TimeOfOpen>2025-06-29T15:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-22T01:02:05</MaxTimeToFinish>
-  </Call>
-  <Call>
-    <Id>1048</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
-    <Description />
-    <Adress>Eilat, Machtesh Rimon</Adress>
-    <Longitude>34.3233</Longitude>
-    <Latitude>31.2334</Latitude>
-    <TimeOfOpen>2025-06-29T17:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-08T15:02:05</MaxTimeToFinish>
+    <Adress>Golan, Kiryat Shmona</Adress>
+    <Longitude>34.764</Longitude>
+    <Latitude>31.6096</Latitude>
+    <TimeOfOpen>2025-06-14T00:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-24T16:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1024</Id>
@@ -467,37 +187,317 @@
     <Adress>Ze'ev Jabotinsky, Modiin</Adress>
     <Longitude>35.5683</Longitude>
     <Latitude>33.2082</Latitude>
-    <TimeOfOpen>2025-06-26T14:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-18T10:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-01T05:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-07T23:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1025</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>HaRabbanim, Safed (Tzfat)</Adress>
+    <Longitude>35.0063</Longitude>
+    <Latitude>31.8996</Latitude>
+    <TimeOfOpen>2025-06-22T18:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-10T00:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1026</Id>
+    <TypeOfReading>FlatTire</TypeOfReading>
+    <Description />
+    <Adress>HaGalil, Metula</Adress>
+    <Longitude>35.496</Longitude>
+    <Latitude>32.9646</Latitude>
+    <TimeOfOpen>2025-06-09T22:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-20T03:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1027</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>HaTomer, Dimona</Adress>
+    <Longitude>35.5773</Longitude>
+    <Latitude>33.279</Latitude>
+    <TimeOfOpen>2025-06-19T08:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-16T04:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1028</Id>
+    <TypeOfReading>DeadBattery</TypeOfReading>
+    <Description />
+    <Adress>HaGilboa, Yokneam</Adress>
+    <Longitude>35.0345</Longitude>
+    <Latitude>31.0707</Latitude>
+    <TimeOfOpen>2025-06-06T17:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-24T11:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1029</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>Ben Gurion, Bat Yam</Adress>
+    <Longitude>35.1047</Longitude>
+    <Latitude>32.6672</Latitude>
+    <TimeOfOpen>2025-06-02T16:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-13T03:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1030</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>Jabotinsky, Ramat Gan</Adress>
+    <Longitude>34.7443</Longitude>
+    <Latitude>32.0171</Latitude>
+    <TimeOfOpen>2025-06-03T04:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-13T02:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1031</Id>
+    <TypeOfReading>DeadBattery</TypeOfReading>
+    <Description />
+    <Adress>Herzl, Kfar Saba</Adress>
+    <Longitude>34.8248</Longitude>
+    <Latitude>32.0684</Latitude>
+    <TimeOfOpen>2025-06-09T02:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-08T21:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1032</Id>
+    <TypeOfReading>FlatTire</TypeOfReading>
+    <Description />
+    <Adress>Rothschild Blvd, Petah Tikva</Adress>
+    <Longitude>34.9065</Longitude>
+    <Latitude>32.1782</Latitude>
+    <TimeOfOpen>2025-06-26T00:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-21T18:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1033</Id>
+    <TypeOfReading>None</TypeOfReading>
+    <Description />
+    <Adress>Shderot HaMeginim, Afula</Adress>
+    <Longitude>34.8878</Longitude>
+    <Latitude>32.084</Latitude>
+    <TimeOfOpen>2025-06-07T11:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-25T20:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1034</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>HaBanim, Hadera</Adress>
+    <Longitude>35.2854</Longitude>
+    <Latitude>32.6082</Latitude>
+    <TimeOfOpen>2025-06-13T18:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-13T01:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1036</Id>
+    <TypeOfReading>None</TypeOfReading>
+    <Description />
+    <Adress>Rabbi Akiva, Bnei Brak</Adress>
+    <Longitude>34.8019</Longitude>
+    <Latitude>30.61</Latitude>
+    <TimeOfOpen>2025-06-08T09:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-30T21:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1037</Id>
+    <TypeOfReading>FlatTire</TypeOfReading>
+    <Description />
+    <Adress>HaMeyasdim, Karmiel</Adress>
+    <Longitude>34.8383</Longitude>
+    <Latitude>32.0853</Latitude>
+    <TimeOfOpen>2025-06-19T23:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-25T04:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1039</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>Ginosar, Sea of Galilee</Adress>
+    <Longitude>35.7496</Longitude>
+    <Latitude>33.0622</Latitude>
+    <TimeOfOpen>2025-06-07T22:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-18T12:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1041</Id>
+    <TypeOfReading>DeadBattery</TypeOfReading>
+    <Description />
+    <Adress>HaTamar, Qiryat Shemona</Adress>
+    <Longitude>35.294</Longitude>
+    <Latitude>31.7768</Latitude>
+    <TimeOfOpen>2025-06-17T12:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-03T22:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1042</Id>
-    <TypeOfReading>None</TypeOfReading>
+    <TypeOfReading>DeadBattery</TypeOfReading>
     <Description />
     <Adress>Sderot HaGalil, Nahariya</Adress>
     <Longitude>35.5683</Longitude>
     <Latitude>33.2082</Latitude>
-    <TimeOfOpen>2025-06-12T04:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-04T02:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-01T20:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-24T06:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1043</Id>
+    <TypeOfReading>FlatTire</TypeOfReading>
+    <Description />
+    <Adress>Hachalutzim, Yavne</Adress>
+    <Longitude>35.0944</Longitude>
+    <Latitude>33.0044</Latitude>
+    <TimeOfOpen>2025-06-06T13:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-25T13:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1045</Id>
+    <TypeOfReading>DeadBattery</TypeOfReading>
+    <Description />
+    <Adress>Sokolov, Holon</Adress>
+    <Longitude>35.45</Longitude>
+    <Latitude>31.8667</Latitude>
+    <TimeOfOpen>2025-06-18T03:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-27T15:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1046</Id>
+    <TypeOfReading>DeadBattery</TypeOfReading>
+    <Description />
+    <Adress>Harish Boulevard, Harish</Adress>
+    <Longitude>34.7872</Longitude>
+    <Latitude>32.0158</Latitude>
+    <TimeOfOpen>2025-06-04T22:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-06-29T22:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1047</Id>
+    <TypeOfReading>FlatTire</TypeOfReading>
+    <Description />
+    <Adress>Bar Ilan, Bnei Brak</Adress>
+    <Longitude>35.0247</Longitude>
+    <Latitude>32.4746</Latitude>
+    <TimeOfOpen>2025-06-14T05:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-02T17:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1048</Id>
+    <TypeOfReading>None</TypeOfReading>
+    <Description />
+    <Adress>Eilat, Machtesh Rimon</Adress>
+    <Longitude>34.3233</Longitude>
+    <Latitude>31.2334</Latitude>
+    <TimeOfOpen>2025-06-19T11:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-16T08:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1049</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>Geha Highway</Adress>
+    <Longitude>35.4545</Longitude>
+    <Latitude>32.4554</Latitude>
+    <TimeOfOpen>2025-06-26T01:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-21T18:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1040</Id>
+    <TypeOfReading>FlatTire</TypeOfReading>
+    <Description />
+    <Adress>HaNegev, Maale Adumim</Adress>
+    <Longitude>35.5833</Longitude>
+    <Latitude>32.8333</Latitude>
+    <TimeOfOpen>2025-06-14T21:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-03T19:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1018</Id>
+    <TypeOfReading>FlatTire</TypeOfReading>
+    <Description />
+    <Adress>Haatzmaut, Arad</Adress>
+    <Longitude>34.8111</Longitude>
+    <Latitude>31.8941</Latitude>
+    <TimeOfOpen>2025-06-16T01:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-01T19:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1012</Id>
+    <TypeOfReading>DeadBattery</TypeOfReading>
+    <Description />
+    <Adress>Herzl, Ashkelon</Adress>
+    <Longitude>34.7418154</Longitude>
+    <Latitude>31.7365647</Latitude>
+    <TimeOfOpen>2025-06-10T02:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-07T07:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1022</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>Jabotinsky, Kiryat Gat</Adress>
+    <Longitude>34.8703</Longitude>
+    <Latitude>32.1847</Latitude>
+    <TimeOfOpen>2025-06-17T20:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-03T17:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1035</Id>
+    <TypeOfReading>None</TypeOfReading>
+    <Description />
+    <Adress>Eilat, Mitzpe Ramon</Adress>
+    <Longitude>34.9197</Longitude>
+    <Latitude>32.434</Latitude>
+    <TimeOfOpen>2025-06-21T14:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-16T19:46:03</MaxTimeToFinish>
   </Call>
   <Call>
     <Id>1038</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
+    <TypeOfReading>DeadBattery</TypeOfReading>
     <Description />
     <Adress>Givat Yoav, Golan Heights</Adress>
     <Longitude>35.3047</Longitude>
     <Latitude>32.917</Latitude>
-    <TimeOfOpen>2025-06-25T00:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-07-16T19:02:05</MaxTimeToFinish>
+    <TimeOfOpen>2025-06-18T10:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-09T09:46:03</MaxTimeToFinish>
   </Call>
   <Call>
-    <Id>1045</Id>
-    <TypeOfReading>FlatTire</TypeOfReading>
+    <Id>1016</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
     <Description />
-    <Adress>Sokolov, Holon</Adress>
-    <Longitude>34.7743971</Longitude>
-    <Latitude>32.022827</Latitude>
-    <TimeOfOpen>2025-06-04T21:02:05</TimeOfOpen>
-    <MaxTimeToFinish>2025-06-25T08:02:05</MaxTimeToFinish>
+    <Adress>Sokolov, Herzliya</Adress>
+    <Longitude>34.8428542</Longitude>
+    <Latitude>32.1672205</Latitude>
+    <TimeOfOpen>2025-06-22T00:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-03T15:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1011</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>Port Road, Ashdod</Adress>
+    <Longitude>34.643736180115184</Longitude>
+    <Latitude>31.827241200000003</Latitude>
+    <TimeOfOpen>2025-06-27T06:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-18T00:00:00</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1044</Id>
+    <TypeOfReading>None</TypeOfReading>
+    <Description />
+    <Adress>Ein Esariya, Jericho Area</Adress>
+    <Longitude>34.7383</Longitude>
+    <Latitude>31.8775</Latitude>
+    <TimeOfOpen>2025-06-15T23:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-07T04:46:03</MaxTimeToFinish>
+  </Call>
+  <Call>
+    <Id>1001</Id>
+    <TypeOfReading>EngineFailure</TypeOfReading>
+    <Description />
+    <Adress>Highway 6, Central Israel</Adress>
+    <Longitude>34.8951</Longitude>
+    <Latitude>31.9575</Latitude>
+    <TimeOfOpen>2025-06-13T06:46:03</TimeOfOpen>
+    <MaxTimeToFinish>2025-07-09T21:46:03</MaxTimeToFinish>
   </Call>
 </ArrayOfCall>
