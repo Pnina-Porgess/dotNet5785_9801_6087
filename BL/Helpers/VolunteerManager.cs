@@ -136,9 +136,8 @@ internal static class VolunteerManager
     {
         if (!IsValidId(boVolunteer.Id))
             throw new BO.BlLogicalException("The ID is not correct");
-
-        var (r, w) = await Tools.GetCoordinatesFromAddressAsync(boVolunteer.CurrentAddress!);
-        return (r, w);
+        var result = await Tools.GetCoordinatesFromAddressAsync(boVolunteer.CurrentAddress!);
+        return (result?.Latitude, result?.Longitude);
     }
 
 

@@ -81,14 +81,14 @@ internal static class Tools
 
             var root = doc.RootElement[0];
 
-            double latitude = double.Parse(root.GetProperty("lat").GetString());
-            double longitude = double.Parse(root.GetProperty("lon").GetString());
+            double latitude = double.Parse(root.GetProperty("lat").GetString()!);
+            double longitude = double.Parse(root.GetProperty("lon").GetString()!);
 
             return (latitude, longitude);
         }
         catch
         {
-            return null; // אפשר להחזיר פרטים על השגיאה אם רוצים לנתח Tooltip/לוג
+            return null; 
         }
     }
 
