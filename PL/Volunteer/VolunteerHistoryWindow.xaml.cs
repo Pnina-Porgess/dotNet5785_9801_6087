@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace PL
 {
@@ -12,37 +13,44 @@ namespace PL
     {
         private static readonly IBl s_bl = Factory.Get();
 
+        private volatile DispatcherOperation? _observerOperation = null;
+
         public VolunteerHistoryWindow(int volunteerId)
         {
             InitializeComponent();
             VolunteerId = volunteerId;
             DataContext = this;
-            QueryClosedCalls();
+
+            // טעינה ראשונית
+            RefreshClosedCallsObserver();
+
+            // הרשמה ל־Observer
+            s_bl.Volunteer.AddObserver(volunteerId, RefreshClosedCallsObserver);
         }
 
         public int VolunteerId { get; set; }
 
-        private BO.TypeOfReading _selectedCallType = BO.TypeOfReading.None;
-        public BO.TypeOfReading SelectedCallType
+        private TypeOfReading _selectedCallType = TypeOfReading.None;
+        public TypeOfReading SelectedCallType
         {
             get => _selectedCallType;
             set
             {
                 _selectedCallType = value;
                 OnPropertyChanged();
-                QueryClosedCalls();
+                RefreshClosedCallsObserver();
             }
         }
 
-        private BO.ClosedCallField _selectedSortOption = BO.ClosedCallField.EndType;
-        public BO.ClosedCallField SelectedSortOption
+        private ClosedCallField _selectedSortOption = ClosedCallField.EndType;
+        public ClosedCallField SelectedSortOption
         {
             get => _selectedSortOption;
             set
             {
                 _selectedSortOption = value;
                 OnPropertyChanged();
-                QueryClosedCalls();
+                RefreshClosedCallsObserver();
             }
         }
 
@@ -57,15 +65,29 @@ namespace PL
             }
         }
 
-        private void QueryClosedCalls()
+        // === Observer ===
+        private void RefreshClosedCallsObserver()
         {
-            var calls = s_bl.Call.GetClosedCallsByVolunteer(
-                volunteerId: VolunteerId,
-                SelectedCallType == BO.TypeOfReading.None ? null : SelectedCallType,
-                sortField: SelectedSortOption
-            );
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            {
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    var calls = s_bl.Call.GetClosedCallsByVolunteer(
+                        volunteerId: VolunteerId,
+                        SelectedCallType == TypeOfReading.None ? null : SelectedCallType,
+                        sortField: SelectedSortOption
+                    );
 
-            ClosedCalls = calls.ToList();
+                    ClosedCalls = calls.ToList();
+                });
+            }
+        }
+
+        // ניקוי זיכרון - הסרת Observer
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            s_bl.Volunteer.RemoveObserver(VolunteerId, RefreshClosedCallsObserver);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

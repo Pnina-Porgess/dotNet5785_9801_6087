@@ -454,7 +454,7 @@ namespace BlImplementation
                         OpenCallField.OpenTime => openCalls.OrderBy(c => c.OpenTime),
                         OpenCallField.MaxEndTime => openCalls.OrderBy(c => c.MaxEndTime),
                         OpenCallField.DistanceFromVolunteer => openCalls.OrderBy(c => c.DistanceFromVolunteer),
-                        _ => throw new BO.BlInvalidInputException($"Sorting by {sortField} is not supported")
+                        _ => openCalls.OrderBy(c => c.Id)
                     };
                 }
             }

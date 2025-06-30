@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace PL.Call
 {
@@ -16,27 +17,29 @@ namespace PL.Call
 
         public ObservableCollection<OpenCallInList> OpenCalls { get; set; } = new();
 
-        private BO.OpenCallField _sortField = BO.OpenCallField.Id;
-        public BO.OpenCallField SortField
+        private volatile DispatcherOperation? _observerOperation = null;
+
+        private OpenCallField _sortField = OpenCallField.Id;
+        public OpenCallField SortField
         {
             get => _sortField;
             set
             {
                 _sortField = value;
                 OnPropertyChanged(nameof(SortField));
-                LoadOpenCalls();
+                RefreshOpenCallsObserver();
             }
         }
 
-        private BO.TypeOfReading _filterStatus = BO.TypeOfReading.None;
-        public BO.TypeOfReading FilterStatus
+        private TypeOfReading _filterStatus = TypeOfReading.None;
+        public TypeOfReading FilterStatus
         {
             get => _filterStatus;
             set
             {
                 _filterStatus = value;
                 OnPropertyChanged(nameof(FilterStatus));
-                LoadOpenCalls();
+                RefreshOpenCallsObserver();
             }
         }
 
@@ -79,27 +82,35 @@ namespace PL.Call
         {
             InitializeComponent();
             CurrentVolunteer = volunteer;
-            CurrentAddress = volunteer.CurrentAddress;
+            CurrentAddress = volunteer.CurrentAddress!;
             DataContext = this;
-            LoadOpenCalls();
+
+            RefreshOpenCallsObserver(); // initial load
         }
 
-        private void LoadOpenCalls()
+        // === Observer function ===
+        private void RefreshOpenCallsObserver()
         {
-            try
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
             {
-                var calls = bl.Call.GetOpenCallsForVolunteer(
-                    CurrentVolunteer.Id,
-                    FilterStatus == BO.TypeOfReading.None ? null : FilterStatus,
-                    SortField);
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    try
+                    {
+                        var calls = bl.Call.GetOpenCallsForVolunteer(
+                            CurrentVolunteer.Id,
+                            FilterStatus == TypeOfReading.None ? null : FilterStatus,
+                            SortField);
 
-                OpenCalls.Clear();
-                foreach (var call in calls)
-                    OpenCalls.Add(call);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"שגיאה בטעינת קריאות: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                        OpenCalls.Clear();
+                        foreach (var call in calls)
+                            OpenCalls.Add(call);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error loading open calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
             }
         }
 
@@ -113,19 +124,18 @@ namespace PL.Call
                 bl.Call.SelectCallForTreatment(CurrentVolunteer.Id, SelectedCall.Id);
                 OpenCalls.Remove(SelectedCall);
                 SelectedCall = null;
-                MessageBox.Show("הקריאה נבחרה לטיפול!", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("The call was successfully selected for treatment.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בבחירת קריאה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error selecting call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-
         private void FilterOrSort_Changed(object sender, SelectionChangedEventArgs e)
         {
-            LoadOpenCalls();
+            RefreshOpenCallsObserver();
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -140,12 +150,12 @@ namespace PL.Call
             {
                 CurrentVolunteer.CurrentAddress = CurrentAddress;
                 bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer.Id, CurrentVolunteer);
-                MessageBox.Show("הכתובת עודכנה בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
-                LoadOpenCalls(); // לרענן מרחקים
+                MessageBox.Show("Address updated successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                RefreshOpenCallsObserver(); // refresh distances
             }
             catch (Exception ex)
             {
-                MessageBox.Show("שגיאה בעדכון כתובת: " + ex.Message, "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error updating address: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
