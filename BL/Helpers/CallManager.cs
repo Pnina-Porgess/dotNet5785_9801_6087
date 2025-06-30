@@ -30,12 +30,12 @@ internal static class CallManager
     /// <param name="call">The call object to check.</param>
     /// <returns>A tuple containing latitude and longitude of the call address.</returns>
     /// <exception cref="BO.BlInvalidInputException">Thrown if the max end time is earlier than the opening time.</exception>
-    internal static (double Latitude, double Longitude) logicalChecking(BO.Call call)
+    internal static async Task<(double Latitude, double Longitude)?> LogicalCheckingAsync(BO.Call call)
     {
         if (call.MaxEndTime < call.OpeningTime)
             throw new BO.BlInvalidInputException("Max end time cannot be earlier than opening time.");
 
-        return Tools.GetCoordinatesFromAddress(call.Address);
+        return await Tools.GetCoordinatesFromAddressAsync(call.Address);
     }
 
     /// <summary>
@@ -216,6 +216,8 @@ internal static class CallManager
                            EndType = (BO.TypeOfEndTime)assignment.TypeOfEndTime
                        }));
     }
+
+    private static int s_periodicCounter = 0;
 
     /// <summary>
     /// Periodically updates the calls based on the current clock and checks for expired assignments.

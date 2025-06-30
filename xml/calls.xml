@@ -82,7 +82,7 @@
   </Call>
   <Call>
     <Id>1009</Id>
-    <TypeOfReading>DeadBattery</TypeOfReading>
+    <TypeOfReading>EngineFailure</TypeOfReading>
     <Description />
     <Adress>El-Rama, Nazareth</Adress>
     <Longitude>34.7915</Longitude>
@@ -92,7 +92,7 @@
   </Call>
   <Call>
     <Id>1010</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
+    <TypeOfReading>FlatTire</TypeOfReading>
     <Description />
     <Adress>Kinneret, Tiberias</Adress>
     <Longitude>35.3035</Longitude>
@@ -242,7 +242,7 @@
   </Call>
   <Call>
     <Id>1030</Id>
-    <TypeOfReading>EngineFailure</TypeOfReading>
+    <TypeOfReading>DeadBattery</TypeOfReading>
     <Description />
     <Adress>Jabotinsky, Ramat Gan</Adress>
     <Longitude>34.7443</Longitude>
