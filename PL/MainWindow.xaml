@@ -488,19 +488,21 @@
                             <StackPanel>
                                 <!-- All 5 time buttons in one row -->
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="+Min" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneMinute_Click"/>
-                                    <Button Content="+Hour" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneHour_Click"/>
-                                    <Button Content="+Day" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneDay_Click"/>
-                                    <Button Content="+Month" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneMonth_Click"/>
-                                    <Button Content="+Year" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneYear_Click"/>
+                                    <Button Content="+Min" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneMinute_Click" IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <Button Content="+Hour" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneHour_Click" IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <Button Content="+Day" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneDay_Click" IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <Button Content="+Month" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneMonth_Click" IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <Button Content="+Year" Style="{StaticResource SmallModernButtonStyle}" Click="btnAddOneYear_Click" IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBoolConverter}}"/>
                                 </StackPanel>
                                 <!-- All 5 time buttons in one row -->
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
-                                    <TextBox Text="{Binding Interval, UpdateSourceTrigger=PropertyChanged}" 
-                 Style="{StaticResource ModernTextBox}" 
-                 Width="70" Height="30"
+                                    <TextBox 
+                                        Foreground="Black" 
+                                       Background="White"
+                                        Text="{Binding Interval, UpdateSourceTrigger=PropertyChanged}" 
+                                   Width="70" Height="30"
                  IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBoolConverter}}"
-                 VerticalAlignment="Center"/>
+                 VerticalAlignment="Center" TextChanged="TextBox_TextChanged"/>
                                     <Button Content="{Binding IsSimulatorRunning, Converter={StaticResource SimulatorButtonTextConverter}}"
                 Style="{StaticResource SmallModernButtonStyle}"
                 Click="ToggleSimulator_Click" Height="25" Width="100"/>
@@ -597,11 +599,13 @@
                 <Button Content="Initialize Database" 
                         Style="{StaticResource ModernButtonStyle}" 
                         Background="{StaticResource BlueGradient}" 
+                        IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBoolConverter}}"
                         Click="InitializeDatabase_Click"/>
                 <Button Content="Reset Database" 
                         Style="{StaticResource ModernButtonStyle}" 
-                        Background="{StaticResource PinkGradient}" 
-                        Click="ResetDatabase_Click"/>
+                        Background="{StaticResource PinkGradient}"
+                        IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBoolConverter}}"
+                         Click="ResetDatabase_Click"/>
                 <Button Content="Manage Calls" 
                         Style="{StaticResource ModernButtonStyle}" 
                         Background="{StaticResource GreenGradient}" 

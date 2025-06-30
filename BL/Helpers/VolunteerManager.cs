@@ -256,7 +256,7 @@ internal static class VolunteerManager
 
         List<DO.Volunteer> activeVolunteers;
         lock (AdminManager.BlMutex)
-            activeVolunteers = DalApi.Factory.Get.Volunteer.ReadAll(v => v.IsActive).ToList();
+            activeVolunteers = s_dal.Volunteer.ReadAll(v => v.IsActive).ToList();
 
         foreach (var volunteer in activeVolunteers)
         {
@@ -264,34 +264,35 @@ internal static class VolunteerManager
 
             lock (AdminManager.BlMutex)
             {
-                currentAssignment = DalApi.Factory.Get.Assignment
+                currentAssignment = s_dal.Assignment
                     .ReadAll(a => a.VolunteerId == volunteer.Id && a.EndTime == null)
                     .FirstOrDefault();
             }
 
             if (currentAssignment == null)
             {
-                // ללא הקצאה - בחירת קריאה רנדומלית
                 List<BO.OpenCallInList> openCalls;
                 lock (AdminManager.BlMutex)
-                    openCalls = (List<BO.OpenCallInList>)new CallImplementation().GetOpenCallsForVolunteer(volunteer.Id);
+                    openCalls = new CallImplementation().GetOpenCallsForVolunteer(volunteer.Id).ToList();
 
-                if (!openCalls.Any() || Random.Shared.NextDouble() > 0.2) continue; // רק 20% סיכוי לבחור קריאה
-
-                var selectedCall = openCalls[Random.Shared.Next(openCalls.Count)];
-                try
+                if (!openCalls.Any() || Random.Shared.NextDouble() > 0.2) continue;
+                if (openCalls.Any())
                 {
-                    new CallImplementation().SelectCallForTreatment(volunteer.Id, selectedCall.Id);
-                    updatedVolunteerIds.Add(volunteer.Id);
-                    updatedCallIds.Add(selectedCall.Id);
-                }
-                catch { continue; } // במקרה של בעיה עם הקריאה
+                    var selectedCall = openCalls[Random.Shared.Next(openCalls.Count)];
+                    try
+                    {
+                        new CallImplementation().SelectCallForTreatment(volunteer.Id, selectedCall.Id);
+                        updatedVolunteerIds.Add(volunteer.Id);
+                        updatedCallIds.Add(selectedCall.Id);
+                    }
+                    catch { continue; }
+                }// במקרה של בעיה עם הקריאה
             }
             else
             {
                 DO.Call? call;
                 lock (AdminManager.BlMutex)
-                    call = DalApi.Factory.Get.Call.Read(currentAssignment.CallId);
+                    call = s_dal.Call.Read(currentAssignment.CallId);
 
                 if (call is null) continue;
 
@@ -311,7 +312,7 @@ internal static class VolunteerManager
                     }
                     catch { continue; }
                 }
-                else if (Random.Shared.NextDouble() < 0.1) // 10% סיכוי לביטול מוקדם
+                else if (Random.Shared.NextDouble() < 0.1)
                 {
                     try
                     {

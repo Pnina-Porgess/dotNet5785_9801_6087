@@ -68,6 +68,7 @@ internal static class CallManager
     {
         try
         {
+
             // Get the call from database
             DO.Call call;
             IEnumerable<DO.Assignment> assignments;
@@ -76,39 +77,27 @@ internal static class CallManager
                  call = _dal.Call.Read(callId)!;
                 if (call == null)
                     throw new ArgumentException($"Call with ID={callId} does not exist.");
-
-                // Get all assignments for this call
-                 assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
-                if (assignments == null)
-                    throw new ArgumentException($"Call with ID={callId} does not has assignment.");
-            }
-            // If there are no assignments at all
-            if (!assignments.Any())
-            {
-                // Check if call has expired
                 if (AdminManager.Now > call.MaxTimeToFinish)
                     return BO.CallStatus.Expired;
-                // Check if call is at risk (less than 30 minutes to expiration)
-                TimeSpan timeToExpiration = (DateTime)call.MaxTimeToFinish -AdminManager.Now;
+                assignments = _dal.Assignment.ReadAll(a => a.CallId == callId);
+            }
+            if (assignments == null)
+            {
+                TimeSpan timeToExpiration = (DateTime)call.MaxTimeToFinish! -AdminManager.Now;
                 if (timeToExpiration <= AdminManager.RiskRange)
                     return BO.CallStatus.OpenAtRisk;
 
                return BO.CallStatus.Open;
             }
 
-            // Get the latest active assignment (no EndTime)
             var activeAssignment = assignments.FirstOrDefault(a => a.EndTime == null&&a.TypeOfEndTime==null);
-            // If there's no active assignment but there are completed assignments
             if (activeAssignment == null)
             {
-                // Check if any assignment was completed successfully
                 var successfulAssignment = assignments.Any(a => a.TypeOfEndTime == DO.TypeOfEndTime.treated);
                 return successfulAssignment ? BO.CallStatus.Closed : BO.CallStatus.Open;
             }
-            // Check if call has expired
-            if (AdminManager.Now > call.MaxTimeToFinish)
-                return BO.CallStatus.Expired;
-            // There is an active assignment - check if it's at risk
+
+
             var remainingTime = (DateTime)call.MaxTimeToFinish - AdminManager.Now;
             if (remainingTime <= AdminManager.RiskRange)
                 return BO.CallStatus.InProgressAtRisk;
@@ -233,35 +222,54 @@ internal static class CallManager
     /// </summary>
     /// <param name="oldClock">The previous clock time.</param>
     /// <param name="newClock">The new clock time.</param>
-    public static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)
+    internal static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)
     {
-        try
+        //Thread.CurrentThread.Name = $"Periodic{++s_periodicCounter}"; //stage 7 (optional)
+        List<DO.Call> expiredCalls;
+        List<DO.Assignment> assignments;
+        List<DO.Assignment> assignmentsWithNull;
+        lock (AdminManager.BlMutex) //stage 7
+            expiredCalls = _dal.Call.ReadAll(c => c.MaxTimeToFinish <newClock).ToList();
+        expiredCalls.ForEach(call =>
         {
             lock (AdminManager.BlMutex)
-            {
-                _dal.Call.ReadAll(c => c.MaxTimeToFinish > AdminManager.Now).ToList().ForEach(call =>
-            {
-                List<DO.Assignment> allAssignmentsCall = _dal.Assignment.ReadAll(a => a.CallId == call.Id && a.EndTime == null).ToList();
-
-                if (!allAssignmentsCall.Any())
+            {//stage 7
+                assignments = _dal.Assignment.ReadAll(a => a.CallId == call.Id).ToList();
+                if (!assignments.Any())
                 {
-                    DO.Assignment newAssignment = new DO.Assignment(0, call.Id, 0, DO.TypeOfEndTime.CancellationHasExpired, AdminManager.Now);
-                    _dal.Assignment.Create(newAssignment);
+                    _dal.Assignment.Create(new DO.Assignment(
+                    Id:0,
+                    CallId: call.Id,
+                    VolunteerId: 0,
+                    TypeOfEndTime: (DO.TypeOfEndTime)BO.TypeOfEndTime.CancellationHasExpired,
+                    EntryTime: AdminManager.Now,
+                    EndTime: AdminManager.Now
+                ));
                 }
-                else
-                {
-                    DO.Assignment updatedAssignment = allAssignmentsCall.FirstOrDefault(a => a.EndTime == null);
-                    _dal.Assignment.Update(updatedAssignment with { EndTime = AdminManager.Now, TypeOfEndTime = DO.TypeOfEndTime.CancellationHasExpired });
-                }
-            });
             }
-        }
-        catch (BO.BlInvalidInputException e)
-        {
-            Console.WriteLine($"Error updating periodic calls: {e.Message}"); // Logging error
-        }
-    }
+            Observers.NotifyItemUpdated(call.Id);
 
+
+            lock (AdminManager.BlMutex) //stage 7
+                assignmentsWithNull =_dal.Assignment.ReadAll(a => a.CallId == call.Id && a.TypeOfEndTime is null).ToList();
+            if (assignmentsWithNull.Any())
+            {
+                lock (AdminManager.BlMutex) //stage 7
+                    foreach (var assignment in assignmentsWithNull)
+                    {
+                        _dal.Assignment.Update(assignment with
+                        {
+                            EndTime = AdminManager.Now,
+                            TypeOfEndTime = (DO.TypeOfEndTime)BO.TypeOfEndTime.CancellationHasExpired
+                        });
+                    }
+
+                Observers.NotifyItemUpdated(call.Id);
+            }
+
+        });
+
+    }
     /// <summary>
     /// Sends an email notification to all volunteers within the specified distance from a new call.
     /// </summary>

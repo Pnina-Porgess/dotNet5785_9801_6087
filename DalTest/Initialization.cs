@@ -154,8 +154,9 @@ public static class Initialization
         for (int i = 0; i <50 ; i++)
         {
             TypeOfReading typeOfReading= (TypeOfReading)s_rand.Next(0,Enum.GetValues(typeof(TypeOfReading)).Length);
-            DateTime TimeOfOpen = new DateTime(s_dal!.Config.Clock.Year ,1,1); 
-            DateTime MaxTimeToFinish = TimeOfOpen.AddDays(s_rand.Next((s_dal!.Config.Clock - TimeOfOpen).Days)+1);
+            DateTime now = s_dal!.Config.Clock; // התאריך הנוכחי לפי השעון המוגדר
+            DateTime TimeOfOpen = now.AddDays(-s_rand.Next(0, 30)).AddHours(-s_rand.Next(0, 24)); // נפתח ב-0 עד 30 ימים אחורה
+            DateTime MaxTimeToFinish = TimeOfOpen.AddDays(s_rand.Next(1, 31)).AddHours(s_rand.Next(0, 24));
             double Longitude = longitudes[i];
             double Latitude = latitudes[i];
             string? Adress= addresses[i];
@@ -170,27 +171,54 @@ public static class Initialization
     /// </summary>
     private static void createAssignments()
     {
-        List<Volunteer>? volunteersList = s_dal!.Volunteer.ReadAll().ToList(); 
-        List<Call>? callsList = s_dal!.Call.ReadAll().ToList(); 
+        List<Volunteer>? volunteersList = s_dal!.Volunteer.ReadAll().ToList();
+        List<Call>? callsList = s_dal!.Call.ReadAll().ToList();
 
-        for (int i = 0; i < 50; i++)
+        Dictionary<int, int> volunteerAssignmentCount = volunteersList.ToDictionary(v => v.Id, v => 0);
+        HashSet<int> volunteersWithActiveAssignment = new();
+
+        int callIndex = 0;
+
+        foreach (var volunteer in volunteersList)
         {
-            DateTime minTime = callsList[i].TimeOfOpen;
-            DateTime maxTime = (DateTime)callsList[i].MaxTimeToFinish!;
-            TimeSpan diff = maxTime - minTime - TimeSpan.FromHours(2);
-            DateTime randomTime = minTime.AddMinutes(s_rand.Next((int)diff.TotalMinutes));
-            TypeOfEndTime typeOfEndTime;
-            if(i<5)
+            int assignmentsForThisVolunteer = s_rand.Next(2, 5); // 2 to 4 assignments per volunteer
+            for (int j = 0; j < assignmentsForThisVolunteer && callIndex < callsList.Count; j++)
             {
-                typeOfEndTime = TypeOfEndTime.CancellationHasExpired;
+                Call call = callsList[callIndex++];
+                bool makeActive = j == 0 && !volunteersWithActiveAssignment.Contains(volunteer.Id); // one active per volunteer
+
+                if (makeActive)
+                {
+                    volunteersWithActiveAssignment.Add(volunteer.Id);
+                    s_dal.Assignment!.Create(new Assignment(
+                        0,
+                        call.Id,
+                        volunteer.Id,
+                        null, // TypeOfEndTime
+                        DateTime.Now,
+                        null // EndTime
+                    ));
+                }
+                else
+                {
+                    DateTime start = call.TimeOfOpen.AddMinutes(s_rand.Next(30, 120));
+                    DateTime end = start.AddHours(2);
+                    TypeOfEndTime type = (TypeOfEndTime)s_rand.Next(Enum.GetValues(typeof(TypeOfEndTime)).Length - 1);
+                    s_dal.Assignment!.Create(new Assignment(
+                        0,
+                        call.Id,
+                        volunteer.Id,
+                        type,
+                        start,
+                        end
+                    ));
+                }
+
+                volunteerAssignmentCount[volunteer.Id]++;
             }
-            else
-            {
-                typeOfEndTime = (TypeOfEndTime)s_rand.Next(Enum.GetValues(typeof(TypeOfEndTime)).Length - 1);
-            }
-            s_dal!.Assignment!.Create(new Assignment(0,callsList[s_rand.Next(callsList.Count-15)].Id, volunteersList[s_rand.Next(volunteersList.Count)].Id, typeOfEndTime, randomTime, randomTime.AddHours(2)));
         }
     }
+
 
 
     /// <summary>
