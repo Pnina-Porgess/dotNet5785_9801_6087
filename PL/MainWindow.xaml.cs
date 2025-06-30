@@ -3,6 +3,7 @@ using PL.Volunteer;
 using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace PL
 {
@@ -25,6 +26,9 @@ namespace PL
         }
 
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+        private volatile DispatcherOperation? _clockObserverOperation = null;
+        private volatile DispatcherOperation? _callStatisticsObserverOperation = null;
+
         public int id { get; set; } // Connected volunteer ID
 
         // Static fields for tracking open windows
@@ -95,6 +99,23 @@ namespace PL
         }
         public static readonly DependencyProperty InProgressAtRiskCallsCountProperty =
             DependencyProperty.Register("InProgressAtRiskCallsCount", typeof(int), typeof(MainWindow));
+        public static readonly DependencyProperty IntervalProperty =
+            DependencyProperty.Register("Interval", typeof(int), typeof(MainWindow), new PropertyMetadata(1));
+
+        public int Interval
+        {
+            get => (int)GetValue(IntervalProperty);
+            set => SetValue(IntervalProperty, value);
+        }
+
+        public static readonly DependencyProperty IsSimulatorRunningProperty =
+            DependencyProperty.Register("IsSimulatorRunning", typeof(bool), typeof(MainWindow));
+
+        public bool IsSimulatorRunning
+        {
+            get => (bool)GetValue(IsSimulatorRunningProperty);
+            set => SetValue(IsSimulatorRunningProperty, value);
+        }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -118,7 +139,13 @@ namespace PL
             s_bl.Admin.RemoveClockObserver(clockObserver);
             s_bl.Admin.RemoveConfigObserver(configObserver);
             s_bl.Call.RemoveObserver(callStatisticsObserver);
+
+            if (IsSimulatorRunning)
+            {
+                try { s_bl.Admin.StopSimulator(); } catch { /* לא לעצור אם נכשל */ }
+            }
         }
+
 
         private void LoadCallStatistics()
         {
@@ -140,7 +167,14 @@ namespace PL
             }
         }
 
-        private void callStatisticsObserver() => LoadCallStatistics();
+        private void callStatisticsObserver()
+        {
+            if (_callStatisticsObserverOperation is null || _callStatisticsObserverOperation.Status == DispatcherOperationStatus.Completed)
+                _callStatisticsObserverOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    LoadCallStatistics();
+                });
+        }
 
         // Call Statistics Button Handlers
         private void OpenCalls_Click(object sender, RoutedEventArgs e) => OpenCallListWithFilter(BO.CallStatus.Open);
@@ -253,8 +287,15 @@ namespace PL
             }
         }
 
-        private void clockObserver() =>
-            CurrentTime = s_bl.Admin.GetClock();
+        private void clockObserver()
+        {
+            if (_clockObserverOperation is null || _clockObserverOperation.Status == DispatcherOperationStatus.Completed)
+                _clockObserverOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    CurrentTime = s_bl.Admin.GetClock();
+                });
+        }
+
 
         private void configObserver() =>
             RiskRange = s_bl.Admin.GetRiskRange();
@@ -354,5 +395,26 @@ namespace PL
                 Mouse.OverrideCursor = null;
             }
         }
+        private async void ToggleSimulator_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!IsSimulatorRunning)
+                {
+                    s_bl.Admin.StartSimulator(Interval);
+                    IsSimulatorRunning = true;
+                }
+                else
+                {
+                    await Task.Run(() => s_bl.Admin.StopSimulator()); // אם זה חסום אתה יכול לשים סינכרוני
+                    IsSimulatorRunning = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error controlling simulator: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
     }
 }

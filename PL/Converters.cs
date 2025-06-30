@@ -86,3 +86,26 @@ public class CanDeleteCallConverter : IValueConverter
         => throw new NotImplementedException();
 }
 
+public class BoolToTextConverter : IValueConverter
+{
+    public string TrueText { get; set; } = "Stop";
+    public string FalseText { get; set; } = "Start";
+
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        => (value is bool b && b) ? TrueText : FalseText;
+
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        => Binding.DoNothing;
+}
+
+public class InverseBoolConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        => !(value is bool b && b);
+
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        => Binding.DoNothing;
+}
+
+
+

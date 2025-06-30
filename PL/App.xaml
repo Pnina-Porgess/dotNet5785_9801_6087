@@ -15,7 +15,10 @@
         <vol:NullToVisibilityConverter x:Key="NotNullToVisible" Invert="True"/>
         <vol:NullToVisibilityConverter x:Key="NullToVisible" />
         <vol:UpdateModeToBoolConverter x:Key="UpdateModeToBoolConverter"/>
-
+        <vol:BoolToTextConverter x:Key="SimulatorButtonTextConverter"
+                               TrueText="עצור סימולטור" 
+                               FalseText="הפעל סימולטור" />
+        <vol:InverseBoolConverter x:Key="InverseBoolConverter" />
 
     </Application.Resources>
 </Application>

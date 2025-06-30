@@ -1,8 +1,10 @@
 ﻿using BlApi;
 using PL;
+using System;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace PL.Volunteer
 {
@@ -21,21 +23,40 @@ namespace PL.Volunteer
             }
         }
 
+        // DispatcherOperation לפי אפשרות 2
+        private volatile DispatcherOperation? _observerOperation = null;
+
         public VolunteerSelfWindow(int volunteerId)
         {
             InitializeComponent();
             Volunteer = _bl.Volunteer.GetVolunteerDetails(volunteerId);
             DataContext = this;
 
-            // ✅ הוספת Observer לעדכון אוטומטי
-            _bl.Volunteer.AddObserver(volunteerId, RefreshVolunteer);
+            // הרשמה ל־Observer
+            _bl.Volunteer.AddObserver(volunteerId, RefreshVolunteerObserver);
         }
 
-        // ✅ הסרת Observer בסגירת החלון למניעת דליפות זיכרון
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-            _bl.Volunteer.RemoveObserver(Volunteer.Id, RefreshVolunteer);
+            _bl.Volunteer.RemoveObserver(Volunteer.Id, RefreshVolunteerObserver);
+        }
+
+        private void RefreshVolunteer()
+        {
+            Volunteer = _bl.Volunteer.GetVolunteerDetails(Volunteer.Id);
+        }
+
+        // ✅ פונקציית Observer נפרדת עם DispatcherOperation
+        private void RefreshVolunteerObserver()
+        {
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            {
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    RefreshVolunteer();
+                });
+            }
         }
 
         private void Update_Click(object sender, RoutedEventArgs e)
@@ -54,14 +75,13 @@ namespace PL.Volunteer
                 if (string.IsNullOrWhiteSpace(Volunteer.Email))
                     throw new Exception("Please enter email address.");
 
-
                 if (Volunteer.MaxDistance <= 0)
                     throw new Exception("Please enter a valid maximum distance (must be a positive number).");
 
-                if (!System.Text.RegularExpressions.Regex.IsMatch(Volunteer.Phone, @"^0\d{9}$"))
+                if (!Regex.IsMatch(Volunteer.Phone, @"^0\d{9}$"))
                     throw new Exception("Invalid phone number. It must be 10 digits, e.g. 0501234567.");
 
-                if (!System.Text.RegularExpressions.Regex.IsMatch(Volunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                if (!Regex.IsMatch(Volunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
                     throw new Exception("Invalid email address.");
 
                 if (!string.IsNullOrWhiteSpace(Volunteer.Password))
@@ -76,7 +96,7 @@ namespace PL.Volunteer
                     }
                 }
 
-                _bl.Volunteer.UpdateVolunteerDetails(Volunteer.Id,Volunteer);
+                _bl.Volunteer.UpdateVolunteerDetails(Volunteer.Id, Volunteer);
                 MessageBox.Show("הפרטים עודכנו בהצלחה!");
             }
             catch (Exception ex)
@@ -85,18 +105,20 @@ namespace PL.Volunteer
             }
         }
 
-
         private void btnHistory_Click(object sender, RoutedEventArgs e)
         {
             var historyWindow = new VolunteerHistoryWindow(Volunteer.Id);
-            historyWindow.ShowDialog();
+            historyWindow.Show();
         }
 
         private void btnOpenCalls_Click(object sender, RoutedEventArgs e)
         {
             var openCalls = new PL.Call.OpenCallsWindow(Volunteer);
-            openCalls.ShowDialog();
-            RefreshVolunteer(); // ריענון לאחר בחירת קריאה
+
+            // הוספת האזנה לסגירת החלון
+            openCalls.Closed += (_, _) => RefreshVolunteer();
+
+            openCalls.Show(); // לא חוסם את החלון הראשי
         }
 
         private void FinishCall_Click(object sender, RoutedEventArgs e)
@@ -125,11 +147,6 @@ namespace PL.Volunteer
             {
                 MessageBox.Show("שגיאה: " + ex.Message);
             }
-        }
-
-        private void RefreshVolunteer()
-        {
-            Volunteer = _bl.Volunteer.GetVolunteerDetails(Volunteer.Id);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

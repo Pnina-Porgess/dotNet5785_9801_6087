@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace PL.Call
 {
@@ -18,18 +19,7 @@ namespace PL.Call
         public ICommand DeleteCallCommand { get; }
         public ICommand UnassignCallCommand { get; }
 
-        private readonly Action _clockObserver;
-
-        public CallListWindow(int volunteerId)
-        {
-            VolunteerId = volunteerId;
-            InitializeComponent();
-
-            DeleteCallCommand = new RelayCommand<BO.CallInList>(DeleteCall);
-            UnassignCallCommand = new RelayCommand<BO.CallInList>(UnassignCall);
-
-            _clockObserver = () => Dispatcher.Invoke(queryCallList);
-        }
+        private volatile DispatcherOperation? _observerOperation = null;
 
         public IEnumerable<BO.CallInList> CallList
         {
@@ -55,6 +45,15 @@ namespace PL.Call
         public static readonly DependencyProperty SelectedStatusProperty =
             DependencyProperty.Register("SelectedStatus", typeof(BO.CallStatus?), typeof(CallListWindow), new PropertyMetadata(null, OnFilterChanged));
 
+        public CallListWindow(int volunteerId)
+        {
+            VolunteerId = volunteerId;
+            InitializeComponent();
+
+            DeleteCallCommand = new RelayCommand<BO.CallInList>(DeleteCall);
+            UnassignCallCommand = new RelayCommand<BO.CallInList>(UnassignCall);
+        }
+
         private static void OnFilterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is CallListWindow window)
@@ -75,19 +74,26 @@ namespace PL.Call
             CallList = list;
         }
 
-        private void callListObserver() => queryCallList();
+        private void RefreshCallListObserver()
+        {
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            {
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    queryCallList();
+                });
+            }
+        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            s_bl.Call.AddObserver(callListObserver);
-            s_bl.Admin.AddClockObserver(_clockObserver);
+            s_bl.Call.AddObserver(RefreshCallListObserver);
             queryCallList();
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            s_bl.Call.RemoveObserver(callListObserver);
-            s_bl.Admin.RemoveClockObserver(_clockObserver);
+            s_bl.Call.RemoveObserver(RefreshCallListObserver);
         }
 
         private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)

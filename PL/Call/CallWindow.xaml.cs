@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Threading;
 using BO;
 
 namespace PL.Call
@@ -7,6 +8,9 @@ namespace PL.Call
     public partial class CallWindow : Window
     {
         private readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
+        // DispatcherOperation לפי אפשרות 2
+        private volatile DispatcherOperation? _observerOperation = null;
 
         public CallWindow(int id = 0)
         {
@@ -19,7 +23,7 @@ namespace PL.Call
                 CurrentCall = new BO.Call
                 {
                     Status = BO.CallStatus.Open,
-                    OpeningTime = s_bl.Admin.GetClock() // זמן התחלה = עכשיו
+                    OpeningTime = s_bl.Admin.GetClock()
                 };
             }
             else
@@ -27,7 +31,7 @@ namespace PL.Call
                 try
                 {
                     CurrentCall = s_bl.Call.GetCallDetails(id);
-                    s_bl.Call.AddObserver(id, CallObserver);
+                    s_bl.Call.AddObserver(id, RefreshCallObserver);
                 }
                 catch (Exception ex)
                 {
@@ -39,9 +43,11 @@ namespace PL.Call
             this.Closed += (s, e) =>
             {
                 if (CurrentCall != null && CurrentCall.Id != 0)
-                    s_bl.Call.RemoveObserver(CurrentCall.Id, CallObserver);
+                    s_bl.Call.RemoveObserver(CurrentCall.Id, RefreshCallObserver);
             };
         }
+
+        // === Properties ===
 
         public BO.Call? CurrentCall
         {
@@ -61,14 +67,22 @@ namespace PL.Call
         public static readonly DependencyProperty ButtonTextProperty =
             DependencyProperty.Register("ButtonText", typeof(string), typeof(CallWindow), new PropertyMetadata("Update"));
 
-        private void CallObserver()
+        // === Observer עם DispatcherOperation ===
+        private void RefreshCallObserver()
         {
-            if (CurrentCall == null) return;
-            int id = CurrentCall.Id;
-            CurrentCall = null;
-            CurrentCall = s_bl.Call.GetCallDetails(id);
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            {
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    if (CurrentCall == null) return;
+                    int id = CurrentCall.Id;
+                    CurrentCall = null;
+                    CurrentCall = s_bl.Call.GetCallDetails(id);
+                });
+            }
         }
 
+        // === Add/Update ===
         private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
