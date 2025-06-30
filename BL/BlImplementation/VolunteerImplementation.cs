@@ -1,5 +1,7 @@
-﻿namespace BlApi;
+﻿using BlApi;
 using Helpers;
+
+namespace BlImplementation;
 
 /// <summary>
 /// Implementation for managing volunteers in the business layer.
@@ -13,24 +15,73 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
             AdminManager.ThrowOnSimulatorIsRunning();
+            VolunteerManager.ValidateInputFormat(volunteer);
+
+            // Step 1: Set dummy coordinates (null or default)
+            volunteer.Latitude = null;
+            volunteer.Longitude = null;
+
+            // Step 2: Encrypt password and create DO object
+            volunteer.Password = VolunteerManager.EncryptPassword(volunteer.Password!);
+            DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteer);
+
+            // Step 3: Check existence and create
             lock (AdminManager.BlMutex)
             {
-                var existingVolunteer = _dal.Volunteer.Read(v => v.Id == volunteer.Id);
-                if (existingVolunteer != null)
+                var existing = _dal.Volunteer.Read(v => v.Id == volunteer.Id);
+                if (existing != null)
                     throw new BO.BlAlreadyExistsException($"Volunteer with ID={volunteer.Id} already exists.");
 
-                VolunteerManager.ValidateInputFormat(volunteer);
-                (volunteer.Latitude, volunteer.Longitude) = Tools.GetCoordinatesFromAddress(volunteer.CurrentAddress!);
-                volunteer.Password = VolunteerManager.EncryptPassword(volunteer.Password!);
-                DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteer);
-                VolunteerManager.ValidatePassword(volunteer);
                 _dal.Volunteer.Create(doVolunteer);
             }
+
             VolunteerManager.Observers.NotifyListUpdated();
+
+            // Step 4: Async coordinate update
+            _ = UpdateCoordinatesForVolunteerAsync(volunteer.Id, volunteer.CurrentAddress!);
         }
         catch (Exception ex)
         {
             throw new BO.BlDatabaseException("An unexpected error occurred while adding the volunteer.", ex);
+        }
+    }
+
+    private static async Task UpdateCoordinatesForVolunteerAsync(int volunteerId, string address)
+    {
+        try
+        {
+            var coordinates = await Tools.GetCoordinatesFromAddressAsync(address);
+            if (coordinates == null)
+            {
+                // טיפול במקרה של null, למשל:
+                throw new Exception("Coordinates not found.");
+            }
+
+            var Latitude = coordinates.Value.Latitude;
+            var Longitude = coordinates.Value.Longitude;
+
+
+            lock (AdminManager.BlMutex)
+            {
+                var volunteer = DalApi.Factory.Get.Volunteer.Read(volunteerId);
+                if (volunteer is null)
+                    return;
+
+                var updated = volunteer with
+                {
+                    Latitude = Latitude,
+                    Longitude = Longitude
+                };
+
+                DalApi.Factory.Get.Volunteer.Update(updated);
+            }
+
+            VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
+            VolunteerManager.Observers.NotifyListUpdated();
+        }
+        catch
+        {
+            // Optional: log or ignore address error
         }
     }
 
@@ -63,15 +114,15 @@ internal class VolunteerImplementation : IVolunteer
             DO.Volunteer volunteer;
             lock (AdminManager.BlMutex)
             {
-                 volunteer = _dal.Volunteer.ReadAll().FirstOrDefault(v => v.Id == id)
+                volunteer = _dal.Volunteer.ReadAll().FirstOrDefault(v => v.Id == id)
                     ?? throw new BO.BlNotFoundException("Username or password is not correct.");
             }
-            var pass = VolunteerManager.EncryptPassword(password);
-                if (pass != volunteer.Password)
-                    throw new BO.BlNotFoundException("Username or password is not correct.");
 
-                return (BO.Role)volunteer.Role;
-          
+            var encrypted = VolunteerManager.EncryptPassword(password);
+            if (encrypted != volunteer.Password)
+                throw new BO.BlNotFoundException("Username or password is not correct.");
+
+            return (BO.Role)volunteer.Role;
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -87,6 +138,7 @@ internal class VolunteerImplementation : IVolunteer
             {
                 var volunteerDO = _dal.Volunteer.Read(volunteerId)
                     ?? throw new BO.BlNotFoundException($"Volunteer with ID={volunteerId} does not exist.");
+
                 var currentAssignment = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a?.TypeOfEndTime == null).FirstOrDefault();
                 BO.CallInProgress? callInProgress = null;
 
@@ -135,14 +187,19 @@ internal class VolunteerImplementation : IVolunteer
         }
     }
 
-    public void UpdateVolunteerDetails(int requesterId, BO.Volunteer volunteerToUpdate)
+    public async Task UpdateVolunteerDetails(int requesterId, BO.Volunteer volunteerToUpdate)
     {
         try
         {
             AdminManager.ThrowOnSimulatorIsRunning();
             VolunteerManager.ValidatePermissions(requesterId, volunteerToUpdate);
             VolunteerManager.ValidateInputFormat(volunteerToUpdate);
-            (volunteerToUpdate.Latitude, volunteerToUpdate.Longitude) = VolunteerManager.LogicalChecking(volunteerToUpdate);
+
+            var coords = await VolunteerManager.LogicalCheckingAsync(volunteerToUpdate);
+            if (coords is null)
+                throw new BO.BlInvalidInputException("Could not determine coordinates for the volunteer's address.");
+
+            (volunteerToUpdate.Latitude, volunteerToUpdate.Longitude) = coords.Value;
 
             lock (AdminManager.BlMutex)
             {
@@ -152,6 +209,7 @@ internal class VolunteerImplementation : IVolunteer
 
                 if (!VolunteerManager.CanUpdateFields(existingVolunteer!, volunteerRequester!))
                     throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
+
                 if (volunteerToUpdate.IsActive == false && volunteerToUpdate.CurrentCall != null)
                     throw new BO.BlInvalidInputException("Cannot set volunteer to inactive while they have an active call.");
 
@@ -168,6 +226,7 @@ internal class VolunteerImplementation : IVolunteer
                 DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(volunteerToUpdate);
                 _dal.Volunteer.Update(doVolunteer);
             }
+
             VolunteerManager.Observers.NotifyItemUpdated(volunteerToUpdate.Id);
             VolunteerManager.Observers.NotifyListUpdated();
         }
@@ -181,28 +240,29 @@ internal class VolunteerImplementation : IVolunteer
         }
     }
 
+
     public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortBy? sortBy = null, BO.TypeOfReading? filterField = null)
     {
         try
         {
-            IEnumerable<BO.VolunteerInList>  volunteerList;
+            IEnumerable<BO.VolunteerInList> volunteerList;
             lock (AdminManager.BlMutex)
             {
                 IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => !isActive.HasValue || v.IsActive == isActive.Value);
                 volunteerList = VolunteerManager.GetVolunteerList(volunteers);
                 volunteerList = volunteerList.Where(vol => !filterField.HasValue || vol.CurrentCallType == filterField);
             }
-                volunteerList = sortBy.HasValue ? sortBy.Value switch
-                {
-                    BO.VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName).ToList(),
-                    BO.VolunteerSortBy.TotalHandledCalls => volunteerList.OrderBy(v => v.TotalHandledCalls).ToList(),
-                    BO.VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderBy(v => v.TotalCancelledCalls).ToList(),
-                    BO.VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderBy(v => v.TotalExpiredCalls).ToList(),
-                    _ => volunteerList.OrderBy(v => v.Id).ToList()
-                } : volunteerList.OrderBy(v => v.Id).ToList();
 
-                return volunteerList;
-            
+            volunteerList = sortBy.HasValue ? sortBy.Value switch
+            {
+                BO.VolunteerSortBy.FullName => volunteerList.OrderBy(v => v.FullName),
+                BO.VolunteerSortBy.TotalHandledCalls => volunteerList.OrderBy(v => v.TotalHandledCalls),
+                BO.VolunteerSortBy.TotalCanceledCalls => volunteerList.OrderBy(v => v.TotalCancelledCalls),
+                BO.VolunteerSortBy.TotalExpiredCalls => volunteerList.OrderBy(v => v.TotalExpiredCalls),
+                _ => volunteerList.OrderBy(v => v.Id)
+            } : volunteerList.OrderBy(v => v.Id);
+
+            return volunteerList;
         }
         catch (DO.DalDoesNotExistException ex)
         {

@@ -30,12 +30,12 @@ internal static class CallManager
     /// <param name="call">The call object to check.</param>
     /// <returns>A tuple containing latitude and longitude of the call address.</returns>
     /// <exception cref="BO.BlInvalidInputException">Thrown if the max end time is earlier than the opening time.</exception>
-    internal static (double Latitude, double Longitude) logicalChecking(BO.Call call)
+    internal static async Task<(double Latitude, double Longitude)?> LogicalCheckingAsync(BO.Call call)
     {
         if (call.MaxEndTime < call.OpeningTime)
             throw new BO.BlInvalidInputException("Max end time cannot be earlier than opening time.");
 
-        return Tools.GetCoordinatesFromAddress(call.Address);
+        return await Tools.GetCoordinatesFromAddressAsync(call.Address);
     }
 
     /// <summary>
@@ -228,6 +228,8 @@ internal static class CallManager
                        }));
     }
 
+    private static int s_periodicCounter = 0;
+
     /// <summary>
     /// Periodically updates the calls based on the current clock and checks for expired assignments.
     /// </summary>
@@ -237,24 +239,59 @@ internal static class CallManager
     {
         try
         {
-            lock (AdminManager.BlMutex)
+            //Thread.CurrentThread.Name = $"Periodic{++s_periodicCounter}"; //stage 7 (optional)
+
+            bool callUpdated = false; //stage 5
+            List<int> updatedCallIds = new List<int>(); //stage 5
+            List<DO.Call> doCallList;
+
+            // ????? ??????? ??? ??????? ?????????? ?????? ?????? ????????
+            lock (AdminManager.BlMutex) //stage 7
+                doCallList = _dal.Call.ReadAll(c => c.MaxTimeToFinish <= AdminManager.Now).ToList(); //stage 4
+
+            foreach (var call in doCallList) //stage 4
             {
-                _dal.Call.ReadAll(c => c.MaxTimeToFinish > AdminManager.Now).ToList().ForEach(call =>
-            {
-                List<DO.Assignment> allAssignmentsCall = _dal.Assignment.ReadAll(a => a.CallId == call.Id && a.EndTime == null).ToList();
+                List<DO.Assignment> allAssignmentsCall;
+
+                // ????? ??? ??????? ?? ?????? ???????
+                lock (AdminManager.BlMutex) //stage 7
+                    allAssignmentsCall = _dal.Assignment.ReadAll(a => a.CallId == call.Id && a.EndTime == null).ToList();
 
                 if (!allAssignmentsCall.Any())
                 {
+                    // ????? ????? ???? ?????? ???? ??? ????? ?????
                     DO.Assignment newAssignment = new DO.Assignment(0, call.Id, 0, DO.TypeOfEndTime.CancellationHasExpired, AdminManager.Now);
-                    _dal.Assignment.Create(newAssignment);
+
+                    lock (AdminManager.BlMutex) //stage 7
+                        _dal.Assignment.Create(newAssignment);
+
+                    callUpdated = true; //stage 5
+                    updatedCallIds.Add(call.Id); //stage 5
                 }
                 else
                 {
+                    // ????? ?????? ?????? ????
                     DO.Assignment updatedAssignment = allAssignmentsCall.FirstOrDefault(a => a.EndTime == null);
-                    _dal.Assignment.Update(updatedAssignment with { EndTime = AdminManager.Now, TypeOfEndTime = DO.TypeOfEndTime.CancellationHasExpired });
+                    if (updatedAssignment != null)
+                    {
+                        lock (AdminManager.BlMutex) //stage 7
+                            _dal.Assignment.Update(updatedAssignment with { EndTime = AdminManager.Now, TypeOfEndTime = DO.TypeOfEndTime.CancellationHasExpired });
+
+                        callUpdated = true; //stage 5
+                        updatedCallIds.Add(call.Id); //stage 5
+                    }
                 }
-            });
             }
+
+            // ????? ?????? ???? ????? lock
+            foreach (int callId in updatedCallIds) //stage 5
+            {
+                Observers.NotifyItemUpdated(callId); //stage 5
+            }
+
+            // ?? ??? ???????, ??? ????? ?? ????? ?????? ??????
+            if (callUpdated) //stage 5
+                Observers.NotifyListUpdated(); //stage 5
         }
         catch (BO.BlInvalidInputException e)
         {

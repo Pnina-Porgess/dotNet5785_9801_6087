@@ -60,29 +60,38 @@ internal static class Tools
     /// <param name="address">The address to geocode.</param>
     /// <returns>A tuple containing the latitude and longitude of the address.</returns>
     /// <exception cref="Exception">Thrown when the address is not found or the API returns an error.</exception>
-    public static (double, double) GetCoordinatesFromAddress(string address)
+    public static async Task<(double Latitude, double Longitude)?> GetCoordinatesFromAddressAsync(string address)
     {
         string apiKey = "PK.83B935C225DF7E2F9B1ee90A6B46AD86";
         using var client = new HttpClient();
         string url = $"https://us1.locationiq.com/v1/search.php?key={apiKey}&q={Uri.EscapeDataString(address)}&format=json";
 
-        var response = client.GetAsync(url).GetAwaiter().GetResult();
-        if (!response.IsSuccessStatusCode)
-            throw new Exception("Invalid address or API error.");
+        try
+        {
+            var response = await client.GetAsync(url);
 
-        var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-        using var doc = JsonDocument.Parse(json);
+            if (!response.IsSuccessStatusCode)
+                return null; // אפשרות לשדרג: לזרוק שגיאה עם מידע מדויק
 
-        if (doc.RootElement.ValueKind != JsonValueKind.Array || doc.RootElement.GetArrayLength() == 0)
-            throw new Exception("Address not found.");
+            var json = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(json);
 
-        var root = doc.RootElement[0];
+            if (doc.RootElement.ValueKind != JsonValueKind.Array || doc.RootElement.GetArrayLength() == 0)
+                return null;
 
-        double latitude = double.Parse(root.GetProperty("lat").GetString());
-        double longitude = double.Parse(root.GetProperty("lon").GetString());
+            var root = doc.RootElement[0];
 
-        return (latitude, longitude);
+            double latitude = double.Parse(root.GetProperty("lat").GetString());
+            double longitude = double.Parse(root.GetProperty("lon").GetString());
+
+            return (latitude, longitude);
+        }
+        catch
+        {
+            return null; // אפשר להחזיר פרטים על השגיאה אם רוצים לנתח Tooltip/לוג
+        }
     }
+
 
     /// <summary>
     /// Sends an email using an SMTP server.

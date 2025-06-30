@@ -17,7 +17,10 @@
         /// <returns>The current date and time.</returns>
         public DateTime GetClock()
         {
-            return AdminManager.Now;
+            lock (AdminManager.BlMutex) //stage 7
+            {
+                return AdminManager.Now;
+            }
         }
 
         /// <summary>
@@ -28,26 +31,33 @@
         public void ForwardClock(BO.TimeUnit unit)
         {
             AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-            DateTime newTime = unit switch
+            lock (AdminManager.BlMutex) //stage 7
             {
-                BO.TimeUnit.Minute => AdminManager.Now.AddMinutes(1),
-                BO.TimeUnit.Hour => AdminManager.Now.AddHours(1),
-                BO.TimeUnit.Day => AdminManager.Now.AddDays(1),
-                BO.TimeUnit.Month => AdminManager.Now.AddMonths(1),
-                BO.TimeUnit.Year => AdminManager.Now.AddYears(1),
-                _ => throw new NotImplementedException("Invalid time unit")
-            };
+                DateTime newTime = unit switch
+                {
+                    BO.TimeUnit.Minute => AdminManager.Now.AddMinutes(1),
+                    BO.TimeUnit.Hour => AdminManager.Now.AddHours(1),
+                    BO.TimeUnit.Day => AdminManager.Now.AddDays(1),
+                    BO.TimeUnit.Month => AdminManager.Now.AddMonths(1),
+                    BO.TimeUnit.Year => AdminManager.Now.AddYears(1),
+                    _ => throw new NotImplementedException("Invalid time unit")
+                };
 
-            AdminManager.UpdateClock(newTime);
+                AdminManager.UpdateClock(newTime);
+            }
         }
 
         /// <summary>
         /// Retrieves the current risk range setting.
         /// </summary>
         /// <returns>The current risk range as a TimeSpan.</returns>
-
-        public TimeSpan GetRiskRange() => AdminManager.RiskRange;
-
+        public TimeSpan GetRiskRange()
+        {
+            lock (AdminManager.BlMutex) //stage 7
+            {
+                return AdminManager.RiskRange;
+            }
+        }
 
         /// <summary>
         /// Updates the risk range setting.
@@ -57,9 +67,11 @@
         public void SetRiskRange(TimeSpan RiskRange)
         {
             AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-            AdminManager.RiskRange = RiskRange;
+            lock (AdminManager.BlMutex) //stage 7
+            {
+                AdminManager.RiskRange = RiskRange;
+            }
         }
-
 
         /// <summary>
         /// Initializes the database with test data after resetting it.
@@ -68,9 +80,11 @@
         public void InitializeDB()
         {
             AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-            AdminManager.InitializeDB();
-            CallManager.Observers.NotifyListUpdated();
-
+            lock (AdminManager.BlMutex) //stage 7
+            {
+                AdminManager.InitializeDB();
+                CallManager.Observers.NotifyListUpdated();
+            }
         }
 
         /// <summary>
@@ -80,30 +94,39 @@
         public void ResetDB()
         {
             AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-            AdminManager.ResetDB();
-            CallManager.Observers.NotifyListUpdated();
+            lock (AdminManager.BlMutex) //stage 7
+            {
+                AdminManager.ResetDB();
+                CallManager.Observers.NotifyListUpdated();
+            }
         }
 
         #region Stage 5
         public void AddClockObserver(Action clockObserver) =>
-        AdminManager.ClockUpdatedObservers += clockObserver;
+            AdminManager.ClockUpdatedObservers += clockObserver;
         public void RemoveClockObserver(Action clockObserver) =>
-        AdminManager.ClockUpdatedObservers -= clockObserver;
+            AdminManager.ClockUpdatedObservers -= clockObserver;
         public void AddConfigObserver(Action configObserver) =>
-       AdminManager.ConfigUpdatedObservers += configObserver;
+            AdminManager.ConfigUpdatedObservers += configObserver;
         public void RemoveConfigObserver(Action configObserver) =>
-        AdminManager.ConfigUpdatedObservers -= configObserver;
+            AdminManager.ConfigUpdatedObservers -= configObserver;
         #endregion Stage 5
 
         public void StartSimulator(int interval)  //stage 7
         {
             AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-            AdminManager.Start(interval); //stage 7
+            lock (AdminManager.BlMutex) //stage 7
+            {
+                AdminManager.Start(interval); //stage 7
+            }
         }
 
         public void StopSimulator()
-    => AdminManager.Stop(); //stage 7
-
-
+        {
+            lock (AdminManager.BlMutex) //stage 7
+            {
+                AdminManager.Stop(); //stage 7
+            }
+        }
     }
 }
