@@ -5,7 +5,7 @@
         xmlns:bo="clr-namespace:BO;assembly=BL"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         Title="Volunteer Management - Yedidim Helper System" 
-        Height="750" Width="600"
+        Height="700" Width="550"
         Background="White"
         WindowStartupLocation="CenterScreen"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
@@ -69,9 +69,9 @@
 
         <!-- Modern input field style with ID specific behavior -->
         <Style x:Key="ModernTextBox" TargetType="TextBox">
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Padding" Value="12,8"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
             <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
@@ -79,14 +79,14 @@
             <Setter Property="CaretBrush" Value="{StaticResource TextBlueBrush}"/>
             <Setter Property="SelectionBrush" Value="{StaticResource LightBlueBrush}"/>
             <Setter Property="FontWeight" Value="Normal"/>
-            <Setter Property="Margin" Value="0,5,0,15"/>
+            <Setter Property="Margin" Value="0,3,0,8"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="8">
+                                CornerRadius="6">
                             <ScrollViewer x:Name="PART_ContentHost"/>
                         </Border>
                     </ControlTemplate>
@@ -109,21 +109,21 @@
 
         <!-- Modern ComboBox style -->
         <Style x:Key="ModernComboBox" TargetType="ComboBox">
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Padding" Value="12,8"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
             <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
             <Setter Property="Background" Value="White"/>
-            <Setter Property="Margin" Value="0,5,0,15"/>
+            <Setter Property="Margin" Value="0,3,0,8"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
                         <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="8">
+                                CornerRadius="6">
                             <Grid>
                                 <ToggleButton x:Name="ToggleButton"
                                               Background="Transparent"
@@ -136,7 +136,7 @@
                                                   Content="{TemplateBinding SelectionBoxItem}"
                                                   ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                                   ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                                  Margin="12,8"/>
+                                                  Margin="10,6"/>
                                 <Popup x:Name="Popup"
                                        Placement="Bottom"
                                        IsOpen="{TemplateBinding IsDropDownOpen}"
@@ -146,7 +146,7 @@
                                     <Border Background="White"
                                             BorderBrush="{StaticResource LightBlueBrush}"
                                             BorderThickness="1"
-                                            CornerRadius="8">
+                                            CornerRadius="6">
                                         <ScrollViewer>
                                             <StackPanel IsItemsHost="True"/>
                                         </ScrollViewer>
@@ -228,30 +228,30 @@
         <Style x:Key="ModernLabel" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Margin" Value="0,10,0,5"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,5,0,3"/>
         </Style>
 
         <!-- Modern CheckBox style -->
         <Style x:Key="ModernCheckBox" TargetType="CheckBox">
             <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Margin" Value="0,8,0,15"/>
+            <Setter Property="Margin" Value="0,6,0,8"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="CheckBox">
                         <StackPanel Orientation="Horizontal">
                             <Border x:Name="CheckBoxBorder"
-                                    Width="20" Height="20"
+                                    Width="18" Height="18"
                                     Background="White"
                                     BorderBrush="{StaticResource LightBlueBrush}"
                                     BorderThickness="2"
-                                    CornerRadius="4"
-                                    Margin="0,0,8,0">
+                                    CornerRadius="3"
+                                    Margin="0,0,6,0">
                                 <Path x:Name="CheckMark"
                                       Fill="{StaticResource LightBlueBrush}"
-                                      Data="M 0 5 L 3 8 L 8 3"
+                                      Data="M 0 4 L 2 6 L 6 2"
                                       Stroke="{StaticResource LightBlueBrush}"
                                       StrokeThickness="2"
                                       Visibility="Collapsed"/>
@@ -295,16 +295,18 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="25">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                      HorizontalScrollBarVisibility="Disabled" 
+                      Margin="20">
             <StackPanel>
                 <!-- Header with volunteer management icon -->
-                <Border Style="{StaticResource GlassContainer}" Padding="20,15" Margin="0,0,0,20">
+                <Border Style="{StaticResource GlassContainer}" Padding="15,10" Margin="0,0,0,15">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <!-- Management Icon -->
                         <Border Background="{StaticResource BlueGradient}" 
-                                Width="60" Height="60" 
-                                CornerRadius="15"
-                                Margin="0,0,15,0">
+                                Width="50" Height="50" 
+                                CornerRadius="12"
+                                Margin="0,0,12,0">
                             <Border.Effect>
                                 <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="8" Opacity="0.3"/>
                             </Border.Effect>
@@ -317,24 +319,22 @@
 
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="Volunteer Management"
-                                       FontSize="24"
+                                       FontSize="20"
                                        FontWeight="Bold"
                                        Foreground="{StaticResource TextBlueBrush}"/>
-                            <TextBlock Text="Add or update volunteer information"
-                                       FontSize="14"
-                                       Foreground="{StaticResource LightBlueBrush}"/>
+                            
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <!-- Volunteer Details Section -->
-                <Border Style="{StaticResource GlassContainer}" Padding="25" Margin="0,0,0,20">
+                <Border Style="{StaticResource GlassContainer}" Padding="20" Margin="0,0,0,15">
                     <StackPanel>
                         <TextBlock Text="👤 Volunteer Information" 
-                                   FontSize="18" 
+                                   FontSize="15" 
                                    FontWeight="Bold" 
                                    Foreground="{StaticResource TextBlueBrush}"
-                                   Margin="0,0,0,20"/>
+                                   Margin="0,0,0,12"/>
 
                         <!-- Personal details in a grid layout -->
                         <Grid>
@@ -418,7 +418,7 @@
 
                             <!-- Active Status -->
                             <StackPanel Grid.Row="4" Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Bottom">
-                                <CheckBox Content="✅ Is Active" 
+                                <CheckBox Content="Is Active" 
                                           IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           Style="{StaticResource ModernCheckBox}"/>
                             </StackPanel>
@@ -427,8 +427,8 @@
                 </Border>
 
                 <!-- Current Call Section - Only visible when there is a current call -->
-                <Border Padding="25" 
-                        Margin="0,0,0,20">
+                <Border Padding="20" 
+                        Margin="0,0,0,15">
                     <Border.Style>
                         <Style TargetType="Border" BasedOn="{StaticResource GlassContainer}">
                             <Setter Property="Visibility" Value="Visible"/>
@@ -440,122 +440,11 @@
                         </Style>
                     </Border.Style>
 
-                    <StackPanel>
-                        <TextBlock Text="🚨 Current Call Assignment" 
-                                   FontSize="18" 
-                                   FontWeight="Bold" 
-                                   Foreground="{StaticResource TextBlueBrush}"
-                                   HorizontalAlignment="Center"
-                                   Margin="0,0,0,20"/>
-
-                        <!-- Call details in cards -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <!-- Description -->
-                            <Border Grid.Row="0" Grid.ColumnSpan="2" 
-                                    Background="White" 
-                                    CornerRadius="10" 
-                                    Padding="15" 
-                                    Margin="0,0,0,10"
-                                    BorderBrush="{StaticResource LightBlueBrush}"
-                                    BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="📝 Description:" 
-                                               FontWeight="Bold" 
-                                               Foreground="{StaticResource TextBlueBrush}"
-                                               Margin="0,0,0,5"/>
-                                    <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Description}" 
-                                               TextWrapping="Wrap"
-                                               Foreground="{StaticResource TextBlueBrush}"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Address -->
-                            <Border Grid.Row="1" Grid.Column="0" 
-                                    Background="White" 
-                                    CornerRadius="10" 
-                                    Padding="15" 
-                                    Margin="0,0,5,10"
-                                    BorderBrush="{StaticResource LightBlueBrush}"
-                                    BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="📍 Address:" 
-                                               FontWeight="Bold" 
-                                               Foreground="{StaticResource TextBlueBrush}"
-                                               Margin="0,0,0,5"/>
-                                    <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Address}"
-                                               Foreground="{StaticResource TextBlueBrush}"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Distance -->
-                            <Border Grid.Row="1" Grid.Column="1" 
-                                    Background="White" 
-                                    CornerRadius="10" 
-                                    Padding="15" 
-                                    Margin="5,0,0,10"
-                                    BorderBrush="{StaticResource LightBlueBrush}"
-                                    BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="🚗 Distance:" 
-                                               FontWeight="Bold" 
-                                               Foreground="{StaticResource TextBlueBrush}"
-                                               Margin="0,0,0,5"/>
-                                    <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.DistanceFromVolunteer}"
-                                               Foreground="{StaticResource TextBlueBrush}"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Status -->
-                            <Border Grid.Row="2" Grid.Column="0" 
-                                    Background="White" 
-                                    CornerRadius="10" 
-                                    Padding="15" 
-                                    Margin="0,0,5,0"
-                                    BorderBrush="{StaticResource LightBlueBrush}"
-                                    BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="📊 Status:" 
-                                               FontWeight="Bold" 
-                                               Foreground="{StaticResource TextBlueBrush}"
-                                               Margin="0,0,0,5"/>
-                                    <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Status}"
-                                               Foreground="{StaticResource TextBlueBrush}"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Start Time -->
-                            <Border Grid.Row="2" Grid.Column="1" 
-                                    Background="White" 
-                                    CornerRadius="10" 
-                                    Padding="15" 
-                                    Margin="5,0,0,0"
-                                    BorderBrush="{StaticResource LightBlueBrush}"
-                                    BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="⏰ Start Time:" 
-                                               FontWeight="Bold" 
-                                               Foreground="{StaticResource TextBlueBrush}"
-                                               Margin="0,0,0,5"/>
-                                    <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.StartTime}"
-                                               Foreground="{StaticResource TextBlueBrush}"/>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-                    </StackPanel>
+                   
                 </Border>
 
                 <!-- Action button section -->
-                <Border Style="{StaticResource GlassContainer}" Padding="25">
+                <Border Style="{StaticResource GlassContainer}" Padding="20">
                     <StackPanel HorizontalAlignment="Center">
                         <Button Content="{Binding ButtonText}" 
                                 Click="btnAddUpdate_Click" 
