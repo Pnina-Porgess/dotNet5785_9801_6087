@@ -14,16 +14,20 @@ namespace BlImplementation
         {
             AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
             CallManager.ValidateInputFormat(newCall);
+            DO.Call doCall;
+
             lock (AdminManager.BlMutex)
             {
-                var (latitude, longitude) = CallManager.logicalChecking(newCall);
-                newCall.Latitude = latitude;
-                newCall.Longitude = longitude;
-                var call = CallManager.CreateDoCall(newCall);
-                _dal.Call.Create(call);
-                CallManager.SendEmailWhenCalOpened(newCall);
+                // לא מחושב קואורדינטות כאן
+                doCall = CallManager.CreateDoCall(newCall);
+                _dal.Call.Create(doCall);
+                CallManager.SendEmailWhenCalOpened(newCall); // שליחת אימייל נשארת
             }
+
             CallManager.Observers.NotifyListUpdated();  //stage 5 
+
+            // חישוב קואורדינטות אסינכרוני
+            _ = UpdateCallCoordinatesAsync(doCall);
         }
 
         public void UpdateCall(BO.Call call)
@@ -32,18 +36,21 @@ namespace BlImplementation
             {
                 AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
                 CallManager.ValidateInputFormat(call);
-                DO.Call updatedCall;
+
+                DO.Call doCall;
+
                 lock (AdminManager.BlMutex)
                 {
-                    var (latitude, longitude) = CallManager.logicalChecking(call);
-                    call.Latitude = latitude;
-                    call.Longitude = longitude;
-                     updatedCall = CallManager.CreateDoCall(call);
-                    _dal.Call.Update(updatedCall);
+                    // לא מחשבים קואורדינטות פה
+                    doCall = CallManager.CreateDoCall(call);
+                    _dal.Call.Update(doCall);
                 }
-                CallManager.Observers.NotifyItemUpdated(updatedCall.Id);  //stage 5
+
+                CallManager.Observers.NotifyItemUpdated(doCall.Id);  //stage 5
                 CallManager.Observers.NotifyListUpdated();  //stage 5
 
+                // חישוב קואורדינטות אסינכרוני
+                _ = UpdateCallCoordinatesAsync(doCall);
             }
             catch (DO.DalAlreadyExistsException ex)
             {
@@ -54,7 +61,24 @@ namespace BlImplementation
                 throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
+        private async Task UpdateCallCoordinatesAsync(DO.Call doCall)
+        {
+            if (!string.IsNullOrEmpty(doCall.Adress))
+            {
+                var coordinates = await Tools.GetCoordinatesFromAddressAsync(doCall.Adress);
+                if (coordinates is not null)
+                {
+                    var (lat, lon) = coordinates.Value;
 
+                    doCall = doCall with { Latitude = lat, Longitude = lon };
+                    lock (AdminManager.BlMutex)
+                        _dal.Call.Update(doCall);
+
+                    CallManager.Observers.NotifyListUpdated();
+                    CallManager.Observers.NotifyItemUpdated(doCall.Id);
+                }
+            }
+        }
         public void DeleteCall(int callId)
         {
             try

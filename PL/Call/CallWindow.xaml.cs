@@ -1,21 +1,23 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
 using BO;
 
 namespace PL.Call
 {
-    public partial class CallWindow : Window
+    public partial class CallWindow : Window, INotifyPropertyChanged
     {
         private readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-
-        // DispatcherOperation לפי אפשרות 2
         private volatile DispatcherOperation? _observerOperation = null;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public CallWindow(int id = 0)
         {
             InitializeComponent();
-
             SetCurrentValue(ButtonTextProperty, id == 0 ? "Add" : "Update");
 
             if (id == 0)
@@ -47,12 +49,15 @@ namespace PL.Call
             };
         }
 
-        // === Properties ===
-
         public BO.Call? CurrentCall
         {
             get => (BO.Call?)GetValue(CurrentCallProperty);
-            set => SetValue(CurrentCallProperty, value);
+            set
+            {
+                SetValue(CurrentCallProperty, value);
+                OnPropertyChanged(nameof(CanEditDetails));
+                OnPropertyChanged(nameof(CanEditMaxEndTime));
+            }
         }
 
         public static readonly DependencyProperty CurrentCallProperty =
@@ -67,7 +72,12 @@ namespace PL.Call
         public static readonly DependencyProperty ButtonTextProperty =
             DependencyProperty.Register("ButtonText", typeof(string), typeof(CallWindow), new PropertyMetadata("Update"));
 
-        // === Observer עם DispatcherOperation ===
+        public bool CanEditDetails =>
+            CurrentCall is { Status: BO.CallStatus.Open or BO.CallStatus.OpenAtRisk };
+
+        public bool CanEditMaxEndTime =>
+            CurrentCall is { Status: BO.CallStatus.Open or BO.CallStatus.OpenAtRisk or BO.CallStatus.InProgress or BO.CallStatus.InProgressAtRisk };
+
         private void RefreshCallObserver()
         {
             if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
@@ -82,22 +92,34 @@ namespace PL.Call
             }
         }
 
-        // === Add/Update ===
         private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (CurrentCall?.Type == null)
-                    throw new Exception("יש לבחור סוג קריאה.");
-
-                if (string.IsNullOrWhiteSpace(CurrentCall?.Address))
-                    throw new Exception("יש להזין כתובת.");
-
                 if (CurrentCall?.MaxEndTime == null)
                     throw new Exception("יש לבחור זמן מקסימלי לסיום.");
 
                 if (CurrentCall.MaxEndTime <= CurrentCall.OpeningTime)
                     throw new Exception("זמן הסיום חייב להיות לאחר זמן הפתיחה.");
+
+                // מניעת עדכון בפרטי קריאה סגורה או שפג תוקפה
+                if (CurrentCall.Status is BO.CallStatus.Closed or BO.CallStatus.Expired)
+                    throw new Exception("אין אפשרות לעדכן קריאה שנסגרה או שפג תוקפה.");
+
+                if (CurrentCall.Status is BO.CallStatus.InProgress or BO.CallStatus.InProgressAtRisk)
+                {
+                    s_bl.Call.UpdateCall(CurrentCall);
+                    MessageBox.Show("הזמן המקסימלי עודכן בהצלחה!");
+                    Close();
+                    return;
+                }
+
+                // עדכון מלא אם פתוחה
+                if (string.IsNullOrWhiteSpace(CurrentCall?.Address))
+                    throw new Exception("יש להזין כתובת.");
+
+                if (CurrentCall.Type == null)
+                    throw new Exception("יש לבחור סוג קריאה.");
 
                 if (ButtonText == "Add")
                 {
