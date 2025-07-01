@@ -83,7 +83,6 @@ namespace PL.Call
             InitializeComponent();
             CurrentVolunteer = volunteer;
             CurrentAddress = volunteer.CurrentAddress!;
-            DataContext = this;
 
             RefreshOpenCallsObserver(); // initial load
         }

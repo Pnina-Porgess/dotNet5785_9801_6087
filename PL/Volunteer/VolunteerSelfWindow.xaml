@@ -352,12 +352,15 @@
                         Margin="0,0,0,20"
                         Visibility="{Binding Volunteer.CurrentCall, Converter={StaticResource NotNullToVisible}}">
                     <StackPanel>
-                        <TextBlock Text="🚨 Current Call"
-                                   FontSize="18"
-                                   FontWeight="Bold"
-                                   Foreground="{StaticResource TextBlueBrush}"
-                                   HorizontalAlignment="Center"
-                                   Margin="0,0,0,20"/>
+                        <TextBlock FontSize="18"
+           FontWeight="Bold"
+           Foreground="{StaticResource TextBlueBrush}"
+           HorizontalAlignment="Center"
+           Margin="0,0,0,20">
+    <Run Text="🚨 Current Call: " />
+    <Run Text="{Binding Volunteer.CurrentCall.CallId}" />
+                        </TextBlock>
+
 
                         <!-- Call details in cards -->
                         <Grid>

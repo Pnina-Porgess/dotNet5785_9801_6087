@@ -9,7 +9,7 @@ namespace PL
 {
     public partial class MainWindow : Window
     {
-        public MainWindow() : this(0) // מפעיל את הבנאי הקיים עם volunteerId=0
+        public MainWindow() : this(0) 
         {
           
 

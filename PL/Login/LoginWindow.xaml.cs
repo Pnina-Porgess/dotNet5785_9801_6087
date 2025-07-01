@@ -12,9 +12,7 @@ namespace PL.Login
 
         public LoginWindow()
         {
-            InitializeComponent();
-            DataContext = this;
-        }
+            InitializeComponent();        }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {

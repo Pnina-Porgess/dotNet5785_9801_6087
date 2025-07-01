@@ -97,46 +97,44 @@ namespace PL.Call
             try
             {
                 if (CurrentCall?.MaxEndTime == null)
-                    throw new Exception("יש לבחור זמן מקסימלי לסיום.");
+                    throw new Exception("Please select a max end time.");
 
                 if (CurrentCall.MaxEndTime <= CurrentCall.OpeningTime)
-                    throw new Exception("זמן הסיום חייב להיות לאחר זמן הפתיחה.");
+                    throw new Exception("Max end time must be after opening time.");
 
-                // מניעת עדכון בפרטי קריאה סגורה או שפג תוקפה
                 if (CurrentCall.Status is BO.CallStatus.Closed or BO.CallStatus.Expired)
-                    throw new Exception("אין אפשרות לעדכן קריאה שנסגרה או שפג תוקפה.");
+                    throw new Exception("Cannot update a call that is closed or expired.");
 
                 if (CurrentCall.Status is BO.CallStatus.InProgress or BO.CallStatus.InProgressAtRisk)
                 {
                     s_bl.Call.UpdateCall(CurrentCall);
-                    MessageBox.Show("הזמן המקסימלי עודכן בהצלחה!");
+                    MessageBox.Show("Max end time updated successfully!");
                     Close();
                     return;
                 }
 
-                // עדכון מלא אם פתוחה
                 if (string.IsNullOrWhiteSpace(CurrentCall?.Address))
-                    throw new Exception("יש להזין כתובת.");
+                    throw new Exception("Please enter an address.");
 
                 if (CurrentCall.Type == null)
-                    throw new Exception("יש לבחור סוג קריאה.");
+                    throw new Exception("Please select a call type.");
 
                 if (ButtonText == "Add")
                 {
                     s_bl.Call.AddCall(CurrentCall!);
-                    MessageBox.Show("הקריאה נוספה בהצלחה!");
+                    MessageBox.Show("Call added successfully!");
                 }
                 else
                 {
                     s_bl.Call.UpdateCall(CurrentCall!);
-                    MessageBox.Show("הקריאה עודכנה בהצלחה!");
+                    MessageBox.Show("Call updated successfully!");
                 }
 
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

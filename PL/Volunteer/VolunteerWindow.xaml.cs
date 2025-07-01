@@ -6,12 +6,18 @@ using System.Windows.Threading;
 
 namespace PL.Volunteer
 {
+    /// <summary>
+    /// Interaction logic for adding or updating a volunteer.
+    /// </summary>
     public partial class VolunteerWindow : Window
     {
         private readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-
         private volatile DispatcherOperation? _observerOperation = null;
 
+        /// <summary>
+        /// Initializes a new instance of the VolunteerWindow.
+        /// </summary>
+        /// <param name="id">Volunteer ID. 0 for adding new volunteer.</param>
         public VolunteerWindow(int id = 0)
         {
             ButtonText = id == 0 ? "Add" : "Update";
@@ -28,9 +34,15 @@ namespace PL.Volunteer
                     CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
                     s_bl.Volunteer.AddObserver(id, RefreshVolunteerObserver);
                 }
+                catch (BO.BlNotFoundException ex)
+                {
+                    MessageBox.Show("Volunteer not found: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    Close();
+                    return;
+                }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show("Unexpected error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     Close();
                     return;
                 }
@@ -61,6 +73,9 @@ namespace PL.Volunteer
         public static readonly DependencyProperty ButtonTextProperty =
             DependencyProperty.Register("ButtonText", typeof(string), typeof(VolunteerWindow), new PropertyMetadata("Add"));
 
+        /// <summary>
+        /// Refreshes the volunteer from the business layer using observer.
+        /// </summary>
         private void RefreshVolunteerObserver()
         {
             if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
@@ -74,6 +89,9 @@ namespace PL.Volunteer
             }
         }
 
+        /// <summary>
+        /// Validates the input and performs add or update operation.
+        /// </summary>
         private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -120,31 +138,43 @@ namespace PL.Volunteer
                 if (CurrentVolunteer.MaxDistance <= 0)
                     throw new Exception("Max distance must be a positive number.");
 
+                // ADD
                 if (ButtonText == "Add")
                 {
                     s_bl.Volunteer.AddVolunteer(CurrentVolunteer!);
-                    MessageBox.Show("Volunteer added successfully!");
+                    MessageBox.Show("Volunteer added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                else
+                else // UPDATE
                 {
-                    try
-                    {
-                        s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer!);
-                        MessageBox.Show("Volunteer updated successfully!");
-                    }
-                    catch (BO.BLTemporaryNotAvailableException)
-                    {
-                        MessageBox.Show("הסימולטור פועל כרגע. לא ניתן לעדכן פרטים בזמן סימולציה.");
-                    }
-
+                    s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer!);
+                    MessageBox.Show("Volunteer updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
                 Close();
             }
-       
+            catch (BO.BlInvalidInputException ex)
+            {
+                MessageBox.Show("Input error: " + ex.Message, "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch (BO.BlAlreadyExistsException ex)
+            {
+                MessageBox.Show("Volunteer already exists: " + ex.Message, "Duplicate", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (BO.BlNotFoundException ex)
+            {
+                MessageBox.Show("Volunteer not found: " + ex.Message, "Not Found", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch (BO.BLTemporaryNotAvailableException)
+            {
+                MessageBox.Show("Simulator is currently running. Cannot perform this operation.", "Simulator Active", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch (BO.BlDatabaseException ex)
+            {
+                MessageBox.Show("Database error: " + ex.Message, "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Unexpected error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
