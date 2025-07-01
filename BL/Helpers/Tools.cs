@@ -100,7 +100,7 @@ internal static class Tools
     /// <param name="subject">The subject of the email.</param>
     /// <param name="body">The body of the email.</param>
     /// <exception cref="Exception">Thrown when the email cannot be sent.</exception>
-    public static void SendEmail(string toEmail, string subject, string body)
+    public static async Task SendEmailAsync(string toEmail, string subject, string body)
     {
         var fromAddress = new MailAddress("projectydidim@gmail.com", "Yedidim");
         var toAddress = new MailAddress(toEmail);
@@ -118,7 +118,7 @@ internal static class Tools
             Body = body,
         })
         {
-            smtpClient.Send(message);
+            await smtpClient.SendMailAsync(message);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace BlImplementation
                 // לא מחושב קואורדינטות כאן
                 doCall = CallManager.CreateDoCall(newCall);
                 _dal.Call.Create(doCall);
-                CallManager.SendEmailWhenCalOpened(newCall); // שליחת אימייל נשארת
+                _ = CallManager.SendEmailToNearbyVolunteersAsync(newCall);
             }
 
             CallManager.Observers.NotifyListUpdated();  //stage 5 
@@ -331,9 +331,9 @@ namespace BlImplementation
                     {
                         volunteer = _dal.Volunteer.Read(assignment.VolunteerId);
                     }
-                    CallManager.SendEmailToVolunteer(volunteer!, assignment);
+                    _ = CallManager.SendEmailToVolunteerAsync(volunteer!, assignment);
                 }
-                    CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyListUpdated();
                 CallManager.Observers.NotifyItemUpdated(requesterId);
 
 
