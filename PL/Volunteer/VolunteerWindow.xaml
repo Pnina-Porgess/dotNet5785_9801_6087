@@ -3,99 +3,567 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:PL.Volunteer"
         xmlns:bo="clr-namespace:BO;assembly=BL"
-        Title="Volunteer" Height="650" Width="450"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
-        WindowStartupLocation="CenterScreen">
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        Title="Volunteer Management - Yedidim Helper System" 
+        Height="750" Width="600"
+        Background="White"
+        WindowStartupLocation="CenterScreen"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
     <Window.Resources>
-        <ObjectDataProvider x:Key="RoleValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+        <!-- Color scheme matching the project -->
+        <Color x:Key="TextBlueColor">#0D3F59</Color>
+        <Color x:Key="OrangeColor">#FDB53B</Color>
+        <Color x:Key="PinkColor">#CF5BA4</Color>
+        <Color x:Key="GreenColor">#B3D36B</Color>
+        <Color x:Key="LightBlueColor">#32A7DD</Color>
+        <Color x:Key="DarkBlueColor">#1B4B66</Color>
+
+        <SolidColorBrush x:Key="TextBlueBrush" Color="{StaticResource TextBlueColor}" />
+        <SolidColorBrush x:Key="OrangeBrush" Color="{StaticResource OrangeColor}" />
+        <SolidColorBrush x:Key="PinkBrush" Color="{StaticResource PinkColor}" />
+        <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource GreenColor}" />
+        <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlueColor}" />
+        <SolidColorBrush x:Key="DarkBlueBrush" Color="{StaticResource DarkBlueColor}" />
+
+        <!-- Gradient backgrounds -->
+        <LinearGradientBrush x:Key="OrangeGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FDB53B" Offset="0"/>
+            <GradientStop Color="#E6A332" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="BlueGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#32A7DD" Offset="0"/>
+            <GradientStop Color="#1B4B66" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="GreenGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#B3D36B" Offset="0"/>
+            <GradientStop Color="#8FB548" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="PinkGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#CF5BA4" Offset="0"/>
+            <GradientStop Color="#B14A8C" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Glass effect style for containers -->
+        <Style x:Key="GlassContainer" TargetType="Border">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.95">
+                        <GradientStop Color="#F8FAFB" Offset="0"/>
+                        <GradientStop Color="#EEF2F5" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="10" Opacity="0.15"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern input field style with ID specific behavior -->
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CaretBrush" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="SelectionBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Margin" Value="0,5,0,15"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Special style for ID TextBox that disables in update mode -->
+        <Style x:Key="ModernTextBoxForID" TargetType="TextBox" BasedOn="{StaticResource ModernTextBox}">
+            <Setter Property="IsEnabled" Value="True"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ButtonText}" Value="Update">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ButtonText}" Value="Update Volunteer">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Modern ComboBox style -->
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Margin" Value="0,5,0,15"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <Grid>
+                                <ToggleButton x:Name="ToggleButton"
+                                              Background="Transparent"
+                                              BorderThickness="0"
+                                              Focusable="False"
+                                              IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                              ClickMode="Press"/>
+                                <ContentPresenter x:Name="ContentSite"
+                                                  IsHitTestVisible="False"
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                  Margin="12,8"/>
+                                <Popup x:Name="Popup"
+                                       Placement="Bottom"
+                                       IsOpen="{TemplateBinding IsDropDownOpen}"
+                                       AllowsTransparency="True"
+                                       Focusable="False"
+                                       PopupAnimation="Slide">
+                                    <Border Background="White"
+                                            BorderBrush="{StaticResource LightBlueBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="8">
+                                        <ScrollViewer>
+                                            <StackPanel IsItemsHost="True"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern button style -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource OrangeGradient}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border x:Name="MainBorder" 
+                                    Background="{TemplateBinding Background}" 
+                                    CornerRadius="22"
+                                    RenderTransformOrigin="0.5,0.5">
+                                <Border.RenderTransform>
+                                    <ScaleTransform x:Name="ScaleTransform" ScaleX="1" ScaleY="1"/>
+                                </Border.RenderTransform>
+                                <Border.Effect>
+                                    <DropShadowEffect x:Name="ShadowEffect" 
+                                                    Color="Black" 
+                                                    Direction="270" 
+                                                    ShadowDepth="4" 
+                                                    BlurRadius="12" 
+                                                    Opacity="0.4"/>
+                                </Border.Effect>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" 
+                                                           Storyboard.TargetProperty="ScaleX" 
+                                                           To="1.05" Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" 
+                                                           Storyboard.TargetProperty="ScaleY" 
+                                                           To="1.05" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" 
+                                                           Storyboard.TargetProperty="ScaleX" 
+                                                           To="1.0" Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" 
+                                                           Storyboard.TargetProperty="ScaleY" 
+                                                           To="1.0" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern label style -->
+        <Style x:Key="ModernLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
+        </Style>
+
+        <!-- Modern CheckBox style -->
+        <Style x:Key="ModernCheckBox" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,8,0,15"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal">
+                            <Border x:Name="CheckBoxBorder"
+                                    Width="20" Height="20"
+                                    Background="White"
+                                    BorderBrush="{StaticResource LightBlueBrush}"
+                                    BorderThickness="2"
+                                    CornerRadius="4"
+                                    Margin="0,0,8,0">
+                                <Path x:Name="CheckMark"
+                                      Fill="{StaticResource LightBlueBrush}"
+                                      Data="M 0 5 L 3 8 L 8 3"
+                                      Stroke="{StaticResource LightBlueBrush}"
+                                      StrokeThickness="2"
+                                      Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="{StaticResource LightBlueBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Data providers for enums -->
+        <ObjectDataProvider x:Key="RoleValues" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="bo:Role"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 
-        <ObjectDataProvider x:Key="DistanceTypeValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+        <ObjectDataProvider x:Key="DistanceTypeValues" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="bo:DistanceType"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+
+        <!-- Converter for update mode - using DataTrigger instead -->
     </Window.Resources>
 
-    <ScrollViewer>
-        <Grid Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <!-- Volunteer Details -->
-                <RowDefinition Height="Auto"/>
-                <!-- Current Call -->
-                <RowDefinition Height="Auto"/>
-                <!-- Button -->
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+    <!-- Background with gradient -->
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F0F4F8" Offset="0"/>
+                <GradientStop Color="#E1E8ED" Offset="0.5"/>
+                <GradientStop Color="#D6E1EA" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
 
-            <!-- פרטי מתנדב -->
-            <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
-                <Label Grid.Row="0" Grid.Column="0" Content="Volunteer ID:"/>
-                <TextBox Grid.Row="0" Grid.Column="1"
-         Text="{Binding CurrentVolunteer.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-         IsEnabled="{Binding ButtonText, Converter={StaticResource UpdateModeToBoolConverter}}"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="25">
+            <StackPanel>
+                <!-- Header with volunteer management icon -->
+                <Border Style="{StaticResource GlassContainer}" Padding="20,15" Margin="0,0,0,20">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <!-- Management Icon -->
+                        <Border Background="{StaticResource BlueGradient}" 
+                                Width="60" Height="60" 
+                                CornerRadius="15"
+                                Margin="0,0,15,0">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="8" Opacity="0.3"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Ellipse Fill="{StaticResource OrangeBrush}" Width="20" Height="20" Margin="0,-10,0,10"/>
+                                <Rectangle Fill="{StaticResource OrangeBrush}" Width="30" Height="18" RadiusX="6" RadiusY="6" Margin="0,6,0,-6"/>
+                                <Rectangle Fill="{StaticResource GreenBrush}" Width="12" Height="8" RadiusX="2" RadiusY="2" Margin="-15,15,15,-15"/>
+                            </Grid>
+                        </Border>
 
-                <Label Content="Full Name:"/>
-                <TextBox Text="{Binding CurrentVolunteer.FullName, Mode=TwoWay}"/>
-
-                <Label Content="Phone:"/>
-                <TextBox Text="{Binding CurrentVolunteer.Phone, Mode=TwoWay}"/>
-
-                <Label Content="Email:"/>
-                <TextBox Text="{Binding CurrentVolunteer.Email, Mode=TwoWay}"/>
-
-                <Label Content="Password:"/>
-                <TextBox Text="{Binding CurrentVolunteer.Password, Mode=TwoWay}"/>
-
-                <Label Content="Address:"/>
-                <TextBox Text="{Binding CurrentVolunteer.CurrentAddress, Mode=TwoWay}"/>
-
-                <Label Content="Is Active:"/>
-                <CheckBox IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay}"/>
-
-                <Label Content="Role:"/>
-                <ComboBox ItemsSource="{Binding Source={StaticResource RoleValues}}"
-                          SelectedItem="{Binding CurrentVolunteer.Role, Mode=TwoWay}"/>
-
-                <Label Content="Distance Type:"/>
-                <ComboBox ItemsSource="{Binding Source={StaticResource DistanceTypeValues}}"
-                          SelectedItem="{Binding CurrentVolunteer.DistanceType, Mode=TwoWay}"/>
-
-                <Label Content="Max Distance:"/>
-                <TextBox Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay}"/>
-            </StackPanel>
-
-            <!-- תצוגת קריאה בטיפול -->
-            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,20,0,0"
-                        Visibility="{Binding CurrentVolunteer.CurrentCall, Converter={StaticResource NotNullToVisible}}">
-                <GroupBox Header="קריאה בטיפול">
-                    <StackPanel>
-                        <TextBlock Text="תיאור:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Description}" TextWrapping="Wrap" Margin="0,5"/>
-                        <TextBlock Text="כתובת:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Address}" />
-                        <TextBlock Text="מרחק:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.DistanceFromVolunteer}" />
-                        <TextBlock Text="סטטוס:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Status}" />
-                        <TextBlock Text="שעת התחלה:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.StartTime}" />
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Volunteer Management"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource TextBlueBrush}"/>
+                            <TextBlock Text="Add or update volunteer information"
+                                       FontSize="14"
+                                       Foreground="{StaticResource LightBlueBrush}"/>
+                        </StackPanel>
                     </StackPanel>
-                </GroupBox>
-            </StackPanel>
+                </Border>
 
-            <!-- כפתור הוספה / עדכון -->
-            <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="0,30,0,0"
-                    Content="{Binding ButtonText}" Click="btnAddUpdate_Click"
-                    HorizontalAlignment="Center" Width="150" Height="40"/>
-        </Grid>
-    </ScrollViewer>
+                <!-- Volunteer Details Section -->
+                <Border Style="{StaticResource GlassContainer}" Padding="25" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="👤 Volunteer Information" 
+                                   FontSize="18" 
+                                   FontWeight="Bold" 
+                                   Foreground="{StaticResource TextBlueBrush}"
+                                   Margin="0,0,0,20"/>
+
+                        <!-- Personal details in a grid layout -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Volunteer ID -->
+                            <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="🆔 Volunteer ID:" Style="{StaticResource ModernLabel}"/>
+                                <TextBox Text="{Binding CurrentVolunteer.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource ModernTextBoxForID}"/>
+                            </StackPanel>
+
+                            <!-- Full Name -->
+                            <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock Text="👤 Full Name:" Style="{StaticResource ModernLabel}"/>
+                                <TextBox Text="{Binding CurrentVolunteer.FullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+
+                            <!-- Phone -->
+                            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="📞 Phone:" Style="{StaticResource ModernLabel}"/>
+                                <TextBox Text="{Binding CurrentVolunteer.Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+
+                            <!-- Email -->
+                            <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock Text="📧 Email:" Style="{StaticResource ModernLabel}"/>
+                                <TextBox Text="{Binding CurrentVolunteer.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+
+                            <!-- Password -->
+                            <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="🔒 Password:" Style="{StaticResource ModernLabel}"/>
+                                <TextBox Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+
+                            <!-- Address -->
+                            <StackPanel Grid.Row="2" Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock Text="🏠 Address:" Style="{StaticResource ModernLabel}"/>
+                                <TextBox Text="{Binding CurrentVolunteer.CurrentAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+
+                            <!-- Role -->
+                            <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="👔 Role:" Style="{StaticResource ModernLabel}"/>
+                                <ComboBox ItemsSource="{Binding Source={StaticResource RoleValues}}"
+                                          SelectedItem="{Binding CurrentVolunteer.Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource ModernComboBox}"/>
+                            </StackPanel>
+
+                            <!-- Distance Type -->
+                            <StackPanel Grid.Row="3" Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock Text="📏 Distance Type:" Style="{StaticResource ModernLabel}"/>
+                                <ComboBox ItemsSource="{Binding Source={StaticResource DistanceTypeValues}}"
+                                          SelectedItem="{Binding CurrentVolunteer.DistanceType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource ModernComboBox}"/>
+                            </StackPanel>
+
+                            <!-- Max Distance -->
+                            <StackPanel Grid.Row="4" Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="📍 Max Distance:" Style="{StaticResource ModernLabel}"/>
+                                <TextBox Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+
+                            <!-- Active Status -->
+                            <StackPanel Grid.Row="4" Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Bottom">
+                                <CheckBox Content="✅ Is Active" 
+                                          IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource ModernCheckBox}"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Current Call Section - Only visible when there is a current call -->
+                <Border Padding="25" 
+                        Margin="0,0,0,20">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource GlassContainer}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentVolunteer.CurrentCall}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+
+                    <StackPanel>
+                        <TextBlock Text="🚨 Current Call Assignment" 
+                                   FontSize="18" 
+                                   FontWeight="Bold" 
+                                   Foreground="{StaticResource TextBlueBrush}"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,20"/>
+
+                        <!-- Call details in cards -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Description -->
+                            <Border Grid.Row="0" Grid.ColumnSpan="2" 
+                                    Background="White" 
+                                    CornerRadius="10" 
+                                    Padding="15" 
+                                    Margin="0,0,0,10"
+                                    BorderBrush="{StaticResource LightBlueBrush}"
+                                    BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="📝 Description:" 
+                                               FontWeight="Bold" 
+                                               Foreground="{StaticResource TextBlueBrush}"
+                                               Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Description}" 
+                                               TextWrapping="Wrap"
+                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Address -->
+                            <Border Grid.Row="1" Grid.Column="0" 
+                                    Background="White" 
+                                    CornerRadius="10" 
+                                    Padding="15" 
+                                    Margin="0,0,5,10"
+                                    BorderBrush="{StaticResource LightBlueBrush}"
+                                    BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="📍 Address:" 
+                                               FontWeight="Bold" 
+                                               Foreground="{StaticResource TextBlueBrush}"
+                                               Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Address}"
+                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Distance -->
+                            <Border Grid.Row="1" Grid.Column="1" 
+                                    Background="White" 
+                                    CornerRadius="10" 
+                                    Padding="15" 
+                                    Margin="5,0,0,10"
+                                    BorderBrush="{StaticResource LightBlueBrush}"
+                                    BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="🚗 Distance:" 
+                                               FontWeight="Bold" 
+                                               Foreground="{StaticResource TextBlueBrush}"
+                                               Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.DistanceFromVolunteer}"
+                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Status -->
+                            <Border Grid.Row="2" Grid.Column="0" 
+                                    Background="White" 
+                                    CornerRadius="10" 
+                                    Padding="15" 
+                                    Margin="0,0,5,0"
+                                    BorderBrush="{StaticResource LightBlueBrush}"
+                                    BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="📊 Status:" 
+                                               FontWeight="Bold" 
+                                               Foreground="{StaticResource TextBlueBrush}"
+                                               Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.Status}"
+                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Start Time -->
+                            <Border Grid.Row="2" Grid.Column="1" 
+                                    Background="White" 
+                                    CornerRadius="10" 
+                                    Padding="15" 
+                                    Margin="5,0,0,0"
+                                    BorderBrush="{StaticResource LightBlueBrush}"
+                                    BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="⏰ Start Time:" 
+                                               FontWeight="Bold" 
+                                               Foreground="{StaticResource TextBlueBrush}"
+                                               Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding CurrentVolunteer.CurrentCall.StartTime}"
+                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Action button section -->
+                <Border Style="{StaticResource GlassContainer}" Padding="25">
+                    <StackPanel HorizontalAlignment="Center">
+                        <Button Content="{Binding ButtonText}" 
+                                Click="btnAddUpdate_Click" 
+                                Style="{StaticResource ModernButtonStyle}"
+                                Width="200"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </Window>
