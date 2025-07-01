@@ -10,7 +10,7 @@ namespace BO
         public string? VolunteerName { get; set; } // Name of the volunteer, nullable if artificial.
         public DateTime AssignmentStartTime { get; set; } // Time the assignment started, cannot be null.
         public DateTime? AssignmentEndTime { get; set; } // Actual end time of the assignment, nullable if not ended.
-        public CallCompletionType? CompletionType { get; set; } // Type of assignment completion, nullable for open assignments.
+        public TypeOfEndTime? CompletionType { get; set; } // Type of assignment completion, nullable for open assignments.
         public override string ToString()
         {
             return $"Volunteer ID: {(VolunteerId.HasValue ? VolunteerId.ToString() : "None")},\n " +

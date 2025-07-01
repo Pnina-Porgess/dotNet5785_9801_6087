@@ -140,8 +140,24 @@ internal static class VolunteerManager
         return (result?.Latitude, result?.Longitude);
     }
 
+    internal static async Task UpdateVolunteerCoordinatesAsync(DO.Volunteer doVolunteer)
+    {
+        if (!string.IsNullOrEmpty(doVolunteer.Address))
+        {
+            var coordinates = await Tools.GetCoordinatesFromAddressAsync(doVolunteer.Address);
+            if (coordinates is not null)
+            {
+                var (lat, lon) = coordinates.Value;
 
+                doVolunteer = doVolunteer with { Latitude = lat, Longitude = lon };
+                lock (AdminManager.BlMutex)
+                    s_dal.Volunteer.Update(doVolunteer);
 
+                CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(doVolunteer.Id);
+            }
+        }
+    }
 
     internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
     {

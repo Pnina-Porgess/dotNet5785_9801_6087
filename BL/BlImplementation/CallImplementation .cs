@@ -21,13 +21,13 @@ namespace BlImplementation
                 // לא מחושב קואורדינטות כאן
                 doCall = CallManager.CreateDoCall(newCall);
                 _dal.Call.Create(doCall);
-                CallManager.SendEmailWhenCalOpened(newCall); // שליחת אימייל נשארת
+                _ = CallManager.SendEmailToNearbyVolunteersAsync(newCall);
             }
 
             CallManager.Observers.NotifyListUpdated();  //stage 5 
 
             // חישוב קואורדינטות אסינכרוני
-            _ = UpdateCallCoordinatesAsync(doCall);
+            _ = CallManager.UpdateCallCoordinatesAsync(doCall);
         }
 
         public void UpdateCall(BO.Call call)
@@ -50,7 +50,7 @@ namespace BlImplementation
                 CallManager.Observers.NotifyListUpdated();  //stage 5
 
                 // חישוב קואורדינטות אסינכרוני
-                _ = UpdateCallCoordinatesAsync(doCall);
+                _ = CallManager.UpdateCallCoordinatesAsync(doCall);
             }
             catch (DO.DalAlreadyExistsException ex)
             {
@@ -61,24 +61,7 @@ namespace BlImplementation
                 throw new BO.BlDatabaseException("An unexpected error occurred while update call.", ex);
             }
         }
-        private async Task UpdateCallCoordinatesAsync(DO.Call doCall)
-        {
-            if (!string.IsNullOrEmpty(doCall.Adress))
-            {
-                var coordinates = await Tools.GetCoordinatesFromAddressAsync(doCall.Adress);
-                if (coordinates is not null)
-                {
-                    var (lat, lon) = coordinates.Value;
-
-                    doCall = doCall with { Latitude = lat, Longitude = lon };
-                    lock (AdminManager.BlMutex)
-                        _dal.Call.Update(doCall);
-
-                    CallManager.Observers.NotifyListUpdated();
-                    CallManager.Observers.NotifyItemUpdated(doCall.Id);
-                }
-            }
-        }
+      
         public void DeleteCall(int callId)
         {
             try
@@ -138,7 +121,7 @@ namespace BlImplementation
                     AssignmentStartTime = assignment.EntryTime,
                     AssignmentEndTime = assignment.EndTime,
                     CompletionType = assignment.EndTime.HasValue ?
-                        (BO.CallCompletionType)assignment.TypeOfEndTime : null
+                        (BO.TypeOfEndTime)assignment.TypeOfEndTime! : null
                 }).ToList();
             
 
@@ -331,9 +314,9 @@ namespace BlImplementation
                     {
                         volunteer = _dal.Volunteer.Read(assignment.VolunteerId);
                     }
-                    CallManager.SendEmailToVolunteer(volunteer!, assignment);
+                    _ = CallManager.SendEmailToVolunteerAsync(volunteer!, assignment);
                 }
-                    CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyListUpdated();
                 CallManager.Observers.NotifyItemUpdated(requesterId);
 
 

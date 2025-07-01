@@ -56,6 +56,24 @@ internal static class CallManager
             MaxTimeToFinish: newCall?.MaxEndTime ?? DateTime.Now.AddHours(1)
         );
     }
+    internal static async Task UpdateCallCoordinatesAsync(DO.Call doCall)
+    {
+        if (!string.IsNullOrEmpty(doCall.Adress))
+        {
+            var coordinates = await Tools.GetCoordinatesFromAddressAsync(doCall.Adress);
+            if (coordinates is not null)
+            {
+                var (lat, lon) = coordinates.Value;
+
+                doCall = doCall with { Latitude = lat, Longitude = lon };
+                lock (AdminManager.BlMutex)
+                    _dal.Call.Update(doCall);
+
+                CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(doCall.Id);
+            }
+        }
+    }
 
     /// <summary>
     /// Calculates the current status of a call based on its assignments and other parameters.
@@ -276,36 +294,41 @@ internal static class CallManager
     /// Sends an email notification to all volunteers within the specified distance from a new call.
     /// </summary>
     /// <param name="call">The call object that was opened.</param>
-    internal static void SendEmailWhenCalOpened(BO.Call call)
+    internal static async Task SendEmailToNearbyVolunteersAsync(BO.Call call)
     {
-  
-   
-            var volunteer = _dal.Volunteer.ReadAll();
-        foreach (var item in volunteer)
-        {
+        var volunteers = _dal.Volunteer.ReadAll();
 
+        foreach (var item in volunteers)
+        {
             if (item.MaximumDistance >= Tools.CalculateDistance(item.Latitude!, item.Longitude!, call.Latitude, call.Longitude))
             {
                 string subject = "Openning call";
                 string body = $@"
-      Hello {item.Name},
+Hello {item.Name},
 
-     A new call has been opened in your area.
-      Call Details:
-      - Call ID: {call.Id}
-      - Call Type: {call.Type}
-      - Call Address: {call.Address}
-      - Opening Time: {call.OpeningTime}
-      - Description: {call.Description}
-      - Entry Time for Treatment: {call.MaxEndTime}
-      -call Status:{call.Status}
+A new call has been opened in your area.
+Call Details:
+- Call ID: {call.Id}
+- Call Type: {call.Type}
+- Call Address: {call.Address}
+- Opening Time: {call.OpeningTime}
+- Description: {call.Description}
+- Entry Time for Treatment: {call.MaxEndTime}
+- Call Status: {call.Status}
 
-      If you wish to handle this call, please log into the system.
+If you wish to handle this call, please log into the system.
 
-      Best regards,  
-     Call Management System";
+Best regards,  
+Call Management System";
 
-                Tools.SendEmail(item.Email, subject, body);
+                try
+                {
+                    await Tools.SendEmailAsync(item.Email, subject, body);
+                }
+                catch
+                {
+                    // אפשר להוסיף לוג שגיאה או לטפל במקרה שנכשל
+                }
             }
         }
     }
@@ -315,27 +338,34 @@ internal static class CallManager
     /// </summary>
     /// <param name="volunteer">The volunteer to notify.</param>
     /// <param name="assignment">The assignment that was canceled.</param>
-    internal static void SendEmailToVolunteer(DO.Volunteer volunteer, DO.Assignment assignment)
+    internal static async Task SendEmailToVolunteerAsync(DO.Volunteer volunteer, DO.Assignment assignment)
     {
         var call = _dal.Call.Read(assignment.CallId)!;
 
         string subject = "Assignment Canceled";
         string body = $@"
-      Hello {volunteer.Name},
+Hello {volunteer.Name},
 
-      Your assignment for handling call {assignment.Id} has been canceled by the administrator.
+Your assignment for handling call {assignment.Id} has been canceled by the administrator.
 
-      Call Details:
-      - Call ID: {assignment.CallId}
-      - Call Type: {call.TypeOfReading}
-      - Call Address: {call.Adress}
-      - Opening Time: {call.TimeOfOpen}
-      - Description: {call.Description}
-      - Entry Time for Treatment: {assignment.EntryTime}
+Call Details:
+- Call ID: {assignment.CallId}
+- Call Type: {call.TypeOfReading}
+- Call Address: {call.Adress}
+- Opening Time: {call.TimeOfOpen}
+- Description: {call.Description}
+- Entry Time for Treatment: {assignment.EntryTime}
 
-      Best regards,  
-      Call Management System";
+Best regards,  
+Call Management System";
 
-        Tools.SendEmail(volunteer.Email, subject, body);
+        try
+        {
+            await Tools.SendEmailAsync(volunteer.Email, subject, body);
+        }
+        catch
+        {
+            // טיפול בשגיאה - לדוגמה לוג או התעלמות
+        }
     }
 }
