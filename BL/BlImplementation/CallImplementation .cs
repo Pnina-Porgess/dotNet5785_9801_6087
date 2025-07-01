@@ -252,6 +252,11 @@ namespace BlImplementation
                     _dal.Assignment.Update(updatedAssignment);
                 CallManager.Observers.NotifyListUpdated();
                 CallManager.Observers.NotifyItemUpdated(volunteerId);
+                VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
+                VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
+                VolunteerManager.Observers.NotifyListUpdated();
+
+
 
             }
             catch (DO.DalAlreadyExistsException ex)
@@ -268,11 +273,12 @@ namespace BlImplementation
         {
             try
             {
-                AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+                AdminManager.ThrowOnSimulatorIsRunning();
+                DO.Assignment assignment;
                 lock (AdminManager.BlMutex)
                 {
 
-                    var assignment = _dal.Assignment.Read(assignmentId);
+                     assignment = _dal.Assignment.Read(assignmentId);
                     var volunteer = _dal.Volunteer.Read(requesterId);
 
                     if (assignment!.VolunteerId != requesterId && volunteer is null)
@@ -318,11 +324,18 @@ namespace BlImplementation
                 }
                 CallManager.Observers.NotifyListUpdated();
                 CallManager.Observers.NotifyItemUpdated(requesterId);
+                int actualVolunteerId = assignment.VolunteerId;
+                VolunteerManager.Observers.NotifyItemUpdated(actualVolunteerId);
+                VolunteerManager.Observers.NotifyItemUpdated(requesterId);
+                VolunteerManager.Observers.NotifyListUpdated();
+
+
+
 
 
 
             }
-           
+
             catch (Exception ex)
             {
                 // טיפול בחריגות כלליות
@@ -334,6 +347,10 @@ namespace BlImplementation
         {
             try
             {
+                var assignments = _dal.Assignment.ReadAll(a => (a?.VolunteerId == volunteerId) && (a.EndTime is null && (a.TypeOfEndTime == null)));
+                if (assignments.Any())
+                      throw new BO.BlLogicalException($"volunteer with ID {volunteerId} cannot select a new call for treatment since he is treating another call now.");
+                DO.Assignment assignment;
                 AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
                 lock (AdminManager.BlMutex)
                 {
@@ -359,7 +376,7 @@ namespace BlImplementation
                     }
 
                     // 4. יצירת הקצאה חדשה
-                    var assignment = new DO.Assignment
+                     assignment = new DO.Assignment
                     (
                         Id: 0, // מזהה ההקצאה יתעדכן אוטומטית
                         CallId: callId,
@@ -373,6 +390,11 @@ namespace BlImplementation
                 }
                 CallManager.Observers.NotifyListUpdated();
                 CallManager.Observers.NotifyItemUpdated(volunteerId);
+                VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
+                VolunteerManager.Observers.NotifyListUpdated();
+                int actualVolunteerId = assignment.VolunteerId;
+                VolunteerManager.Observers.NotifyItemUpdated(actualVolunteerId);
+
 
             }
             catch (Exception ex)

@@ -177,6 +177,7 @@ internal static class AdminManager //stage 4
         {
             s_dal.Config.SetRiskRange(value);
             ConfigUpdatedObservers?.Invoke(); // stage 5
+            CallManager.Observers.NotifyListUpdated();
         }
     }
 
@@ -230,6 +231,7 @@ internal static class AdminManager //stage 4
 
         //Calling all the observers of clock update
         ClockUpdatedObservers?.Invoke(); //prepared for stage 5
+        CallManager.Observers.NotifyListUpdated();
     }
     #endregion Stage 4
 
@@ -257,9 +259,13 @@ internal static class AdminManager //stage 4
     [MethodImpl(MethodImplOptions.Synchronized)] //stage 7                                                 
     public static void ThrowOnSimulatorIsRunning()
     {
-        if (s_thread is not null && !Thread.CurrentThread.Name?.StartsWith("Simulator") == true)
-            throw new BO.BLTemporaryNotAvailableException("Cannot perform the operation since Simulator is running");
-
+        string? name = Thread.CurrentThread.Name;
+        if (string.IsNullOrEmpty(name) || !name.StartsWith("Simulator"))
+        {
+            if (s_thread is not null)
+            { throw new BO.BLTemporaryNotAvailableException("Cannot perform the operation since Simulator is running"); }
+        }
+        else return;
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)] //stage 7                                                 

@@ -49,7 +49,7 @@ public void UpdateVolunteerDetails(int requesterId, BO.Volunteer volunteerToUpda
 {
     try
     {
-        AdminManager.ThrowOnSimulatorIsRunning();
+        AdminManager.ThrowOnSimulatorIsRunning(); 
         VolunteerManager.ValidatePermissions(requesterId, volunteerToUpdate);
         VolunteerManager.ValidateInputFormat(volunteerToUpdate);
 
@@ -95,6 +95,10 @@ public void UpdateVolunteerDetails(int requesterId, BO.Volunteer volunteerToUpda
     {
         throw new BO.BlInvalidInputException($"Invalid data for volunteer update: {ex.Message}", ex);
     }
+      catch (BO.BLTemporaryNotAvailableException)
+        {
+            throw new BO.BLTemporaryNotAvailableException("Cannot perform the operation since Simulator is running");
+        }
     catch (Exception ex)
     {
         throw new BO.BlDatabaseException("An unexpected error occurred while updating the volunteer.", ex);

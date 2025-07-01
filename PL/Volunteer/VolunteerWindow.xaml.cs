@@ -127,12 +127,21 @@ namespace PL.Volunteer
                 }
                 else
                 {
-                    s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer!);
-                    MessageBox.Show("Volunteer updated successfully!");
+                    try
+                    {
+                        s_bl.Volunteer.UpdateVolunteerDetails(CurrentVolunteer!.Id, CurrentVolunteer!);
+                        MessageBox.Show("Volunteer updated successfully!");
+                    }
+                    catch (BO.BLTemporaryNotAvailableException)
+                    {
+                        MessageBox.Show("הסימולטור פועל כרגע. לא ניתן לעדכן פרטים בזמן סימולציה.");
+                    }
+
                 }
 
                 Close();
             }
+       
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

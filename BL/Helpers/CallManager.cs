@@ -183,7 +183,7 @@ internal static class CallManager
             LastVolunteerName = latestAssignment?.VolunteerId != null && volunteers.TryGetValue(latestAssignment!.VolunteerId, out var name) ? name : null,
             TotalAssignments = callAssignments.Count,
             RemainingTime = call.MaxTimeToFinish.HasValue
-            ? call.MaxTimeToFinish.Value - DateTime.Now
+            ? call.MaxTimeToFinish.Value - AdminManager.Now
             : null,
             CompletionTime = latestAssignment?.EndTime.HasValue == true ? latestAssignment.EndTime - latestAssignment.EntryTime : null
         };
@@ -288,6 +288,7 @@ internal static class CallManager
             }
 
         });
+        VolunteerManager.Observers.NotifyListUpdated();
 
     }
     /// <summary>
