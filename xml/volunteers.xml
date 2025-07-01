@@ -91,36 +91,6 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>214751885</Id>
-    <Name>Chaim</Name>
-    <Phone>0501256789</Phone>
-    <Email>Chaim@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>46</MaximumDistance>
-    <Password>4H08l5Mlc/rWwsnek8DA99JSFzTJeLCQrVQv64xsA/0=</Password>
-    <Address>Bat Yam, Ben Gurion Blvd.</Address>
-    <Latitude>34.7502</Latitude>
-    <Longitude>32.0236</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
-    <Id>214606170</Id>
-    <Name>Shani</Name>
-    <Phone>0524567890</Phone>
-    <Email>Shani@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>11</MaximumDistance>
-    <Password>4RuzNBMLIbCO4JSGy6bXvQozBgJ4InmIoztxDnpyqqQ=</Password>
-    <Address>Herzliya, Sokolov St.</Address>
-    <Latitude>34.8436</Latitude>
-    <Longitude>32.1663</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
     <Id>328308646</Id>
     <Name>Yonatan</Name>
     <Phone>0546543210</Phone>
@@ -253,6 +223,21 @@
     <Address>tel aviv</Address>
     <Latitude>32.0852997</Latitude>
     <Longitude>34.7818064</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>214751885</Id>
+    <Name>Chaimmm</Name>
+    <Phone>0501256789</Phone>
+    <Email>Chaim@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>46</MaximumDistance>
+    <Password>4H08l5Mlc/rWwsnek8DA99JSFzTJeLCQrVQv64xsA/0=</Password>
+    <Address>Bat Yam, Ben Gurion Blvd.</Address>
+    <Latitude>32.023697</Latitude>
+    <Longitude>34.74013</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
 </ArrayOfVolunteer>
