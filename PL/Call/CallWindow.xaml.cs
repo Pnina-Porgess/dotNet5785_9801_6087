@@ -1,11 +1,14 @@
-﻿using System;
+﻿
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
-using BO;
+
 
 namespace PL.Call
 {
+    /// <summary>
+    /// Interaction logic for viewing and editing a single call.
+    /// </summary>
     public partial class CallWindow : Window, INotifyPropertyChanged
     {
         private readonly BlApi.IBl s_bl = BlApi.Factory.Get();
@@ -15,6 +18,10 @@ namespace PL.Call
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+        /// <summary>
+        /// Initializes the window for creating or editing a call.
+        /// </summary>
+        /// <param name="id">The ID of the call to edit. If 0, creates a new call.</param>
         public CallWindow(int id = 0)
         {
             InitializeComponent();
@@ -35,9 +42,19 @@ namespace PL.Call
                     CurrentCall = s_bl.Call.GetCallDetails(id);
                     s_bl.Call.AddObserver(id, RefreshCallObserver);
                 }
+                catch (BO.BlNotFoundException ex)
+                {
+                    MessageBox.Show($"Call not found: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Close();
+                }
+                catch (BO.BlGeneralException ex)
+                {
+                    MessageBox.Show($"Failed to load call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Close();
+                }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show($"Unexpected error: {ex.Message}", "Critical", MessageBoxButton.OK, MessageBoxImage.Error);
                     Close();
                 }
             }
@@ -72,12 +89,21 @@ namespace PL.Call
         public static readonly DependencyProperty ButtonTextProperty =
             DependencyProperty.Register("ButtonText", typeof(string), typeof(CallWindow), new PropertyMetadata("Update"));
 
+        /// <summary>
+        /// Indicates if call details are editable.
+        /// </summary>
         public bool CanEditDetails =>
             CurrentCall is { Status: BO.CallStatus.Open or BO.CallStatus.OpenAtRisk };
 
+        /// <summary>
+        /// Indicates if max end time can be edited.
+        /// </summary>
         public bool CanEditMaxEndTime =>
             CurrentCall is { Status: BO.CallStatus.Open or BO.CallStatus.OpenAtRisk or BO.CallStatus.InProgress or BO.CallStatus.InProgressAtRisk };
 
+        /// <summary>
+        /// Refreshes the displayed call when notified.
+        /// </summary>
         private void RefreshCallObserver()
         {
             if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
@@ -86,55 +112,89 @@ namespace PL.Call
                 {
                     if (CurrentCall == null) return;
                     int id = CurrentCall.Id;
-                    CurrentCall = null;
-                    CurrentCall = s_bl.Call.GetCallDetails(id);
+                    try
+                    {
+                        CurrentCall = null;
+                        CurrentCall = s_bl.Call.GetCallDetails(id);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Failed to refresh call: {ex.Message}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 });
             }
         }
 
+        /// <summary>
+        /// Handles click event for add/update button.
+        /// </summary>
         private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (CurrentCall?.MaxEndTime == null)
-                    throw new Exception("Please select a max end time.");
+                    throw new BO.BlInvalidInputException("Please select a maximum end time.");
 
                 if (CurrentCall.MaxEndTime <= CurrentCall.OpeningTime)
-                    throw new Exception("Max end time must be after opening time.");
+                    throw new BO.BlInvalidInputException("End time must be after opening time.");
 
                 if (CurrentCall.Status is BO.CallStatus.Closed or BO.CallStatus.Expired)
-                    throw new Exception("Cannot update a call that is closed or expired.");
+                    throw new BO.BlInvalidInputException("You cannot edit a closed or expired call.");
 
                 if (CurrentCall.Status is BO.CallStatus.InProgress or BO.CallStatus.InProgressAtRisk)
                 {
                     s_bl.Call.UpdateCall(CurrentCall);
-                    MessageBox.Show("Max end time updated successfully!");
+                    MessageBox.Show("Max end time updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     Close();
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(CurrentCall?.Address))
-                    throw new Exception("Please enter an address.");
+                    throw new BO.BlInvalidInputException("Address is required.");
 
                 if (CurrentCall.Type == null)
-                    throw new Exception("Please select a call type.");
+                    throw new BO.BlInvalidInputException("Call type is required.");
 
                 if (ButtonText == "Add")
                 {
                     s_bl.Call.AddCall(CurrentCall!);
-                    MessageBox.Show("Call added successfully!");
+                    MessageBox.Show("Call added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
                     s_bl.Call.UpdateCall(CurrentCall!);
-                    MessageBox.Show("Call updated successfully!");
+                    MessageBox.Show("Call updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
                 Close();
             }
+            catch (BO.BlInvalidInputException ex)
+            {
+                MessageBox.Show($"Input error: {ex.Message}", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch (BO.BlNotFoundException ex)
+            {
+                MessageBox.Show($"Call not found: {ex.Message}", "Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (BO.BlAlreadyExistsException ex)
+            {
+                MessageBox.Show($"Call already exists: {ex.Message}", "Duplicate", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (BO.BLTemporaryNotAvailableException ex)
+            {
+                MessageBox.Show($"Call is temporarily unavailable: {ex.Message}", "Temporary", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch (BO.BlUnauthorizedAccessException ex)
+            {
+                MessageBox.Show($"Unauthorized: {ex.Message}", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
+            catch (BO.BlGeneralException ex)
+            {
+                MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Unexpected exception: {ex.Message}", "Critical", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

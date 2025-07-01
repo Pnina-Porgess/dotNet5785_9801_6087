@@ -240,4 +240,19 @@
     <Longitude>29.5581</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
+  <Volunteer>
+    <Id>214606170</Id>
+    <Name>Shana</Name>
+    <Phone>0524567890</Phone>
+    <Email>Shani@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>41</MaximumDistance>
+    <Password>4RuzNBMLIbCO4JSGy6bXvQozBgJ4InmIoztxDnpyqqQ=</Password>
+    <Address>Herzliya, Sokolov St.</Address>
+    <Latitude>32.16361</Latitude>
+    <Longitude>34.810979</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
 </ArrayOfVolunteer>
