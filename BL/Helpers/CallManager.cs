@@ -56,6 +56,24 @@ internal static class CallManager
             MaxTimeToFinish: newCall?.MaxEndTime ?? DateTime.Now.AddHours(1)
         );
     }
+    internal static async Task UpdateCallCoordinatesAsync(DO.Call doCall)
+    {
+        if (!string.IsNullOrEmpty(doCall.Adress))
+        {
+            var coordinates = await Tools.GetCoordinatesFromAddressAsync(doCall.Adress);
+            if (coordinates is not null)
+            {
+                var (lat, lon) = coordinates.Value;
+
+                doCall = doCall with { Latitude = lat, Longitude = lon };
+                lock (AdminManager.BlMutex)
+                    _dal.Call.Update(doCall);
+
+                CallManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(doCall.Id);
+            }
+        }
+    }
 
     /// <summary>
     /// Calculates the current status of a call based on its assignments and other parameters.

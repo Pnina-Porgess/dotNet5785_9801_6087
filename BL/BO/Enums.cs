@@ -65,15 +65,7 @@ public enum CallStatus
     None
 }
 
-/// <summary>
-/// Enumeration for call completion types.
-/// </summary>
-public enum CallCompletionType
-{
-    Completed,
-    Canceled,
-    Expired
-}
+
 
 
 /// <summary>

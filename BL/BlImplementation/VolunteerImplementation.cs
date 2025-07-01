@@ -23,18 +23,18 @@ internal class VolunteerImplementation : IVolunteer
                     throw new BO.BlAlreadyExistsException($"Volunteer with ID={volunteer.Id} already exists.");
 
                 VolunteerManager.ValidateInputFormat(volunteer);
-
+                VolunteerManager.ValidatePassword(volunteer);
                 // שלב ההוספה בלי קואורדינטות
                 volunteer.Password = VolunteerManager.EncryptPassword(volunteer.Password!);
                  doVolunteer = VolunteerManager.CreateDoVolunteer(volunteer);
-                VolunteerManager.ValidatePassword(volunteer);
+               
                 _dal.Volunteer.Create(doVolunteer);
             }
 
             VolunteerManager.Observers.NotifyListUpdated();
 
             // שלב החישוב האסינכרוני – לא ממתינים לו
-            _ = UpdateVolunteerCoordinatesAsync(doVolunteer);
+            _ = VolunteerManager.UpdateVolunteerCoordinatesAsync(doVolunteer);
         }
         catch (Exception ex)
         {
@@ -42,81 +42,64 @@ internal class VolunteerImplementation : IVolunteer
         }
     }
 
-    private async Task UpdateVolunteerCoordinatesAsync(DO.Volunteer doVolunteer)
+   
+
+
+public void UpdateVolunteerDetails(int requesterId, BO.Volunteer volunteerToUpdate)
+{
+    try
     {
-        if (!string.IsNullOrEmpty(doVolunteer.Address))
+        AdminManager.ThrowOnSimulatorIsRunning();
+        VolunteerManager.ValidatePermissions(requesterId, volunteerToUpdate);
+        VolunteerManager.ValidateInputFormat(volunteerToUpdate);
+
+        DO.Volunteer doVolunteer;
+
+        lock (AdminManager.BlMutex)
         {
-            var coordinates = await Tools.GetCoordinatesFromAddressAsync(doVolunteer.Address);
-            if (coordinates is not null)
+            var existingVolunteer = _dal.Volunteer.Read(volunteerToUpdate.Id)
+                ?? throw new BO.BlNotFoundException($"Volunteer with ID={volunteerToUpdate.Id} does not exist.");
+            var volunteerRequester = _dal.Volunteer.Read(requesterId);
+
+            if (!VolunteerManager.CanUpdateFields(existingVolunteer!, volunteerRequester!))
+                throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
+
+            if (volunteerToUpdate.IsActive == false && volunteerToUpdate.CurrentCall != null)
+                throw new BO.BlInvalidInputException("Cannot set volunteer to inactive while they have an active call.");
+
+            if (string.IsNullOrEmpty(volunteerToUpdate.Password))
             {
-                var (lat, lon) = coordinates.Value;
-
-                doVolunteer = doVolunteer with { Latitude = lat, Longitude = lon };
-                lock (AdminManager.BlMutex)
-                    _dal.Volunteer.Update(doVolunteer);
-
-                CallManager.Observers.NotifyListUpdated();
-                CallManager.Observers.NotifyItemUpdated(doVolunteer.Id);
+                volunteerToUpdate.Password = existingVolunteer.Password;
             }
+            else
+            {
+                VolunteerManager.ValidatePassword(volunteerToUpdate);
+                volunteerToUpdate.Password = VolunteerManager.EncryptPassword(volunteerToUpdate.Password);
+            }
+
+            doVolunteer = VolunteerManager.CreateDoVolunteer(volunteerToUpdate);
+            _dal.Volunteer.Update(doVolunteer);
         }
-    }
 
-
-    public void UpdateVolunteerDetails(int requesterId, BO.Volunteer volunteerToUpdate)
-    {
-        try
-        {
-            AdminManager.ThrowOnSimulatorIsRunning();
-            VolunteerManager.ValidatePermissions(requesterId, volunteerToUpdate);
-            VolunteerManager.ValidateInputFormat(volunteerToUpdate);
-
-            DO.Volunteer doVolunteer;
-
-            lock (AdminManager.BlMutex)
-            {
-                var existingVolunteer = _dal.Volunteer.Read(volunteerToUpdate.Id)
-                    ?? throw new BO.BlNotFoundException($"Volunteer with ID={volunteerToUpdate.Id} does not exist.");
-                var volunteerRequester = _dal.Volunteer.Read(requesterId);
-
-                if (!VolunteerManager.CanUpdateFields(existingVolunteer!, volunteerRequester!))
-                    throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
-
-                if (volunteerToUpdate.IsActive == false && volunteerToUpdate.CurrentCall != null)
-                    throw new BO.BlInvalidInputException("Cannot set volunteer to inactive while they have an active call.");
-
-                if (string.IsNullOrEmpty(volunteerToUpdate.Password))
-                {
-                    volunteerToUpdate.Password = existingVolunteer.Password;
-                }
-                else
-                {
-                    VolunteerManager.ValidatePassword(volunteerToUpdate);
-                    volunteerToUpdate.Password = VolunteerManager.EncryptPassword(volunteerToUpdate.Password);
-                }
-
-                doVolunteer = VolunteerManager.CreateDoVolunteer(volunteerToUpdate);
-                _dal.Volunteer.Update(doVolunteer);
-            }
-
-            VolunteerManager.Observers.NotifyItemUpdated(volunteerToUpdate.Id);
-            VolunteerManager.Observers.NotifyListUpdated();
+        VolunteerManager.Observers.NotifyItemUpdated(volunteerToUpdate.Id);
+        VolunteerManager.Observers.NotifyListUpdated();
 
             // עדכון אסינכרוני של קואורדינטות – בלי להמתין
-            _ = UpdateVolunteerCoordinatesAsync(doVolunteer);
+            _ = VolunteerManager.UpdateVolunteerCoordinatesAsync(doVolunteer);
         }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.BlNotFoundException($"The volunteer with ID={volunteerToUpdate.Id} was not found.", ex);
-        }
-        catch (BO.BlInvalidInputException ex)
-        {
-            throw new BO.BlInvalidInputException($"Invalid data for volunteer update: {ex.Message}", ex);
-        }
-        catch (Exception ex)
-        {
-            throw new BO.BlDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
-        }
+    catch (DO.DalDoesNotExistException ex)
+    {
+        throw new BO.BlNotFoundException($"The volunteer with ID={volunteerToUpdate.Id} was not found.", ex);
     }
+    catch (BO.BlInvalidInputException ex)
+    {
+        throw new BO.BlInvalidInputException($"Invalid data for volunteer update: {ex.Message}", ex);
+    }
+    catch (Exception ex)
+    {
+        throw new BO.BlDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
+    }
+}
     public void DeleteVolunteer(int id)
     {
         try
