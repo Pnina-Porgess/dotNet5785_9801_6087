@@ -9,6 +9,9 @@ using System.Windows.Threading;
 
 namespace PL.Call
 {
+    /// <summary>
+    /// Interaction logic for CallListWindow.xaml
+    /// </summary>
     public partial class CallListWindow : Window
     {
         static readonly IBl s_bl = Factory.Get();
@@ -45,6 +48,9 @@ namespace PL.Call
         public static readonly DependencyProperty SelectedStatusProperty =
             DependencyProperty.Register("SelectedStatus", typeof(BO.CallStatus?), typeof(CallListWindow), new PropertyMetadata(null, OnFilterChanged));
 
+        /// <summary>
+        /// Initializes the window with a specific volunteer ID.
+        /// </summary>
         public CallListWindow(int volunteerId)
         {
             VolunteerId = volunteerId;
@@ -54,41 +60,56 @@ namespace PL.Call
             UnassignCallCommand = new RelayCommand<BO.CallInList>(UnassignCall);
         }
 
+        /// <summary>
+        /// Handles filter change and refreshes the call list.
+        /// </summary>
         private static void OnFilterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is CallListWindow window)
-                window.queryCallList();
+                window.QueryCallList();
         }
 
-        private void queryCallList()
+        /// <summary>
+        /// Queries and filters the call list from the business layer.
+        /// </summary>
+        private void QueryCallList()
         {
-            BO.CallField? filterField = SelectedField;
-            BO.CallField? sortField = SelectedField;
+            try
+            {
+                BO.CallField? filterField = SelectedField;
+                BO.CallField? sortField = SelectedField;
 
-            IEnumerable<BO.CallInList> list = s_bl?.Call.GetCalls(filterField,
-                (SelectedStatus == BO.CallStatus.None) ? null : SelectedStatus, sortField)!;
+                IEnumerable<BO.CallInList> list = s_bl?.Call.GetCalls(
+                    filterField,
+                    (SelectedStatus == BO.CallStatus.None) ? null : SelectedStatus,
+                    sortField)!;
 
-            if (SelectedStatus != null && SelectedStatus != BO.CallStatus.None)
-                list = list.Where(c => c.CallStatus == SelectedStatus);
+                if (SelectedStatus != null && SelectedStatus != BO.CallStatus.None)
+                    list = list.Where(c => c.CallStatus == SelectedStatus);
 
-            CallList = list;
+                CallList = list;
+            }
+            catch (BO.BlGeneralException ex)
+            {
+                MessageBox.Show($"Failed to retrieve calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
+        /// <summary>
+        /// Refreshes the call list asynchronously when notified.
+        /// </summary>
         private void RefreshCallListObserver()
         {
             if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
             {
-                _observerOperation = Dispatcher.BeginInvoke(() =>
-                {
-                    queryCallList();
-                });
+                _observerOperation = Dispatcher.BeginInvoke(() => QueryCallList());
             }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             s_bl.Call.AddObserver(RefreshCallListObserver);
-            queryCallList();
+            QueryCallList();
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -111,51 +132,81 @@ namespace PL.Call
             window.Show();
         }
 
+        /// <summary>
+        /// Deletes the selected call after confirmation.
+        /// </summary>
         private void DeleteCall(BO.CallInList call)
         {
             if (call == null) return;
 
-            var result = MessageBox.Show($"האם אתה בטוח שברצונך למחוק את הקריאה #{call.CallId}?",
-                "אישור מחיקה", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = MessageBox.Show($"Are you sure you want to delete Call #{call.CallId}?",
+                "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
                 try
                 {
                     s_bl.Call.DeleteCall(call.CallId);
-                    MessageBox.Show("הקריאה נמחקה בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
-                    queryCallList();
+                    MessageBox.Show("Call deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    QueryCallList();
                 }
                 catch (BO.BlNotFoundException ex)
                 {
-                    MessageBox.Show($"לא ניתן למחוק את הקריאה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Cannot delete call: {ex.Message}", "Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (BO.BLTemporaryNotAvailableException ex)
+                {
+                    MessageBox.Show($"Call cannot be deleted right now: {ex.Message}", "Temporary Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                catch (BO.BlUnauthorizedAccessException ex)
+                {
+                    MessageBox.Show($"Unauthorized: {ex.Message}", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Stop);
+                }
+                catch (BO.BlGeneralException ex)
+                {
+                    MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"שגיאה לא צפויה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Unexpected exception: {ex.Message}", "Critical", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
+        /// <summary>
+        /// Cancels the assignment of the selected call if it's in progress.
+        /// </summary>
         private void UnassignCall(BO.CallInList call)
         {
             if (call == null) return;
 
             if (call.CallStatus != BO.CallStatus.InProgress)
             {
-                MessageBox.Show("ניתן לבטל הקצאה רק לקריאה שנמצאת בטיפול.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Only calls in progress can be unassigned.", "Invalid Action", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             try
             {
                 s_bl.Call.CancelCallTreatment(VolunteerId, call.AssignmentId!.Value);
-                MessageBox.Show("ההקצאה בוטלה בהצלחה.", "בוצע", MessageBoxButton.OK, MessageBoxImage.Information);
-                queryCallList();
+                MessageBox.Show("Call unassignment completed successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                QueryCallList();
+            }
+            catch (BO.BlNotFoundException ex)
+            {
+                MessageBox.Show($"Unassignment failed: {ex.Message}", "Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (BO.BlUnauthorizedAccessException ex)
+            {
+                MessageBox.Show($"Unauthorized: {ex.Message}", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
+            catch (BO.BlGeneralException ex)
+            {
+                MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בביטול הקצאה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Unexpected exception: {ex.Message}", "Critical", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

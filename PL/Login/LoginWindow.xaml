@@ -9,7 +9,7 @@
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
     <Window.Resources>
-        <!-- Color scheme matching the other windows -->
+        <!-- Color scheme -->
         <Color x:Key="TextBlueColor">#0D3F59</Color>
         <Color x:Key="OrangeColor">#FDB53B</Color>
         <Color x:Key="PinkColor">#CF5BA4</Color>
@@ -17,14 +17,13 @@
         <Color x:Key="LightBlueColor">#32A7DD</Color>
         <Color x:Key="DarkBlueColor">#1B4B66</Color>
 
-        <SolidColorBrush x:Key="TextBlueBrush" Color="{StaticResource TextBlueColor}" />
-        <SolidColorBrush x:Key="OrangeBrush" Color="{StaticResource OrangeColor}" />
-        <SolidColorBrush x:Key="PinkBrush" Color="{StaticResource PinkColor}" />
-        <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource GreenColor}" />
-        <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlueColor}" />
-        <SolidColorBrush x:Key="DarkBlueBrush" Color="{StaticResource DarkBlueColor}" />
+        <SolidColorBrush x:Key="TextBlueBrush" Color="{StaticResource TextBlueColor}"/>
+        <SolidColorBrush x:Key="OrangeBrush" Color="{StaticResource OrangeColor}"/>
+        <SolidColorBrush x:Key="PinkBrush" Color="{StaticResource PinkColor}"/>
+        <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource GreenColor}"/>
+        <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlueColor}"/>
+        <SolidColorBrush x:Key="DarkBlueBrush" Color="{StaticResource DarkBlueColor}"/>
 
-        <!-- Style for input fields -->
         <Style x:Key="ModernTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="40"/>
             <Setter Property="Padding" Value="12,8"/>
@@ -38,7 +37,6 @@
             <Setter Property="FontWeight" Value="Normal"/>
         </Style>
 
-        <!-- Style for password box -->
         <Style x:Key="ModernPasswordBox" TargetType="PasswordBox">
             <Setter Property="Height" Value="40"/>
             <Setter Property="Padding" Value="12,8"/>
@@ -52,16 +50,17 @@
             <Setter Property="FontWeight" Value="Normal"/>
         </Style>
 
-        <!-- Style for labels -->
         <Style x:Key="ModernLabel" TargetType="Label">
             <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Margin" Value="0,0,0,5"/>
         </Style>
+
+        <!-- Converter to toggle error message visibility -->
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     </Window.Resources>
 
-    <!-- Main background with gradient -->
     <Grid>
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -70,19 +69,9 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <!-- Login card -->
-        <Border Background="White" 
-                CornerRadius="15" 
-                Width="320"
-                Height="450"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
+        <Border Background="White" CornerRadius="15" Width="320" Height="450" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Border.Effect>
-                <DropShadowEffect Color="Black" 
-                                Direction="270" 
-                                ShadowDepth="8" 
-                                BlurRadius="20" 
-                                Opacity="0.3"/>
+                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="8" BlurRadius="20" Opacity="0.3"/>
             </Border.Effect>
 
             <Grid Margin="30">
@@ -100,75 +89,40 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Logo section -->
+                <!-- Logo and title -->
                 <StackPanel Grid.Row="0" HorizontalAlignment="Center">
-                    <!-- Logo placeholder - replace with actual logo -->
-                    <Border Background="{StaticResource DarkBlueBrush}" 
-                            Width="80" Height="80" 
-                            CornerRadius="15"
-                            Margin="0,0,0,10">
+                    <Border Background="{StaticResource DarkBlueBrush}" Width="80" Height="80" CornerRadius="15" Margin="0,0,0,10">
                         <Grid>
-                            <!-- Colorful squares representing the logo -->
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
                             <Rectangle Grid.Row="0" Grid.Column="0" Fill="{StaticResource OrangeBrush}" Margin="8,8,2,2" RadiusX="4" RadiusY="4"/>
                             <Rectangle Grid.Row="0" Grid.Column="1" Fill="{StaticResource PinkBrush}" Margin="2,8,8,2" RadiusX="4" RadiusY="4"/>
                             <Rectangle Grid.Row="1" Grid.Column="0" Fill="{StaticResource GreenBrush}" Margin="8,2,2,8" RadiusX="4" RadiusY="4"/>
                             <Rectangle Grid.Row="1" Grid.Column="1" Fill="{StaticResource LightBlueBrush}" Margin="2,2,8,8" RadiusX="4" RadiusY="4"/>
                         </Grid>
                     </Border>
-
-                    <!-- Title -->
-                    <TextBlock Text="ידידים"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Foreground="{StaticResource TextBlueBrush}"
-                               HorizontalAlignment="Center"/>
-                    <TextBlock Text="Helper System Login"
-                               FontSize="14"
-                               Foreground="{StaticResource LightBlueBrush}"
-                               HorizontalAlignment="Center"
-                               Margin="0,2,0,0"/>
+                    <TextBlock Text="ידידים" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextBlueBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Helper System Login" FontSize="14" Foreground="{StaticResource LightBlueBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                 </StackPanel>
 
                 <!-- User ID field -->
                 <StackPanel Grid.Row="2">
                     <Label Content="👤 User ID" Style="{StaticResource ModernLabel}"/>
-                    <TextBox Style="{StaticResource ModernTextBox}"
-                             Text="{Binding UserId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Style="{StaticResource ModernTextBox}" Text="{Binding UserId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <!-- Password field -->
                 <StackPanel Grid.Row="4">
                     <Label Content="🔒 Password" Style="{StaticResource ModernLabel}"/>
-                    <PasswordBox Style="{StaticResource ModernPasswordBox}"
-                                 PasswordChanged="PasswordBox_PasswordChanged"/>
+                    <PasswordBox Style="{StaticResource ModernPasswordBox}" PasswordChanged="PasswordBox_PasswordChanged"/>
                 </StackPanel>
 
                 <!-- Login button -->
-                <Button Grid.Row="6"
-                        Content="🚀 Login"
-                        Height="45"
-                        Background="{StaticResource OrangeBrush}"
-                        Foreground="White"
-                        FontWeight="Bold"
-                        FontSize="16"
-                        BorderThickness="0"
-                        Cursor="Hand"
-                        Click="LoginButton_Click">
+                <Button Grid.Row="6" Content="🚀 Login" Height="45" Background="{StaticResource OrangeBrush}" Foreground="White" FontWeight="Bold" FontSize="16" BorderThickness="0" Cursor="Hand" Click="LoginButton_Click">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" 
-                                    CornerRadius="22"
-                                    x:Name="ButtonBorder">
-                                <ContentPresenter HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center"/>
+                            <Border Background="{TemplateBinding Background}" CornerRadius="22" x:Name="ButtonBorder">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -183,26 +137,12 @@
                 </Button>
 
                 <!-- Error message -->
-                <Border Grid.Row="8" 
-                        Background="#FFE6E6" 
-                        BorderBrush="{StaticResource PinkBrush}" 
-                        BorderThickness="1" 
-                        CornerRadius="6"
-                        Padding="10">
-                    <TextBlock Text="{Binding ErrorMessage}" 
-                               Foreground="{StaticResource PinkBrush}"
-                               FontWeight="SemiBold"
-                               TextWrapping="Wrap"
-                               HorizontalAlignment="Center"/>
+                <Border Grid.Row="8" Background="#FFF5F5" BorderBrush="{StaticResource PinkBrush}" BorderThickness="1" CornerRadius="6" Padding="10" Visibility="{Binding ErrorMessage, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource PinkBrush}" FontWeight="Bold" TextWrapping="Wrap" HorizontalAlignment="Center"/>
                 </Border>
 
                 <!-- Footer -->
-                <TextBlock Grid.Row="10"
-                           Text="© 2024 Yedidim Helper System"
-                           FontSize="10"
-                           Foreground="{StaticResource LightBlueBrush}"
-                           HorizontalAlignment="Center"
-                           Opacity="0.7"/>
+                <TextBlock Grid.Row="10" Text="© 2024 Yedidim Helper System" FontSize="10" Foreground="{StaticResource LightBlueBrush}" HorizontalAlignment="Center" Opacity="0.7"/>
             </Grid>
         </Border>
     </Grid>

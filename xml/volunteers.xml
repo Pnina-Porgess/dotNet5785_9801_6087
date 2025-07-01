@@ -196,21 +196,6 @@
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <Id>214606170</Id>
-    <Name>Shani</Name>
-    <Phone>0524567890</Phone>
-    <Email>Shani@gmail.com</Email>
-    <Role>Volunteer</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>41</MaximumDistance>
-    <Password>4RuzNBMLIbCO4JSGy6bXvQozBgJ4InmIoztxDnpyqqQ=</Password>
-    <Address>Herzliya, Sokolov St.</Address>
-    <Latitude>34.8436</Latitude>
-    <Longitude>32.1663</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
     <Id>328308646</Id>
     <Name>Yonatan</Name>
     <Phone>0546543210</Phone>
@@ -238,6 +223,21 @@
     <Address>Eilat, HaTmarim St.</Address>
     <Latitude>34.9482</Latitude>
     <Longitude>29.5581</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>214606170</Id>
+    <Name>Shana</Name>
+    <Phone>0524567890</Phone>
+    <Email>Shani@gmail.com</Email>
+    <Role>Volunteer</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>41</MaximumDistance>
+    <Password>4RuzNBMLIbCO4JSGy6bXvQozBgJ4InmIoztxDnpyqqQ=</Password>
+    <Address>Herzliya, Sokolov St.</Address>
+    <Latitude>32.16361</Latitude>
+    <Longitude>34.810979</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
 </ArrayOfVolunteer>

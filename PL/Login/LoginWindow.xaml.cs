@@ -1,13 +1,31 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using BlApi;
+using BO;
+using System.ComponentModel;
 
 namespace PL.Login
 {
-    public partial class LoginWindow : Window
+    /// <summary>
+    /// Interaction logic for LoginWindow.xaml
+    /// </summary>
+    public partial class LoginWindow : Window, INotifyPropertyChanged
     {
-        public readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+        public readonly IBl s_bl = Factory.Get();
+
+        /// <summary>
+        /// User ID entered by the user.
+        /// </summary>
         public string UserId { get; set; } = "";
+
+        /// <summary>
+        /// Password entered by the user.
+        /// </summary>
         public string Password { get; set; } = "";
+
+        /// <summary>
+        /// Message to be displayed in case of errors.
+        /// </summary>
         public string ErrorMessage { get; set; } = "";
 
         public LoginWindow()
@@ -16,12 +34,18 @@ namespace PL.Login
             DataContext = this;
         }
 
+        /// <summary>
+        /// Handles password change in PasswordBox.
+        /// </summary>
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (sender is PasswordBox pb)
                 Password = pb.Password;
         }
 
+        /// <summary>
+        /// Handles login button click: validates input, performs login and navigates based on role.
+        /// </summary>
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -31,15 +55,13 @@ namespace PL.Login
 
                 if (!int.TryParse(UserId, out int id))
                 {
-                    ErrorMessage = "Invalid ID number - please enter numbers only.";
-                    OnPropertyChanged(nameof(ErrorMessage));
-                    MessageBox.Show(ErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    ShowError("Invalid ID number - please enter digits only.");
                     return;
                 }
 
-                var role = s_bl.Volunteer.Login(id, Password);
+                Role role = s_bl.Volunteer.Login(id, Password);
 
-                if (role == BO.Role.Manager)
+                if (role == Role.Manager)
                 {
                     var result = MessageBox.Show(
                         "Manager login - Would you like to enter the main management screen?\n(Yes - Management, No - Volunteer)",
@@ -47,35 +69,58 @@ namespace PL.Login
 
                     if (result == MessageBoxResult.Yes)
                     {
-                        var adminWindow = new MainWindow(id);
-                        adminWindow.Show();
+                        new MainWindow(id).Show();
+                        Close();
                     }
                     else if (result == MessageBoxResult.No)
                     {
-                        var volunteerSelfWindow = new Volunteer.VolunteerSelfWindow(id);
-                        volunteerSelfWindow.Show();
+                        new Volunteer.VolunteerSelfWindow(id).Show();
+                        Close();
                     }
                 }
                 else
                 {
-                    var volunteerSelfWindow = new Volunteer.VolunteerSelfWindow(id);
-                    volunteerSelfWindow.Show();
+                    new Volunteer.VolunteerSelfWindow(id).Show();
+                    Close();
                 }
+            }
+            catch (BlInvalidInputException ex)
+            {
+                ShowError($"Invalid input: {ex.Message}");
+            }
+            catch (BlNotFoundException ex)
+            {
+                ShowError($"User not found: {ex.Message}");
+            }
+            catch (BlUnauthorizedAccessException ex)
+            {
+                ShowError($"Unauthorized: {ex.Message}");
             }
             catch (System.Exception ex)
             {
-                ErrorMessage = "An error occurred: " + ex.Message;
-                OnPropertyChanged(nameof(ErrorMessage));
-                MessageBox.Show(ErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowError($"An unexpected error occurred: {ex.Message}");
             }
         }
 
-        // INotifyPropertyChanged for data binding
-        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
+        /// <summary>
+        /// Displays an error message in the UI and message box.
+        /// </summary>
+        private void ShowError(string message)
         {
-            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            ErrorMessage = message;
+            OnPropertyChanged(nameof(ErrorMessage));
+            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        /// <summary>
+        /// PropertyChanged event for data binding.
+        /// </summary>
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// Notifies the UI that a property value has changed.
+        /// </summary>
+        protected void OnPropertyChanged(string propertyName) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
