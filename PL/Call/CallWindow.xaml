@@ -5,67 +5,431 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
-        Title="ניהול קריאה" Height="600" Width="450">
+        Title="Call Management - Yedidim Helper System" 
+        Height="700" Width="550"
+        Background="White"
+        WindowStartupLocation="CenterScreen">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Margin="20">
+    <Window.Resources>
+        <!-- Color scheme matching the project -->
+        <Color x:Key="TextBlueColor">#0D3F59</Color>
+        <Color x:Key="OrangeColor">#FDB53B</Color>
+        <Color x:Key="PinkColor">#CF5BA4</Color>
+        <Color x:Key="GreenColor">#B3D36B</Color>
+        <Color x:Key="LightBlueColor">#32A7DD</Color>
+        <Color x:Key="DarkBlueColor">#1B4B66</Color>
+
+        <SolidColorBrush x:Key="TextBlueBrush" Color="{StaticResource TextBlueColor}" />
+        <SolidColorBrush x:Key="OrangeBrush" Color="{StaticResource OrangeColor}" />
+        <SolidColorBrush x:Key="PinkBrush" Color="{StaticResource PinkColor}" />
+        <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource GreenColor}" />
+        <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlueColor}" />
+        <SolidColorBrush x:Key="DarkBlueBrush" Color="{StaticResource DarkBlueColor}" />
+
+        <!-- Gradient backgrounds -->
+        <LinearGradientBrush x:Key="BlueGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#32A7DD" Offset="0"/>
+            <GradientStop Color="#1B4B66" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Glass effect style for containers -->
+        <Style x:Key="GlassContainer" TargetType="Border">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.95">
+                        <GradientStop Color="#F8FAFB" Offset="0"/>
+                        <GradientStop Color="#EEF2F5" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="10" Opacity="0.15"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern input field style -->
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CaretBrush" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="SelectionBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Margin" Value="0,3,0,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern ComboBox style -->
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Margin" Value="0,3,0,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <Grid>
+                                <ToggleButton x:Name="ToggleButton"
+                                              Background="Transparent"
+                                              BorderThickness="0"
+                                              Focusable="False"
+                                              IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                              ClickMode="Press"/>
+                                <ContentPresenter x:Name="ContentSite"
+                                                  IsHitTestVisible="False"
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                  Margin="10,6"/>
+                                <Popup x:Name="Popup"
+                                       Placement="Bottom"
+                                       IsOpen="{TemplateBinding IsDropDownOpen}"
+                                       AllowsTransparency="True"
+                                       Focusable="False"
+                                       PopupAnimation="Slide">
+                                    <Border Background="White"
+                                            BorderBrush="{StaticResource LightBlueBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="6">
+                                        <ScrollViewer>
+                                            <StackPanel IsItemsHost="True"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern DatePicker style -->
+        <Style x:Key="ModernDatePicker" TargetType="DatePicker">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Margin" Value="0,3,0,8"/>
+        </Style>
+
+        <!-- Modern label style -->
+        <Style x:Key="ModernLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,5,0,3"/>
+        </Style>
+
+        <!-- Read-only text style -->
+        <Style x:Key="ReadOnlyText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="0,3,0,8"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Background" Value="#F8F9FA"/>
+        </Style>
+
+        <!-- Professional button style -->
+        <Style x:Key="ProfessionalButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource GreenBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="8">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="8" Opacity="0.2"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Assignment card style -->
+        <Style x:Key="AssignmentCard" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" BlurRadius="6" Opacity="0.1"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Original resource -->
+        <ResourceDictionary x:Key="VolunteerFieldCollection"/>
+    </Window.Resources>
+
+    <!-- Background with gradient -->
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F0F4F8" Offset="0"/>
+                <GradientStop Color="#E1E8ED" Offset="0.5"/>
+                <GradientStop Color="#D6E1EA" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="20">
             <StackPanel>
+                <!-- Header -->
+                <Border Style="{StaticResource GlassContainer}" 
+                        Padding="20,15" 
+                        Margin="0,0,0,20">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <!-- Call Icon -->
+                        <Border Background="{StaticResource BlueGradient}" 
+                                Width="50" Height="50" 
+                                CornerRadius="12"
+                                Margin="0,0,12,0">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="8" Opacity="0.3"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Ellipse Fill="{StaticResource OrangeBrush}" Width="15" Height="15" Margin="-8,-8,8,8"/>
+                                <Rectangle Fill="{StaticResource OrangeBrush}" Width="25" Height="12" RadiusX="6" RadiusY="6" Margin="0,8,0,-8"/>
+                                <Rectangle Fill="{StaticResource GreenBrush}" Width="8" Height="6" RadiusX="2" RadiusY="2" Margin="-12,12,12,-12"/>
+                            </Grid>
+                        </Border>
 
-                <!-- תיאור -->
-                <Label Content="תיאור:" />
-                <TextBox Text="{Binding CurrentCall.Description, Mode=TwoWay}" 
-                         IsEnabled="{Binding CanEditDetails}" />
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Call Management"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource TextBlueBrush}"/>
+                            <TextBlock Text="Add or update call information"
+                                       FontSize="12"
+                                       Foreground="{StaticResource LightBlueBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
 
-                <!-- סוג קריאה -->
-                <Label Content="סוג הקריאה:" />
-                <ComboBox SelectedItem="{Binding CurrentCall.Type, Mode=TwoWay}"
-                          ItemsSource="{StaticResource VolunteerFieldCollection}" 
-                          IsEnabled="{Binding CanEditDetails}" />
+                <!-- Call Details Section -->
+                <Border Style="{StaticResource GlassContainer}" 
+                        Padding="20" 
+                        Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="📞 Call Information" 
+                                   FontSize="16" 
+                                   FontWeight="Bold" 
+                                   Foreground="{StaticResource TextBlueBrush}"
+                                   Margin="0,0,0,15"/>
 
-                <!-- כתובת -->
-                <Label Content="כתובת:" />
-                <TextBox Text="{Binding CurrentCall.Address, Mode=TwoWay}" 
-                         IsEnabled="{Binding CanEditDetails}" />
+                        <!-- Description -->
+                        <TextBlock Text="📝 Description:" Style="{StaticResource ModernLabel}"/>
+                        <TextBox Text="{Binding CurrentCall.Description, Mode=TwoWay}" 
+                                 Style="{StaticResource ModernTextBox}"
+                                 IsEnabled="{Binding CanEditDetails}" />
 
-                <!-- זמן מקסימלי לסיום -->
-                <Label Content="זמן מקסימלי לסיום:" />
-                <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" 
-                            IsEnabled="{Binding CanEditMaxEndTime}" />
+                        <!-- Call Type -->
+                        <TextBlock Text="📚 Call Type:" Style="{StaticResource ModernLabel}"/>
+                        <ComboBox SelectedItem="{Binding CurrentCall.Type, Mode=TwoWay}"
+                                  ItemsSource="{StaticResource VolunteerFieldCollection}" 
+                                  Style="{StaticResource ModernComboBox}"
+                                  IsEnabled="{Binding CanEditDetails}" />
 
-                <!-- סטטוס לצפייה בלבד -->
-                <Label Content="סטטוס:" />
-                <TextBlock Text="{Binding CurrentCall.Status}" />
+                        <!-- Address -->
+                        <TextBlock Text="📍 Address:" Style="{StaticResource ModernLabel}"/>
+                        <TextBox Text="{Binding CurrentCall.Address, Mode=TwoWay}" 
+                                 Style="{StaticResource ModernTextBox}"
+                                 IsEnabled="{Binding CanEditDetails}" />
 
-                <!-- זמן פתיחה לצפייה בלבד -->
-                <Label Content="זמן פתיחה:" />
-                <TextBlock Text="{Binding CurrentCall.OpeningTime}" />
+                        <!-- Max End Time -->
+                        <TextBlock Text="⏰ Maximum End Time:" Style="{StaticResource ModernLabel}"/>
+                        <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" 
+                                    Style="{StaticResource ModernDatePicker}"
+                                    IsEnabled="{Binding CanEditMaxEndTime}" />
+                    </StackPanel>
+                </Border>
 
-                <!-- הקצאות קודמות -->
-                <Label Content="הקצאות קודמות צפייה בלבד:" />
-                <ItemsControl ItemsSource="{Binding CurrentCall.Assignments}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="1" BorderBrush="Gray" Margin="0,2">
-                                <StackPanel Margin="5">
-                                    <Label Content="שם :" />
-                                    <TextBlock Text="{Binding VolunteerName}" />
-                                    <Label Content="זמן פתיחה:" />
-                                    <TextBlock Text="{Binding AssignmentStartTime}" />
-                                    <Label Content="זמן סיום:" />
-                                    <TextBlock Text="{Binding AssignmentEndTime}" />
-                                    <Label Content=" סוג הביצוע:" />
-                                    <TextBlock Text="{Binding CompletionType}" />
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <!-- Status Information Section -->
+                <Border Style="{StaticResource GlassContainer}" 
+                        Padding="20" 
+                        Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="📊 Status Information" 
+                                   FontSize="16" 
+                                   FontWeight="Bold" 
+                                   Foreground="{StaticResource TextBlueBrush}"
+                                   Margin="0,0,0,15"/>
 
-                <!-- כפתור -->
-                <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click" 
-                        Margin="0,20,0,0" Height="47"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
+                            <!-- Status -->
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="🔄 Status:" Style="{StaticResource ModernLabel}"/>
+                                <Border Background="#F8F9FA" 
+                                        CornerRadius="6" 
+                                        Padding="10,6"
+                                        BorderBrush="{StaticResource LightBlueBrush}"
+                                        BorderThickness="1">
+                                    <TextBlock Text="{Binding CurrentCall.Status}" 
+                                               Foreground="{StaticResource TextBlueBrush}"
+                                               FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+
+                            <!-- Opening Time -->
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock Text="🕐 Opening Time:" Style="{StaticResource ModernLabel}"/>
+                                <Border Background="#F8F9FA" 
+                                        CornerRadius="6" 
+                                        Padding="10,6"
+                                        BorderBrush="{StaticResource LightBlueBrush}"
+                                        BorderThickness="1">
+                                    <TextBlock Text="{Binding CurrentCall.OpeningTime}" 
+                                               Foreground="{StaticResource TextBlueBrush}"
+                                               FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Previous Assignments Section -->
+                <Border Style="{StaticResource GlassContainer}" 
+                        Padding="20" 
+                        Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="📋 Previous Assignments (View Only)" 
+                                   FontSize="16" 
+                                   FontWeight="Bold" 
+                                   Foreground="{StaticResource TextBlueBrush}"
+                                   Margin="0,0,0,15"/>
+
+                        <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding CurrentCall.Assignments}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource AssignmentCard}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <!-- Volunteer Name -->
+                                                <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,5,5">
+                                                    <TextBlock Text="👤 Volunteer:" 
+                                                               FontSize="10" 
+                                                               FontWeight="SemiBold" 
+                                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                                    <TextBlock Text="{Binding VolunteerName}" 
+                                                               FontSize="12"
+                                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                                </StackPanel>
+
+                                                <!-- Start Time -->
+                                                <StackPanel Grid.Row="0" Grid.Column="1" Margin="5,0,0,5">
+                                                    <TextBlock Text="⏰ Start Time:" 
+                                                               FontSize="10" 
+                                                               FontWeight="SemiBold" 
+                                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                                    <TextBlock Text="{Binding AssignmentStartTime}" 
+                                                               FontSize="12"
+                                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                                </StackPanel>
+
+                                                <!-- End Time -->
+                                                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,5,5">
+                                                    <TextBlock Text="🏁 End Time:" 
+                                                               FontSize="10" 
+                                                               FontWeight="SemiBold" 
+                                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                                    <TextBlock Text="{Binding AssignmentEndTime}" 
+                                                               FontSize="12"
+                                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                                </StackPanel>
+
+                                                <!-- Completion Type -->
+                                                <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0">
+                                                    <TextBlock Text="✅ Completion Type:" 
+                                                               FontSize="10" 
+                                                               FontWeight="SemiBold" 
+                                                               Foreground="{StaticResource TextBlueBrush}"/>
+                                                    <Border Background="{StaticResource GreenBrush}" 
+                                                            CornerRadius="4" 
+                                                            Padding="6,2"
+                                                            HorizontalAlignment="Left">
+                                                        <TextBlock Text="{Binding CompletionType}" 
+                                                                   FontSize="11"
+                                                                   FontWeight="SemiBold"
+                                                                   Foreground="White"/>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Border>
+
+                <!-- Action Button -->
+                <Border Style="{StaticResource GlassContainer}" 
+                        Padding="20">
+                    <Button Content="{Binding ButtonText}" 
+                            Click="btnAddUpdate_Click" 
+                            Style="{StaticResource ProfessionalButtonStyle}"
+                            Width="200"
+                            HorizontalAlignment="Center"/>
+                </Border>
             </StackPanel>
-        </Grid>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </Window>
