@@ -109,8 +109,8 @@ namespace PL.Call
             InitializeComponent();
             CurrentVolunteer = volunteer;
             CurrentAddress = volunteer.CurrentAddress!;
-            DataContext = this;
-            RefreshOpenCallsObserver(); // Initial load
+
+            RefreshOpenCallsObserver(); // initial load
         }
 
         /// <summary>

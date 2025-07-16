@@ -9,7 +9,7 @@ namespace PL
 {
     public partial class MainWindow : Window
     {
-        public MainWindow() : this(0) // מפעיל את הבנאי הקיים עם volunteerId=0
+        public MainWindow() : this(0) 
         {
           
 
@@ -356,7 +356,7 @@ namespace PL
             {
                 Mouse.OverrideCursor = Cursors.Wait;
                 foreach (Window window in Application.Current.Windows)
-                    if (window != this) window.Close();
+               
 
                 s_bl.Admin.InitializeDB();
                 MessageBox.Show("Database initialized successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -395,7 +395,7 @@ namespace PL
                 Mouse.OverrideCursor = null;
             }
         }
-        private async void ToggleSimulator_Click(object sender, RoutedEventArgs e)
+        private  void ToggleSimulator_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -406,7 +406,7 @@ namespace PL
                 }
                 else
                 {
-                    await Task.Run(() => s_bl.Admin.StopSimulator()); // אם זה חסום אתה יכול לשים סינכרוני
+                     Task.Run(() => s_bl.Admin.StopSimulator()); // אם זה חסום אתה יכול לשים סינכרוני
                     IsSimulatorRunning = false;
                 }
             }

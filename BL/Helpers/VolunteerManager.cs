@@ -132,13 +132,7 @@ internal static class VolunteerManager
             boVolunteer.Longitude
         );
     }
-    internal static async Task<(double? Latitude, double? Longitude)> LogicalCheckingAsync(BO.Volunteer boVolunteer)
-    {
-        if (!IsValidId(boVolunteer.Id))
-            throw new BO.BlLogicalException("The ID is not correct");
-        var result = await Tools.GetCoordinatesFromAddressAsync(boVolunteer.CurrentAddress!);
-        return (result?.Latitude, result?.Longitude);
-    }
+
 
     internal static async Task UpdateVolunteerCoordinatesAsync(DO.Volunteer doVolunteer)
     {
@@ -224,7 +218,7 @@ internal static class VolunteerManager
                         updatedCallIds.Add(selectedCall.Id);
                     }
                     catch { continue; }
-                }// במקרה של בעיה עם הקריאה
+                }
             }
             else
             {
