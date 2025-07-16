@@ -314,7 +314,11 @@
                                 <TextBox Text="{Binding Volunteer.MaxDistance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Style="{StaticResource ModernTextBox}"/>
                             </StackPanel>
-
+                            <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,71,0,22" Grid.RowSpan="2">
+                                <TextBlock Text="🏠 Address:" Style="{StaticResource ModernLabel}"/>
+                                <TextBox Text="{Binding Volunteer.CurrentAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+             Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
                             <!-- Active Status -->
                             <StackPanel Grid.Row="2" Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Bottom">
                                 <CheckBox Content="✅ Active in System"

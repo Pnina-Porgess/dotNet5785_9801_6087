@@ -1,39 +1,161 @@
 ﻿<Window x:Class="PL.VolunteerHistoryWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:PL"
-        Title="Volunteer Call History" Height="450" Width="800">
+        Title="Volunteer Call History"
+        Height="750" Width="1000"
+        Background="White"
+        WindowStartupLocation="CenterScreen"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
+    <Window.Resources>
+        <!-- צבעים אחידים -->
+        <Color x:Key="TextBlueColor">#0D3F59</Color>
+        <Color x:Key="OrangeColor">#FDB53B</Color>
+        <Color x:Key="PinkColor">#CF5BA4</Color>
+        <Color x:Key="GreenColor">#B3D36B</Color>
+        <Color x:Key="LightBlueColor">#32A7DD</Color>
+        <Color x:Key="DarkBlueColor">#1B4B66</Color>
+
+        <SolidColorBrush x:Key="TextBlueBrush" Color="{StaticResource TextBlueColor}" />
+        <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlueColor}" />
+        <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource GreenColor}" />
+        <SolidColorBrush x:Key="PinkBrush" Color="{StaticResource PinkColor}" />
+        <SolidColorBrush x:Key="OrangeBrush" Color="{StaticResource OrangeColor}" />
+
+        <!-- Glass Container -->
+        <Style x:Key="GlassContainer" TargetType="Border">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.95">
+                        <GradientStop Color="#F8FAFB" Offset="0"/>
+                        <GradientStop Color="#EEF2F5" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="10" Opacity="0.15"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ProfessionalHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#32A7DD" Offset="0"/>
+                        <GradientStop Color="#1B4B66" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+
+    </Window.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <!-- רקע -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F0F4F8" Offset="0"/>
+                <GradientStop Color="#E1E8ED" Offset="0.5"/>
+                <GradientStop Color="#D6E1EA" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
 
-        <!-- Filter and Sort Options -->
-        <StackPanel Orientation="Horizontal" Margin="10">
-            <TextBlock Text="סינון לפי סוג קריאה:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerFieldCollection}}"
-                      SelectedItem="{Binding SelectedCallType, Mode=TwoWay}"
-                      Width="150" Margin="0,0,20,0"/>
-            <TextBlock Text="מיון לפי:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <ComboBox ItemsSource="{Binding Source={StaticResource CloseCallFieldCollection}}"
-                      SelectedItem="{Binding SelectedSortOption, Mode=TwoWay}"
-                      Width="150"/>
-        </StackPanel>
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <!-- Closed Calls List -->
-        <DataGrid Grid.Row="1" ItemsSource="{Binding ClosedCalls}" AutoGenerateColumns="False"
-                  IsReadOnly="True" SelectionMode="Single" Margin="10">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
-                <DataGridTextColumn Header="Type" Binding="{Binding CallType}" Width="Auto"/>
-                <DataGridTextColumn Header="Address" Binding="{Binding FullAddress}" Width="Auto"/>
-                <DataGridTextColumn Header="סוג זמן הסיום:" Binding="{Binding EndType}" Width="200"/>
-                <DataGridTextColumn Header="Finish Time" Binding="{Binding ActualEndTime}" Width="Auto"/>
-            </DataGrid.Columns>
-        </DataGrid>
+            <!-- כותרת -->
+            <Border Grid.Row="0" Style="{StaticResource GlassContainer}" Padding="25,20" Margin="0,0,0,25">
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="📜 Volunteer Call History"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextBlueBrush}"/>
+                    <TextBlock Text="A summary of all finished calls for the volunteer"
+                               FontSize="14"
+                               Foreground="{StaticResource LightBlueBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- סינון ומיון -->
+            <Grid Grid.Row="1" Margin="0,0,0,25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource GlassContainer}" Padding="20,15">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="🔍" FontSize="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="סינון לפי סוג קריאה:"
+                                   FontWeight="SemiBold"
+                                   FontSize="13"
+                                   Foreground="{StaticResource TextBlueBrush}"
+                                   Margin="0,0,12,0"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerFieldCollection}}"
+                                  SelectedItem="{Binding SelectedCallType, Mode=TwoWay}"
+                                  Width="160"
+                                  Style="{StaticResource ModernComboBox}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource GlassContainer}" Padding="20,15">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="🔽" FontSize="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="מיון לפי:"
+                                   FontWeight="SemiBold"
+                                   FontSize="13"
+                                   Foreground="{StaticResource TextBlueBrush}"
+                                   Margin="0,0,12,0"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource CloseCallFieldCollection}}"
+                                  SelectedItem="{Binding SelectedSortOption, Mode=TwoWay}"
+                                  Width="160"
+                                  Style="{StaticResource ModernComboBox}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- טבלת קריאות סגורות -->
+            <Border Grid.Row="2" Style="{StaticResource GlassContainer}" Padding="10">
+                <DataGrid ItemsSource="{Binding ClosedCalls}" AutoGenerateColumns="False"
+                          IsReadOnly="True" SelectionMode="Single"
+                          HeadersVisibility="Column"
+                          ColumnHeaderStyle="{StaticResource ProfessionalHeaderStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="🆔 ID" Binding="{Binding Id}" Width="Auto"/>
+                        <DataGridTextColumn Header="📚 Type" Binding="{Binding CallType}" Width="*"/>
+                        <DataGridTextColumn Header="📍 Address" Binding="{Binding FullAddress}" Width="2*"/>
+                        <DataGridTextColumn Header="⏱️ סוג סיום" Binding="{Binding EndType}" Width="*"/>
+                        <DataGridTextColumn Header="🕒 Finish Time" Binding="{Binding ActualEndTime}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

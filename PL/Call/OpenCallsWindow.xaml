@@ -1,67 +1,196 @@
 ﻿<Window x:Class="PL.Call.OpenCallsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-       DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         xmlns:local="clr-namespace:PL"
-        Title="קריאות פתוחות" Height="600" Width="800">
+        Title="קריאות פתוחות"
+        Height="750" Width="1000"
+        Background="White"
+        WindowStartupLocation="CenterScreen"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
-    <StackPanel>
+    <Window.Resources>
+        <!-- צבעים -->
+        <Color x:Key="TextBlueColor">#0D3F59</Color>
+        <Color x:Key="OrangeColor">#FDB53B</Color>
+        <Color x:Key="PinkColor">#CF5BA4</Color>
+        <Color x:Key="GreenColor">#B3D36B</Color>
+        <Color x:Key="LightBlueColor">#32A7DD</Color>
+        <Color x:Key="DarkBlueColor">#1B4B66</Color>
 
-        <!-- עריכת כתובת נוכחית של המתנדב -->
-        <StackPanel Orientation="Horizontal" Margin="10">
-            <TextBlock Text="הכתובת הנוכחית שלך:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <TextBox Text="{Binding CurrentAddress, Mode=TwoWay}" Width="250" Margin="0,0,10,0"/>
-            <Button Content="עדכן כתובת" Click="UpdateAddress_Click" />
-        </StackPanel>
+        <SolidColorBrush x:Key="TextBlueBrush" Color="{StaticResource TextBlueColor}" />
+        <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlueColor}" />
+        <SolidColorBrush x:Key="PinkBrush" Color="{StaticResource PinkColor}" />
+        <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource GreenColor}" />
 
-        <!-- סינון ומיון -->
-        <StackPanel Orientation="Horizontal" Margin="10">
-            <TextBlock Text="סינון לפי סוג קריאה:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerFieldCollection}}"
-                      SelectedItem="{Binding FilterStatus, Mode=TwoWay}"
-                      Width="150"
-                      Margin="0,0,20,0"
-                      SelectionChanged="FilterOrSort_Changed"/>
+        <Style x:Key="GlassContainer" TargetType="Border">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.95">
+                        <GradientStop Color="#F8FAFB" Offset="0"/>
+                        <GradientStop Color="#EEF2F5" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="10" Opacity="0.15"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-            <TextBlock Text="מיון לפי:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <ComboBox ItemsSource="{Binding Source={StaticResource OpenCallFieldCollection}}"
-                      SelectedItem="{Binding SortField, Mode=TwoWay}"
-                      Width="150"
-                      SelectionChanged="FilterOrSort_Changed"/>
-        </StackPanel>
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
 
-        <!-- טבלת קריאות -->
-        <DataGrid ItemsSource="{Binding OpenCalls}"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  SelectedItem="{Binding SelectedCall, Mode=TwoWay}"
-                  SelectionChanged="DataGrid_SelectionChanged"
-                  Margin="10">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="מזהה" Binding="{Binding Id}" Width="80"/>
-                <DataGridTextColumn Header="סוג" Binding="{Binding Type}" Width="120"/>
-                <DataGridTextColumn Header="כתובת" Binding="{Binding FullAddress}" Width="200"/>
-                <DataGridTextColumn Header="סוג הקריאה" Binding="{Binding Type}" Width="100"/>
-                <DataGridTextColumn Header="מרחק (ק״מ)" Binding="{Binding DistanceFromVolunteer}" Width="100"/>
+        <Style x:Key="ProfessionalHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#32A7DD" Offset="0"/>
+                        <GradientStop Color="#1B4B66" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="8"/>
+        </Style>
 
-                <DataGridTemplateColumn Header="פעולה" Width="100">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="בחר" Click="SelectCall_Click"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <local:TypeOfReadingCollection x:Key="VolunteerFieldCollection"/>
+        <local:OpenCallFieldCollection x:Key="OpenCallFieldCollection"/>
+    </Window.Resources>
 
-        <!-- תיאור קריאה נבחרת -->
-        <Border Margin="10" Padding="10" Background="#FFEFEFEF" CornerRadius="8"
-                Visibility="{Binding SelectedCall, Converter={StaticResource NotNullToVisible}}">
-            <StackPanel>
-                <TextBlock Text="תיאור הקריאה שנבחרה:" FontWeight="Bold" Margin="0,0,0,5"/>
-                <TextBlock Text="{Binding SelectedDescription}" TextWrapping="Wrap"/>
-            </StackPanel>
-        </Border>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F0F4F8" Offset="0"/>
+                <GradientStop Color="#E1E8ED" Offset="0.5"/>
+                <GradientStop Color="#D6E1EA" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
 
-    </StackPanel>
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- כתובת נוכחית -->
+            <Border Grid.Row="0" Style="{StaticResource GlassContainer}" Padding="20" Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                    <TextBlock Text="📍 הכתובת הנוכחית שלך:"
+                               FontWeight="SemiBold"
+                               FontSize="13"
+                               Foreground="{StaticResource TextBlueBrush}"
+                               Margin="0,0,12,0"
+                               VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CurrentAddress, Mode=TwoWay}" Width="250" Margin="0,0,12,0"/>
+                    <Button Content="עדכן כתובת"
+                            Background="{StaticResource GreenBrush}"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Width="120"
+                            Height="35"
+                            Click="UpdateAddress_Click"/>
+                </StackPanel>
+            </Border>
+
+            <!-- סינון ומיון -->
+            <Grid Grid.Row="1" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource GlassContainer}" Padding="20,15">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="🔍" FontSize="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="סינון לפי סוג קריאה:" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextBlueBrush}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerFieldCollection}}"
+                                  SelectedItem="{Binding FilterStatus, Mode=TwoWay}"
+                                  Width="160"
+                                  Style="{StaticResource ModernComboBox}"
+                                  SelectionChanged="FilterOrSort_Changed"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource GlassContainer}" Padding="20,15">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="🔽" FontSize="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="מיון לפי:" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextBlueBrush}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource OpenCallFieldCollection}}"
+                                  SelectedItem="{Binding SortField, Mode=TwoWay}"
+                                  Width="160"
+                                  Style="{StaticResource ModernComboBox}"
+                                  SelectionChanged="FilterOrSort_Changed"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- טבלת קריאות פתוחות -->
+            <Border Grid.Row="2" Style="{StaticResource GlassContainer}" Padding="10">
+                <DataGrid ItemsSource="{Binding OpenCalls}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          SelectedItem="{Binding SelectedCall, Mode=TwoWay}"
+                          SelectionChanged="DataGrid_SelectionChanged"
+                          HeadersVisibility="Column"
+                          ColumnHeaderStyle="{StaticResource ProfessionalHeaderStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="🆔 מזהה" Binding="{Binding Id}" Width="80"/>
+                        <DataGridTextColumn Header="📚 סוג" Binding="{Binding Type}" Width="120"/>
+                        <DataGridTextColumn Header="📍 כתובת" Binding="{Binding FullAddress}" Width="200"/>
+                        <DataGridTextColumn Header="🔖 סוג קריאה" Binding="{Binding Type}" Width="120"/>
+                        <DataGridTextColumn Header="📏 מרחק (ק״מ)" Binding="{Binding DistanceFromVolunteer}" Width="100"/>
+                        <DataGridTemplateColumn Header="🎯 פעולה" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="בחר"
+                                            Click="SelectCall_Click"
+                                            Background="{StaticResource PinkBrush}"
+                                            Foreground="White"
+                                            FontWeight="Bold"
+                                            Width="70" Height="30"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <!-- תיאור קריאה -->
+            <Border Grid.Row="3"
+                    Style="{StaticResource GlassContainer}"
+                    Margin="0,20,0,0"
+                    Padding="15"
+                    Visibility="{Binding SelectedCall, Converter={StaticResource NotNullToVisible}}">
+                <StackPanel>
+                    <TextBlock Text="📄 תיאור הקריאה שנבחרה:"
+                               FontWeight="Bold"
+                               FontSize="14"
+                               Foreground="{StaticResource TextBlueBrush}"
+                               Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding SelectedDescription}"
+                               TextWrapping="Wrap"
+                               FontSize="13"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
 </Window>

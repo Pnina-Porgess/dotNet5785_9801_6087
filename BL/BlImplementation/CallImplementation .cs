@@ -255,6 +255,7 @@ namespace BlImplementation
                 VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
                 VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
                 VolunteerManager.Observers.NotifyListUpdated();
+                CallManager.Observers.NotifyItemUpdated(assignment.CallId);
 
 
 
@@ -275,6 +276,8 @@ namespace BlImplementation
             {
                 AdminManager.ThrowOnSimulatorIsRunning();
                 DO.Assignment assignment;
+                DO.Call call;
+
                 lock (AdminManager.BlMutex)
                 {
 
@@ -289,7 +292,7 @@ namespace BlImplementation
                     //if (!=) // בדיקה אם המשתמש הוא מנהל
                     //    throw new BO.UnauthorizedActionException("The volunteer does not have permission to complete this treatment.");
 
-                    var call = _dal.Call.Read(assignment.CallId);
+                     call = _dal.Call.Read(assignment.CallId);
                     if (call == null)
                         throw new ArgumentException($"Call with ID={assignment.CallId} does not exist.");
 
@@ -328,11 +331,7 @@ namespace BlImplementation
                 VolunteerManager.Observers.NotifyItemUpdated(actualVolunteerId);
                 VolunteerManager.Observers.NotifyItemUpdated(requesterId);
                 VolunteerManager.Observers.NotifyListUpdated();
-
-
-
-
-
+                CallManager.Observers.NotifyItemUpdated(call.Id);
 
             }
 
@@ -347,6 +346,7 @@ namespace BlImplementation
         {
             try
             {
+                DO.Call call;
                 var assignments = _dal.Assignment.ReadAll(a => (a?.VolunteerId == volunteerId) && (a.EndTime is null && (a.TypeOfEndTime == null)));
                 if (assignments.Any())
                       throw new BO.BlLogicalException($"volunteer with ID {volunteerId} cannot select a new call for treatment since he is treating another call now.");
@@ -355,7 +355,7 @@ namespace BlImplementation
                 lock (AdminManager.BlMutex)
                 {
                     // 1. קבלת הקריאה לפי מזהה הקריאה
-                    var call = _dal.Call.Read(callId);
+                     call = _dal.Call.Read(callId);
                     if (call == null)
                     {
                         throw new ArgumentException($"Call with ID={callId} does not exist.");
@@ -394,6 +394,7 @@ namespace BlImplementation
                 VolunteerManager.Observers.NotifyListUpdated();
                 int actualVolunteerId = assignment.VolunteerId;
                 VolunteerManager.Observers.NotifyItemUpdated(actualVolunteerId);
+                CallManager.Observers.NotifyItemUpdated(call.Id);
 
 
             }
@@ -468,7 +469,7 @@ namespace BlImplementation
                MaxEndTime = c.MaxTimeToFinish,
                DistanceFromVolunteer = Tools.CalculateDistance(volunteer.Latitude!, volunteer.Longitude!, c.Latitude, c.Longitude)
            })
-           .Where(c => c.DistanceFromVolunteer < volunteer.MaximumDistance);
+         .Where(c => c.DistanceFromVolunteer < volunteer.MaximumDistance);
                     if (filterType.HasValue)
                     {
                         openCalls = openCalls.Where(c => (BO.TypeOfReading)c.Type == filterType.Value);

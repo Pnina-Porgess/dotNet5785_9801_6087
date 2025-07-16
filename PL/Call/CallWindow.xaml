@@ -1,75 +1,180 @@
 ﻿<Window x:Class="PL.Call.CallWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
-        Title="Call Management" Height="600" Width="450">
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        Title="Call Management - Yedidim Helper System"
+        Height="700" Width="550"
+        Background="White"
+        WindowStartupLocation="CenterScreen"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Margin="20">
+    <Window.Resources>
+        <Color x:Key="TextBlueColor">#0D3F59</Color>
+        <Color x:Key="OrangeColor">#FDB53B</Color>
+        <Color x:Key="LightBlueColor">#32A7DD</Color>
+        <Color x:Key="DarkBlueColor">#1B4B66</Color>
+
+        <SolidColorBrush x:Key="TextBlueBrush" Color="{StaticResource TextBlueColor}" />
+        <SolidColorBrush x:Key="OrangeBrush" Color="{StaticResource OrangeColor}" />
+        <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlueColor}" />
+        <SolidColorBrush x:Key="DarkBlueBrush" Color="{StaticResource DarkBlueColor}" />
+
+        <LinearGradientBrush x:Key="OrangeGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FDB53B" Offset="0"/>
+            <GradientStop Color="#E6A332" Offset="1"/>
+        </LinearGradientBrush>
+
+        <Style x:Key="GlassContainer" TargetType="Border">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.95">
+                        <GradientStop Color="#F8FAFB" Offset="0"/>
+                        <GradientStop Color="#EEF2F5" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="10" Opacity="0.15"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CaretBrush" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Margin" Value="0,3,0,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Margin" Value="0,3,0,8"/>
+        </Style>
+
+        <Style x:Key="ModernLabel" TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource TextBlueBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,5,0,3"/>
+        </Style>
+
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource OrangeGradient}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F0F4F8" Offset="0"/>
+                <GradientStop Color="#E1E8ED" Offset="0.5"/>
+                <GradientStop Color="#D6E1EA" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="20">
             <StackPanel>
+                <Border Style="{StaticResource GlassContainer}" Padding="15,10" Margin="0,0,0,15">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Border  Width="50" Height="50" CornerRadius="12" Margin="0,0,12,0">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="8" Opacity="0.3"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Ellipse Fill="{StaticResource OrangeBrush}" Width="20" Height="20" Margin="0,-10,0,10"/>
+                                <Rectangle Fill="{StaticResource OrangeBrush}" Width="30" Height="18" RadiusX="6" RadiusY="6" Margin="0,6,0,-6"/>
+                                <Rectangle Fill="{StaticResource LightBlueBrush}" Width="12" Height="8" RadiusX="2" RadiusY="2" Margin="-15,15,15,-15"/>
+                            </Grid>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Call Management" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextBlueBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
 
-                <!-- Call ID -->
-                <Label Content="Call ID:" />
-                <TextBox Text="{Binding CurrentCall.Id}" IsReadOnly="True" IsEnabled="False"/>
+                <Border Style="{StaticResource GlassContainer}" Padding="20">
+                    <StackPanel>
+                        <Label Content="Call ID:" Style="{StaticResource ModernLabel}"/>
+                        <TextBox Text="{Binding CurrentCall.Id}" IsReadOnly="True" IsEnabled="False" Style="{StaticResource ModernTextBox}"/>
 
-                <!-- Description -->
-                <Label Content="Description:" />
-                <TextBox Text="{Binding CurrentCall.Description, Mode=TwoWay}" 
-                         IsEnabled="{Binding CanEditDetails}" />
+                        <Label Content="Description:" Style="{StaticResource ModernLabel}"/>
+                        <TextBox Text="{Binding CurrentCall.Description, Mode=TwoWay}" IsEnabled="{Binding CanEditDetails}" Style="{StaticResource ModernTextBox}"/>
 
-                <!-- Type -->
-                <Label Content="Call Type:" />
-                <ComboBox SelectedItem="{Binding CurrentCall.Type, Mode=TwoWay}"
-                          ItemsSource="{StaticResource VolunteerFieldCollection}" 
-                          IsEnabled="{Binding CanEditDetails}" />
+                        <Label Content="Call Type:" Style="{StaticResource ModernLabel}"/>
+                        <ComboBox SelectedItem="{Binding CurrentCall.Type, Mode=TwoWay}" ItemsSource="{StaticResource VolunteerFieldCollection}" IsEnabled="{Binding CanEditDetails}" Style="{StaticResource ModernComboBox}"/>
 
-                <!-- Address -->
-                <Label Content="Address:" />
-                <TextBox Text="{Binding CurrentCall.Address, Mode=TwoWay}" 
-                         IsEnabled="{Binding CanEditDetails}" />
+                        <Label Content="Address:" Style="{StaticResource ModernLabel}"/>
+                        <TextBox Text="{Binding CurrentCall.Address, Mode=TwoWay}" IsEnabled="{Binding CanEditDetails}" Style="{StaticResource ModernTextBox}"/>
 
-                <!-- Max End Time -->
-                <Label Content="Max End Time:" />
-                <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" 
-                            IsEnabled="{Binding CanEditMaxEndTime}" />
+                        <Label Content="Max End Time:" Style="{StaticResource ModernLabel}"/>
+                        <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" IsEnabled="{Binding CanEditMaxEndTime}" Margin="0,3,0,8"/>
 
-                <!-- Status -->
-                <Label Content="Status:" />
-                <TextBlock Text="{Binding CurrentCall.Status}" />
+                        <Label Content="Status:" Style="{StaticResource ModernLabel}"/>
+                        <TextBlock Text="{Binding CurrentCall.Status}" Foreground="{StaticResource TextBlueBrush}"/>
 
-                <!-- Opening Time -->
-                <Label Content="Opening Time:" />
-                <TextBlock Text="{Binding CurrentCall.OpeningTime}" />
+                        <Label Content="Opening Time:" Style="{StaticResource ModernLabel}"/>
+                        <TextBlock Text="{Binding CurrentCall.OpeningTime}" Foreground="{StaticResource TextBlueBrush}"/>
 
-                <!-- Previous Assignments -->
-                <Label Content="Previous Assignments (read-only):" />
-                <ItemsControl ItemsSource="{Binding CurrentCall.Assignments}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="1" BorderBrush="Gray" Margin="0,2">
-                                <StackPanel Margin="5">
-                                    <Label Content="Volunteer Name:" />
-                                    <TextBlock Text="{Binding VolunteerName}" />
-                                    <Label Content="Start Time:" />
-                                    <TextBlock Text="{Binding AssignmentStartTime}" />
-                                    <Label Content="End Time:" />
-                                    <TextBlock Text="{Binding AssignmentEndTime}" />
-                                    <Label Content="Completion Type:" />
-                                    <TextBlock Text="{Binding CompletionType}" />
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                        <Label Content="Previous Assignments (read-only):" Style="{StaticResource ModernLabel}"/>
+                        <ItemsControl ItemsSource="{Binding CurrentCall.Assignments}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1" BorderBrush="Gray" Margin="0,2" CornerRadius="8" Padding="6">
+                                        <StackPanel>
+                                            <Label Content="Volunteer Name:" Style="{StaticResource ModernLabel}"/>
+                                            <TextBlock Text="{Binding VolunteerName}"/>
+                                            <Label Content="Start Time:" Style="{StaticResource ModernLabel}"/>
+                                            <TextBlock Text="{Binding AssignmentStartTime}"/>
+                                            <Label Content="End Time:" Style="{StaticResource ModernLabel}"/>
+                                            <TextBlock Text="{Binding AssignmentEndTime}"/>
+                                            <Label Content="Completion Type:" Style="{StaticResource ModernLabel}"/>
+                                            <TextBlock Text="{Binding CompletionType}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
-                <!-- Save Button -->
-                <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click" 
-                        Margin="0,20,0,0" Height="47"/>
-
+                        <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click" Style="{StaticResource ModernButtonStyle}" Width="200"/>
+                    </StackPanel>
+                </Border>
             </StackPanel>
-        </Grid>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </Window>

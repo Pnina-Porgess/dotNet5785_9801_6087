@@ -68,18 +68,17 @@ namespace PL.Login
                     if (result == MessageBoxResult.Yes)
                     {
                         new MainWindow(id).Show();
-                        Close();
+                        
                     }
                     else if (result == MessageBoxResult.No)
                     {
                         new Volunteer.VolunteerSelfWindow(id).Show();
-                        Close();
+                       
                     }
                 }
                 else
                 {
                     new Volunteer.VolunteerSelfWindow(id).Show();
-                    Close();
                 }
             }
             catch (BlInvalidInputException ex)

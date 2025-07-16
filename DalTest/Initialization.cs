@@ -73,7 +73,7 @@ public static class Initialization
     (31.8948, 34.8093), (32.0236, 34.7502), (32.1663, 34.8436), (32.4340, 34.9196),(29.5581, 34.9482) 
 };
 
-        s_dal!.Volunteer.Create(new Volunteer(329236087, "Shlomo", "05321234565", "Shlomo@gmail.com", Role.Manager, true, DistanceType.AerialDistance, s_rand.Next(5, 50), EncryptPassword("1234@Aaa"), "Tel Aviv", 32.0853, 34.7818));
+        s_dal!.Volunteer.Create(new Volunteer(329236087, "Shlomo", "05321234565", "Shlomo@gmail.com", Role.Manager, true, DistanceType.AerialDistance, s_rand.Next(1000,4000), EncryptPassword("1234@Aaa"), "Tel Aviv", 32.0853, 34.7818));
         for (int i = 0; i < 15; i++)
 
         {
@@ -85,7 +85,7 @@ public static class Initialization
             string password = passwords[i];
             double Latitude = coordinates[i].Latitude;
             double Longitude = coordinates[i].Longitude;
-            double MaximumDistance = s_rand.Next(5, 50);
+            double MaximumDistance = s_rand.Next(1000, 4000);
             s_dal!.Volunteer.Create(new Volunteer(id[i], name, phone, email, Role.Volunteer, true, DistanceType.AerialDistance, MaximumDistance, EncryptPassword(password), addresses[i], Longitude, Latitude));
 
         }
