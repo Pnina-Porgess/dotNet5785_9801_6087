@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
-    <Id>329236087</Id>
-    <Name>Shlomo</Name>
-    <Phone>05321234565</Phone>
-    <Email>Shlomo@gmail.com</Email>
-    <Role>Manager</Role>
-    <IsActive>true</IsActive>
-    <DistanceType>AerialDistance</DistanceType>
-    <MaximumDistance>23</MaximumDistance>
-    <Password>ir3Y4/oVAE27M1agrTKuPozV2LsYKj8GwcW1sJpzO80=</Password>
-    <Address>Tel Aviv</Address>
-    <Latitude>32.0853</Latitude>
-    <Longitude>34.7818</Longitude>
-    <MaxEndTime xsi:nil="true" />
-  </Volunteer>
-  <Volunteer>
     <Id>328216783</Id>
     <Name>Sari</Name>
     <Phone>0503214571</Phone>
@@ -238,6 +223,21 @@
     <Address>Herzliya, Sokolov St.</Address>
     <Latitude>32.16361</Latitude>
     <Longitude>34.810979</Longitude>
+    <MaxEndTime xsi:nil="true" />
+  </Volunteer>
+  <Volunteer>
+    <Id>329236087</Id>
+    <Name>Shlomo</Name>
+    <Phone>0532123456</Phone>
+    <Email>Shlomo@gmail.com</Email>
+    <Role>Manager</Role>
+    <IsActive>true</IsActive>
+    <DistanceType>AerialDistance</DistanceType>
+    <MaximumDistance>100</MaximumDistance>
+    <Password>ir3Y4/oVAE27M1agrTKuPozV2LsYKj8GwcW1sJpzO80=</Password>
+    <Address>Tel Aviv</Address>
+    <Latitude>32.0852997</Latitude>
+    <Longitude>34.7818064</Longitude>
     <MaxEndTime xsi:nil="true" />
   </Volunteer>
 </ArrayOfVolunteer>

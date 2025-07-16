@@ -388,8 +388,48 @@
     <Id>2048</Id>
     <CallId>1022</CallId>
     <VolunteerId>329236087</VolunteerId>
-    <TypeOfEndTime />
+    <TypeOfEndTime>treated</TypeOfEndTime>
     <EntryTime>2025-07-01T21:38:40.7699273+03:00</EntryTime>
-    <EndTime />
+    <EndTime>2025-01-07T22:00:59</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2049</Id>
+    <CallId>1004</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>SelfCancellation</TypeOfEndTime>
+    <EntryTime>2025-07-02T14:40:52.5141251+03:00</EntryTime>
+    <EndTime>2025-07-02T14:55:50.964161+03:00</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2050</Id>
+    <CallId>1004</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>SelfCancellation</TypeOfEndTime>
+    <EntryTime>2025-07-02T14:55:55.5652938+03:00</EntryTime>
+    <EndTime>2025-07-02T14:56:14.653711+03:00</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2051</Id>
+    <CallId>1000</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>SelfCancellation</TypeOfEndTime>
+    <EntryTime>2025-07-02T15:32:30.2809992+03:00</EntryTime>
+    <EndTime>2025-07-02T16:20:41.0317625+03:00</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2052</Id>
+    <CallId>1000</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>treated</TypeOfEndTime>
+    <EntryTime>2025-07-02T16:20:48.3761788+03:00</EntryTime>
+    <EndTime>2025-01-07T22:00:59</EndTime>
+  </Assignment>
+  <Assignment>
+    <Id>2053</Id>
+    <CallId>1004</CallId>
+    <VolunteerId>329236087</VolunteerId>
+    <TypeOfEndTime>treated</TypeOfEndTime>
+    <EntryTime>2025-07-02T16:21:22.5031008+03:00</EntryTime>
+    <EndTime>2025-01-07T22:00:59</EndTime>
   </Assignment>
 </Assignments>
